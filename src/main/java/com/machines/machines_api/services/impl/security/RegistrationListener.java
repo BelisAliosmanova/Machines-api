@@ -1,8 +1,10 @@
 package com.machines.machines_api.services.impl.security;
 
 import com.machines.machines_api.models.entity.User;
+import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.services.UserService;
 import com.machines.machines_api.services.impl.security.events.OnRegistrationCompleteEvent;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -18,27 +20,22 @@ import java.util.UUID;
  * Component responsible for handling registration confirmation emails.
  */
 @Component
+@RequiredArgsConstructor
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
-
-    @Autowired
-    private UserService service;
-
-    @Autowired
-    private MessageSource messages;
-
-    @Autowired
-    private JavaMailSender mailSender;
+    private final TokenService tokenService;
+    private final MessageSource messages;
+    private final JavaMailSender mailSender;
 
     @Override
+    @Async
     public void onApplicationEvent(@NotNull OnRegistrationCompleteEvent event) {
         this.confirmRegistration(event);
     }
 
-    @Async
-    private void confirmRegistration(OnRegistrationCompleteEvent event) {
+    protected void confirmRegistration(OnRegistrationCompleteEvent event) {
         User user = event.getUser();
         String token = UUID.randomUUID().toString();
-        service.createVerificationToken(user, token);
+        tokenService.createVerificationToken(user, token);
 
         String recipientAddress = user.getEmail();
         String subject = "The Machines Registration Confirmation";

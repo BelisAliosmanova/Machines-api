@@ -31,4 +31,8 @@ public interface TokenService {
     void attachAuthCookies(AuthenticationResponse authenticationResponse, Consumer<Cookie> cookieConsumer);
 
     void detachAuthCookies(Consumer<Cookie> cookieConsumer);
+
+    void createVerificationToken(User user, String token);
+
+    void clearVerificationTokensByUser(User user);
 }

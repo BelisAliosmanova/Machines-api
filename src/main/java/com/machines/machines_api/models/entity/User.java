@@ -28,7 +28,6 @@ public class User extends BaseEntity implements UserDetails {
     @Size(min = 2, message = "The name should be at least 2 symbols!")
     private String name;
 
-    @NotNull(message = "The surname should not be null!")
     @Size(min = 2, message = "The surname should be at least 2 symbols!")
     private String surname;
 
@@ -37,7 +36,6 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @NotNull(message = "The password should not be null!")
     private String password;
 
     @NotNull
@@ -47,9 +45,6 @@ public class User extends BaseEntity implements UserDetails {
     @NotNull
     @Enumerated(EnumType.STRING)
     private Provider provider;
-
-    @Column(name = "is_additional_info_required", nullable = false)
-    private boolean additionalInfoRequired;
 
     @Column(name = "enabled")
     private boolean enabled;

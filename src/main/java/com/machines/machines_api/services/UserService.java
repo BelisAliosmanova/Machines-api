@@ -3,7 +3,6 @@ package com.machines.machines_api.services;
 import com.machines.machines_api.models.dto.auth.AdminUserDTO;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
-import com.machines.machines_api.models.dto.request.CompleteOAuthRequest;
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.models.entity.VerificationToken;
 import com.machines.machines_api.security.CustomOAuth2User;
@@ -22,13 +21,7 @@ public interface UserService {
 
     void deleteUserById(UUID id, PublicUserDTO currentUser);
 
-    User processOAuthUser(CustomOAuth2User oAuth2User) throws Exception;
-
-    User updateOAuth2UserWithFullData(CompleteOAuthRequest request, UUID userId);
+    User processOAuthUser(CustomOAuth2User oAuth2User);
 
     User findById(UUID id);
-
-    void createVerificationToken(User user, String token);
-
-    VerificationToken getVerificationToken(String VerificationToken);
 }

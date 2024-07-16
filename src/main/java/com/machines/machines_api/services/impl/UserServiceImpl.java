@@ -8,7 +8,6 @@ import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.dto.auth.AdminUserDTO;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
-import com.machines.machines_api.models.dto.request.CompleteOAuthRequest;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.*;
 import com.machines.machines_api.security.CustomOAuth2User;
@@ -113,12 +112,10 @@ public class UserServiceImpl implements UserService {
      * @return The processed user.
      */
     @Override
-    public User processOAuthUser(CustomOAuth2User oAuth2User) throws Exception {
+    public User processOAuthUser(CustomOAuth2User oAuth2User) {
         User user = userRepository.findByEmail(oAuth2User.getEmail()).orElse(null);
 
         if (user == null) {
-            final String SURNAME_PLACEHOLDER = "CHANGE_SURNAME";
-
             RegisterRequest registerRequest = new RegisterRequest();
 
             registerRequest.setEmail(oAuth2User.getEmail());
@@ -126,36 +123,14 @@ public class UserServiceImpl implements UserService {
 
             if (oAuth2User.getProvider().equals(Provider.GOOGLE)) {
                 registerRequest.setName(oAuth2User.getGivenName());
-                registerRequest.setSurname(oAuth2User.getFamilyName());
             } else if (oAuth2User.getProvider().equals(Provider.FACEBOOK)) {
                 registerRequest.setName(oAuth2User.getName());
-                registerRequest.setSurname(SURNAME_PLACEHOLDER);
             }
 
             user = userRepository.save(buildUser(registerRequest));
         }
+
         return user;
-    }
-
-    @Override
-    public User updateOAuth2UserWithFullData(CompleteOAuthRequest request, UUID userId) {
-        User user = findById(userId);
-        user.setName(request.getName());
-        user.setSurname(request.getSurname());
-        user.setAdditionalInfoRequired(false);
-
-        return userRepository.save(user);
-    }
-
-    @Override
-    public VerificationToken getVerificationToken(String VerificationToken) {
-        return verificationTokenRepository.findByToken(VerificationToken);
-    }
-
-    @Override
-    public void createVerificationToken(User user, String token) {
-        VerificationToken myToken = new VerificationToken(token, user);
-        verificationTokenRepository.save(myToken);
     }
 
     public User findById(UUID id) {
@@ -164,16 +139,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private User buildUser(RegisterRequest request) {
-        boolean additionalInfoRequired = !request.getProvider().equals(Provider.LOCAL);
-
         User.UserBuilder userBuilder = User
                 .builder()
                 .name(request.getName())
-                .surname(request.getSurname())
                 .email(request.getEmail())
                 .provider(request.getProvider())
-                .role(Role.USER)
-                .additionalInfoRequired(additionalInfoRequired);
+                .role(Role.USER);
 
         if (request.getPassword() != null) {
             userBuilder.password(passwordEncoder.encode(request.getPassword()));

@@ -23,7 +23,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
     private final TokenService tokenService;
 
     @Override
-    public boolean processOAuthPostLogin(CustomOAuth2User oAuth2User, Consumer<Cookie> addCookieFunc) throws Exception {
+    public void processOAuthPostLogin(CustomOAuth2User oAuth2User, Consumer<Cookie> addCookieFunc)  {
         // Process OAuth2 user and retrieve associated user entity
         User user = userService.processOAuthUser(oAuth2User);
 
@@ -32,8 +32,5 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
         // Generate authentication response and attach cookies to the response
         AuthenticationResponse authResponse = tokenService.generateAuthResponse(user);
         tokenService.attachAuthCookies(authResponse, addCookieFunc);
-
-        // Check if additional user info is required
-        return user.isAdditionalInfoRequired();
     }
 }

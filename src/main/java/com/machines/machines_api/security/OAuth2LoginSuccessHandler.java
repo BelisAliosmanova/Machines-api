@@ -23,23 +23,14 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+                                        Authentication authentication) {
         // Retrieve the OAuth2 user details from the authentication object
         CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+        oAuth2AuthenticationService.processOAuthPostLogin(oauthUser, response::addCookie);
 
-        // Check if additional information is required after login
-        boolean isAdditionalInfoRequired = false;
         try {
-            isAdditionalInfoRequired = oAuth2AuthenticationService.processOAuthPostLogin(oauthUser, response::addCookie);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-
-        // Redirect users to appropriate URLs based on whether additional information is required
-        if (isAdditionalInfoRequired) {
-            response.sendRedirect(frontendConfig.getFinishRegisterUrl());
-        } else {
-            response.sendRedirect(frontendConfig.getBaseUrl());
         }
     }
 }

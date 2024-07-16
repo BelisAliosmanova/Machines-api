@@ -5,7 +5,9 @@ import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.entity.Token;
 import com.machines.machines_api.models.entity.User;
+import com.machines.machines_api.models.entity.VerificationToken;
 import com.machines.machines_api.repositories.TokenRepository;
+import com.machines.machines_api.repositories.VerificationTokenRepository;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.TokenService;
 import jakarta.servlet.http.Cookie;
@@ -32,6 +34,7 @@ public class TokenServiceImpl implements TokenService {
     public final static String AUTH_COOKIE_KEY_JWT = "COOL_SCHOOL_SESSION_JWT";
     public final static String AUTH_COOKIE_KEY_REFRESH = "COOL_SCHOOL_SESSION_REFRESH";
     private final TokenRepository tokenRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
     @Value("${spring.security.jwt.refresh-token.expiration}")
@@ -152,4 +155,18 @@ public class TokenServiceImpl implements TokenService {
         cookieConsumer.accept(jwtCookie);
         cookieConsumer.accept(refreshCookie);
     }
+
+    @Override
+    @Transactional
+    public void createVerificationToken(User user, String token) {
+        clearVerificationTokensByUser(user);
+        VerificationToken myToken = new VerificationToken(token, user);
+        verificationTokenRepository.save(myToken);
+    }
+
+    @Override
+    public void clearVerificationTokensByUser(User user) {
+        verificationTokenRepository.deleteAllByUser(user);
+    }
+
 }

@@ -8,7 +8,6 @@ import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
-import com.machines.machines_api.models.dto.request.CompleteOAuthRequest;
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.models.entity.VerificationToken;
 import com.machines.machines_api.repositories.UserRepository;
@@ -54,9 +53,6 @@ public class AuthenticationController {
 
     private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
-    private final UserRepository userRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
-    private final MessageSource messageSource;
     private final FrontendConfig frontendConfig;
 
     @Value("${server.backend.baseUrl}")
@@ -66,28 +62,17 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         AuthenticationResponse authenticationResponse = authenticationService.register(request);
-        sendVerificationEmail(modelMapper.map(authenticationResponse.getUser(), User.class));
+
+        User user = modelMapper.map(authenticationResponse.getUser(), User.class);
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, appBaseUrl));
+
         return ResponseEntity.ok(authenticationResponse);
     }
 
     //Endpoint for email confirmation during registration
     @GetMapping("/registrationConfirm")
     public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token, HttpServletResponse httpServletResponse) throws IOException {
-
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-        if (verificationToken == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token expired!");
-        }
-        verificationToken.setCreatedAt(LocalDateTime.now());
-
-        User user = verificationToken.getUser();
-        Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token expired!");
-        }
-
-        user.setEnabled(true);
-        userRepository.save(user);
+        authenticationService.confirmRegistration(token);
         httpServletResponse.sendRedirect(frontendConfig.getLoginUrl());
         return ResponseEntity.ok("User registration confirmed successfully!");
     }
@@ -95,26 +80,7 @@ public class AuthenticationController {
     @RateLimited
     @PostMapping("/authenticate") // login
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException(messageSource));
-
-        if (!user.isEnabled()) {
-            throw new EmailNotVerified(messageSource);
-        }
-
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(request);
-        authenticationService.attachAuthCookies(authenticationResponse, servletResponse::addCookie);
-
-        return ResponseEntity.ok(authenticationResponse);
-    }
-
-    @RateLimited
-    @PutMapping("/complete-oauth")
-    // After registering with Google we need more information about the user, described in CompleteOAuthRequest
-    public ResponseEntity<AuthenticationResponse> completeOAuth(@RequestBody CompleteOAuthRequest request, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-        PublicUserDTO currentLoggedUser = (PublicUserDTO) servletRequest.getAttribute(JwtAuthenticationFilter.userKey);
-
-        AuthenticationResponse authenticationResponse = authenticationService.completeOAuth2(request, currentLoggedUser);
         authenticationService.attachAuthCookies(authenticationResponse, servletResponse::addCookie);
 
         return ResponseEntity.ok(authenticationResponse);
@@ -140,14 +106,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationResponse);
     }
 
-    private void sendVerificationEmail(User user) {
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, appBaseUrl));
-    }
-
     @RateLimited
     @PostMapping("/forgot-password") // Sends link to email so the user can change their password
     public ResponseEntity<String> forgotPassword(@RequestParam("email") String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(messageSource));
+        User user = authenticationService.forgotPassword(email);
         eventPublisher.publishEvent(new OnPasswordResetRequestEvent(user, appBaseUrl));
         return ResponseEntity.ok("Password reset link sent to your email!");
     }

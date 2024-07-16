@@ -2,6 +2,7 @@ package com.machines.machines_api.services.impl.security;
 
 import com.machines.machines_api.config.FrontendConfig;
 import com.machines.machines_api.models.entity.User;
+import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.services.UserService;
 import com.machines.machines_api.services.impl.security.events.OnPasswordResetRequestEvent;
 import lombok.RequiredArgsConstructor;
@@ -23,23 +24,24 @@ public class PasswordResetListener implements ApplicationListener<OnPasswordRese
 
     private final JavaMailSender mailSender;
     private final FrontendConfig frontendConfig;
-    private final UserService service;
+    private final TokenService tokenService;
 
     /**
      * Sends a password reset email upon receiving the password reset request event.
      */
     @Override
+    @Async
     public void onApplicationEvent(@NotNull OnPasswordResetRequestEvent event) {
         sendPasswordResetEmail(event);
     }
 
-    @Async
-    private void sendPasswordResetEmail(OnPasswordResetRequestEvent event) {
+    protected void sendPasswordResetEmail(OnPasswordResetRequestEvent event) {
         User user = event.getUser();
 
         // Generate a password reset token and create a verification token for the user
         String token = generateResetToken(user);
-        service.createVerificationToken(user, token);
+        tokenService.createVerificationToken(user, token);
+
         String recipientAddress = user.getEmail();
         String subject = "Password Reset Request";
         String message = getEmailMessage(token, user);

@@ -1,13 +1,15 @@
 package com.machines.machines_api.services.impl.security;
 
 import com.machines.machines_api.enums.TokenType;
+import com.machines.machines_api.exceptions.email.EmailNotVerified;
+import com.machines.machines_api.exceptions.token.ExpiredTokenException;
 import com.machines.machines_api.exceptions.token.InvalidTokenException;
 import com.machines.machines_api.exceptions.user.UserLoginException;
+import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
-import com.machines.machines_api.models.dto.request.CompleteOAuthRequest;
 import com.machines.machines_api.models.entity.Token;
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.models.entity.VerificationToken;
@@ -17,18 +19,23 @@ import com.machines.machines_api.services.AuthenticationService;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.services.UserService;
+import com.machines.machines_api.services.impl.security.events.OnPasswordResetRequestEvent;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -57,17 +64,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return tokenService.generateAuthResponse(user);
     }
 
-    /**
-     * Completes the OAuth2 authentication process for the provided user and generates an authentication response.
-     * It updates the user's information with the data obtained from the OAuth2 provider.
-     */
-    @Override
-    public AuthenticationResponse completeOAuth2(CompleteOAuthRequest request, PublicUserDTO currentLoggedUser) {
-        User updatedUser = userService.updateOAuth2UserWithFullData(request, currentLoggedUser.getId());
-
-        return tokenService.generateAuthResponse(updatedUser);
-    }
-
     // Login with correct email and password
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -78,6 +74,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             request.getPassword()
                     )
             );
+        } catch (DisabledException exception) {
+            throw new EmailNotVerified(messageSource);
         } catch (AuthenticationException exception) {
             throw new UserLoginException(messageSource);
         }
@@ -213,13 +211,51 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     public void resetPassword(String token, String newPassword) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            throw new InvalidTokenException(messageSource);
+        }
+
+
         User user = verificationToken.getUser();
         if (user == null) {
             throw new InvalidTokenException(messageSource);
         }
+
+        verificationToken.setCreatedAt(LocalDateTime.now());
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        userRepository.save(user);
+        verificationTokenRepository.delete(verificationToken);
+    }
+
+    @Override
+    public void confirmRegistration(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            throw new ExpiredTokenException(messageSource);
+        }
+
         verificationToken.setCreatedAt(LocalDateTime.now());
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            throw new ExpiredTokenException(messageSource);
+        }
+
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+
         userRepository.save(user);
+        verificationTokenRepository.delete(verificationToken);
+    }
+
+    @Override
+    public User forgotPassword(String email) {
+        User user = userService.findByEmail(email);
+        if (!user.isEnabled()) {
+            throw new EmailNotVerified(messageSource);
+        }
+
+        return user;
     }
 }

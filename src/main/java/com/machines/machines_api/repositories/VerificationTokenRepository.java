@@ -15,4 +15,5 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
 
     List<VerificationToken> findByUserAndCreatedAtBefore(User user, LocalDateTime thresholdDateTime);
 
+    void deleteAllByUser(User user);
 }

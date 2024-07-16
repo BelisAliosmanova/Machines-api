@@ -1,4 +1,4 @@
-package com.machines.machines_api;
+package com.machines.machines_api.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

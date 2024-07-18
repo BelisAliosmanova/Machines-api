@@ -20,5 +20,5 @@ public class Subcategory extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Category mainCategory;
+    private Category category;
 }

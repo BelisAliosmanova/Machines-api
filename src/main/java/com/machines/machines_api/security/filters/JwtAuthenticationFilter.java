@@ -1,5 +1,6 @@
 package com.machines.machines_api.security.filters;
 
+import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.repositories.TokenRepository;
 import com.machines.machines_api.services.JwtService;
@@ -65,7 +66,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail = jwtService.extractUsername(jwt);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.findByEmail(userEmail);
+            UserDetails userDetails;
+
+            try {
+                userDetails = userService.findByEmail(userEmail);
+            } catch (UserNotFoundException exception) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             // Check if token is valid and not revoked or expired
             boolean isTokenValid = tokenRepository.findByToken(jwt)

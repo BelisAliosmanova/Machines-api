@@ -1,18 +1,16 @@
 package com.machines.machines_api.models.dto.response;
 
-import com.machines.machines_api.models.dto.common.CategoryDTO;
+import com.machines.machines_api.models.dto.common.SubcategoryDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class CategoryResponseDTO extends CategoryDTO {
+public class SubcategoryResponseDTO extends SubcategoryDTO {
     private UUID id;
-    private List<SubcategoryResponseDTO> subcategories;
+    private UUID categoryId;
 }

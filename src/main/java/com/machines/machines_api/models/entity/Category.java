@@ -1,12 +1,8 @@
 package com.machines.machines_api.models.entity;
 
 import com.machines.machines_api.models.baseEntity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -24,6 +20,6 @@ public class Category extends BaseEntity {
     @NotBlank(message = "The category cannot be blank.")
     private String name;
 
-    @OneToMany(mappedBy = "mainCategory")
+    @OneToMany(mappedBy = "category")
     private List<Subcategory> subcategories;
 }

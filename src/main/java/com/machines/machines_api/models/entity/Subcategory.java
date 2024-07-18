@@ -17,7 +17,7 @@ public class Subcategory extends BaseEntity {
     @Column(nullable = false)
     @NotBlank(message = "The subcategory cannot be blank.")
     private String name;
-    
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category mainCategory;

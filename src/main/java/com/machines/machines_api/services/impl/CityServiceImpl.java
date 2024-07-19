@@ -63,11 +63,12 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityResponseDTO update(UUID id, CityRequestDTO cityRequestDTO) {
-        if (cityRepository.findByNameAndDeletedAtIsNull(cityRequestDTO.getName()).isPresent()) {
+        City city = getEntityById(id);
+        Optional<City> potentialCity = cityRepository.findByNameAndDeletedAtIsNull(cityRequestDTO.getName());
+
+        if (potentialCity.isPresent() && !city.getId().equals(potentialCity.get().getId())) {
             throw new CityCreateException(true);
         }
-
-        City city = getEntityById(id);
 
         if (cityRequestDTO.getRegionId() != null) {
             Region region = regionService.getEntityById(cityRequestDTO.getRegionId());

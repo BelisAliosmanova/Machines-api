@@ -65,11 +65,12 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public RegionResponseDTO update(UUID id, RegionRequestDTO regionRequestDTO) {
-        if (regionRepository.findByNameAndDeletedAtIsNull(regionRequestDTO.getName()).isPresent()) {
+        Region region = getEntityById(id);
+        Optional<Region> potentialRegion = regionRepository.findByNameAndDeletedAtIsNull(regionRequestDTO.getName());
+
+        if (potentialRegion.isPresent() && !region.getId().equals(potentialRegion.get().getId())) {
             throw new RegionCreateException(true);
         }
-
-        Region region = getEntityById(id);
 
         if (regionRequestDTO.getName() != null) {
             region.setName(regionRequestDTO.getName());

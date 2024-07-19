@@ -63,11 +63,12 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public CountryResponseDTO update(UUID id, CountryRequestDTO countryRequestDTO) {
-        if (countryRepository.findByNameAndDeletedAtIsNull(countryRequestDTO.getName()).isPresent()) {
+        Country country = getEntityById(id);
+        Optional<Country> potentialCountry = countryRepository.findByNameAndDeletedAtIsNull(countryRequestDTO.getName());
+
+        if (potentialCountry.isPresent() && !country.getId().equals(potentialCountry.get().getId())) {
             throw new CountryCreateException(true);
         }
-
-        Country country = getEntityById(id);
 
         if (countryRequestDTO.getName() != null) {
             country.setName(countryRequestDTO.getName());

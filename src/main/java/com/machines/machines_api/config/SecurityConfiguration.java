@@ -51,38 +51,8 @@ public class SecurityConfiguration {
                 })
                 // Configure authorization rules for various endpoints
                 .authorizeHttpRequests()
-                .requestMatchers(
-                        "/api/v1/files/upload",
-                        "/api/v1/files/**",
-                        "/api/v1/userCourses/**",
-                        "/api/v1/messages/**",
-                        "/api/v1/auth/**",
-                        "/api/v1/auth/registrationConfirm/**",
-                        "/v2/api-docs",
-                        "/v3/api-docs",
-                        "/v3/api-docs/**",
-                        "/swagger-resources",
-                        "/swagger-resources/**",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui/**",
-                        "/webjars/**",
-                        "/swagger-ui.html",
-                        "/oauth/**",
-                        "/api/v1/countries/**",
-                        "/api/v1/cities/**",
-                        "/api/v1/organisations/**",
-                        "/api/v1/lessons/**",
-                        "/api/v1/groups/**",
-                        "/api/v1/applications/**"
-                )
-                .permitAll()
-//                .requestMatchers(GET, "/api/v1/courses/**").permitAll()
-//                .requestMatchers(POST, "/api/v1/courses/**").hasAnyRole(TEACHER.name(), ADMIN.name())
-//                .requestMatchers(PUT, "/api/v1/courses/**").hasAnyRole(TEACHER.name(), ADMIN.name())
-//                .requestMatchers(DELETE, "/api/v1/courses/**").hasAnyRole(TEACHER.name(), ADMIN.name())
                 .anyRequest()
-                .authenticated()
+                .permitAll()
                 .and()
                 // Configure OAuth2 login
                 .oauth2Login(oauth2 -> {

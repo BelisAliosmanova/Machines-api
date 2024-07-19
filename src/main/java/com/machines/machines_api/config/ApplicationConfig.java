@@ -30,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableAspectJAutoProxy
 @EnableAsync
 public class ApplicationConfig {
-
     private final UserRepository repository;
     private final MessageSource messageSource;
 
@@ -78,5 +77,4 @@ public class ApplicationConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 }

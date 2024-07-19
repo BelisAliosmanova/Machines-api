@@ -1,0 +1,24 @@
+package com.machines.machines_api.models.dto.response;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.machines.machines_api.models.dto.common.CountryDTO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.UUID;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+public class CountryResponseDTO extends CountryDTO {
+    private UUID id;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<RegionResponseDTO> regions;
+
+    public void setRegions(List<RegionResponseDTO> regions) {
+        this.regions = regions.stream().filter(x -> x.getDeletedAt() == null).toList();
+    }
+}

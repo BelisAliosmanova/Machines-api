@@ -10,6 +10,4 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Data
 public class SubcategoryDTO {
     public String name;
-    @JsonInclude(NON_NULL)
-    private LocalDateTime deletedAt;
 }

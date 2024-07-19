@@ -14,6 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +48,8 @@ public class CategoryServiceImpl implements CategoryService {
         // Persist category
         try {
             Category category = categoryRepository.save(modelMapper.map(categoryDTO, Category.class));
+            category.setSubcategories(new ArrayList<>());
+
             return modelMapper.map(category, CategoryResponseDTO.class);
         } catch (RuntimeException exception) {
             throw new CategoryCreateException(messageSource, false);

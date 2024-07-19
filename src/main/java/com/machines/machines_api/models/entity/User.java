@@ -79,6 +79,10 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
+    public boolean isEnabled() {
+        return true;
+    }
+
     @PrePersist
     void prePersist() {
         if (this.provider == null) {

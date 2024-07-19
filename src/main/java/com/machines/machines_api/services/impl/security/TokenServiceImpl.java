@@ -31,8 +31,8 @@ import java.util.function.Consumer;
 public class TokenServiceImpl implements TokenService {
 
     // Constants for authentication cookie keys
-    public final static String AUTH_COOKIE_KEY_JWT = "COOL_SCHOOL_SESSION_JWT";
-    public final static String AUTH_COOKIE_KEY_REFRESH = "COOL_SCHOOL_SESSION_REFRESH";
+    public final static String AUTH_COOKIE_KEY_JWT = "MACHINES_SESSION_JWT";
+    public final static String AUTH_COOKIE_KEY_REFRESH = "MACHINES_SESSION_REFRESH";
     private final TokenRepository tokenRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final JwtService jwtService;

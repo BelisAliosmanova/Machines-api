@@ -59,6 +59,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponseDTO update(UUID id, CategoryRequestDTO categoryDTO) {
         Category existingCategory = getCategoryEntityById(id);
+        Optional<Category> potentialCategory = categoryRepository.findByNameAndDeletedAtIsNull(categoryDTO.getName());
+
+        if (potentialCategory.isPresent() && !existingCategory.getId().equals(potentialCategory.get().getId())) {
+            throw new CategoryCreateException(messageSource, true);
+        }
 
         modelMapper.map(categoryDTO, existingCategory);
         existingCategory.setId(id);

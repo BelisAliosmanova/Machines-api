@@ -67,6 +67,11 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     @Override
     public SubcategoryResponseDTO update(UUID id, SubcategoryRequestDTO subcategoryDTO) {
         Subcategory subcategory = getSubCategoryEntityById(id);
+        Optional<Subcategory> potentialSubcategory = subcategoryRepository.findByNameAndDeletedAtIsNull(subcategoryDTO.getName());
+
+        if (potentialSubcategory.isPresent() && !subcategory.getId().equals(potentialSubcategory.get().getId())) {
+            throw new CategoryCreateException(messageSource, true);
+        }
 
         if (subcategoryDTO.getName() != null) {
             subcategory.setName(subcategoryDTO.getName());

@@ -2,6 +2,8 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.dto.request.SubcategoryRequestDTO;
 import com.machines.machines_api.models.dto.response.SubcategoryResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CategoryAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
 import com.machines.machines_api.services.SubcategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,13 @@ public class SubcategoryController {
     @GetMapping("/all")
     public ResponseEntity<List<SubcategoryResponseDTO>> getAll() {
         return ResponseEntity.ok(subcategoryService.getAll());
+    }
+
+    @GetMapping("/all/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SubcategoryAdminResponseDTO>> getAllAdmin() {
+        List<SubcategoryAdminResponseDTO> categories = subcategoryService.getAllAdmin();
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")

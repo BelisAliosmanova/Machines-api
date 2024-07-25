@@ -17,7 +17,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public class SubcategoryResponseDTO extends SubcategoryDTO {
     private UUID id;
     private UUID categoryId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    @JsonIgnore
     private LocalDateTime deletedAt;
 }

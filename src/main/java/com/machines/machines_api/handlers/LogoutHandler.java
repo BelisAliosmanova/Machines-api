@@ -2,6 +2,7 @@ package com.machines.machines_api.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.machines.machines_api.exceptions.token.InvalidTokenException;
+import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.utils.CookieHelper;
 import com.machines.machines_api.utils.ObjectMapperHelper;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static com.machines.machines_api.services.impl.security.TokenServiceImpl.AUTH_COOKIE_KEY_JWT;
 
 /**
  * LogoutHandler is responsible for handling user logout by invalidating the JWT token and removing associated cookies.
@@ -37,7 +37,7 @@ public class LogoutHandler implements org.springframework.security.web.authentic
             HttpServletResponse response,
             Authentication authentication
     ) {
-        final String jwt = CookieHelper.readCookie(AUTH_COOKIE_KEY_JWT, request.getCookies()).orElse(null);
+        final String jwt = CookieHelper.readCookie(JwtAuthenticationFilter.AUTH_COOKIE_KEY_JWT, request.getCookies()).orElse(null);
 
         // If JWT token is missing or empty, send an error response
         if (jwt == null || jwt.isEmpty()) {

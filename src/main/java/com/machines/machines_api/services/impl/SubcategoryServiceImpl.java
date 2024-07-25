@@ -5,6 +5,7 @@ import com.machines.machines_api.exceptions.category.CategoryNotFoundException;
 import com.machines.machines_api.models.dto.request.SubcategoryRequestDTO;
 import com.machines.machines_api.models.dto.response.CategoryResponseDTO;
 import com.machines.machines_api.models.dto.response.SubcategoryResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
 import com.machines.machines_api.models.entity.Category;
 import com.machines.machines_api.models.entity.Subcategory;
 import com.machines.machines_api.repositories.SubcategoryRepository;
@@ -35,6 +36,12 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     public List<SubcategoryResponseDTO> getAll() {
         List<Subcategory> subcategories = subcategoryRepository.findAllByDeletedAtIsNull();
         return subcategories.stream().map(x -> modelMapper.map(x, SubcategoryResponseDTO.class)).toList();
+    }
+
+    @Override
+    public List<SubcategoryAdminResponseDTO> getAllAdmin() {
+        List<Subcategory> subcategories = subcategoryRepository.findAll();
+        return subcategories.stream().map(x -> modelMapper.map(x, SubcategoryAdminResponseDTO.class)).toList();
     }
 
     @Override

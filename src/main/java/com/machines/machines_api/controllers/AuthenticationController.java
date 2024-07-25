@@ -33,8 +33,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 
-import static com.machines.machines_api.services.impl.security.TokenServiceImpl.AUTH_COOKIE_KEY_JWT;
-import static com.machines.machines_api.services.impl.security.TokenServiceImpl.AUTH_COOKIE_KEY_REFRESH;
+import static com.machines.machines_api.security.filters.JwtAuthenticationFilter.AUTH_COOKIE_KEY_JWT;
+import static com.machines.machines_api.security.filters.JwtAuthenticationFilter.AUTH_COOKIE_KEY_REFRESH;
 
 /**
  * Controller class for handling authentication-related operations.

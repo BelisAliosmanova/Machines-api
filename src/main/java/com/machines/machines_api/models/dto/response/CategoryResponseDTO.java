@@ -14,10 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CategoryResponseDTO extends CategoryDTO {
     private UUID id;
-    private List<SubcategoryResponseDTO> subcategories;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    protected List<SubcategoryResponseDTO> subcategories;
 
     public void setSubcategories(List<SubcategoryResponseDTO> subcategories) {
         this.subcategories = subcategories.stream().filter(x -> x.getDeletedAt() == null).toList();

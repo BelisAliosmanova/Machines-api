@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final MessageSource messageSource;
-    private final VerificationTokenRepository verificationTokenRepository;
 
     /**
      * Creates a new user based on the provided registration request.

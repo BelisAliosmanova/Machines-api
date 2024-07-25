@@ -4,6 +4,7 @@ import com.machines.machines_api.exceptions.category.CategoryCreateException;
 import com.machines.machines_api.exceptions.category.CategoryNotFoundException;
 import com.machines.machines_api.models.dto.request.CategoryRequestDTO;
 import com.machines.machines_api.models.dto.response.CategoryResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CategoryAdminResponseDTO;
 import com.machines.machines_api.models.entity.Category;
 import com.machines.machines_api.repositories.CategoryRepository;
 import com.machines.machines_api.services.CategoryService;
@@ -30,6 +31,12 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryResponseDTO> getAll() {
         List<Category> categories = categoryRepository.findAllByDeletedAtIsNull();
         return categories.stream().map(x -> modelMapper.map(x, CategoryResponseDTO.class)).toList();
+    }
+
+    @Override
+    public List<CategoryAdminResponseDTO> getAllAdmin() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(x -> modelMapper.map(x, CategoryAdminResponseDTO.class)).toList();
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.models.entity.VerificationToken;
 import com.machines.machines_api.repositories.TokenRepository;
 import com.machines.machines_api.repositories.VerificationTokenRepository;
+import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.TokenService;
 import jakarta.servlet.http.Cookie;
@@ -30,9 +31,6 @@ import java.util.function.Consumer;
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    // Constants for authentication cookie keys
-    public final static String AUTH_COOKIE_KEY_JWT = "MACHINES_SESSION_JWT";
-    public final static String AUTH_COOKIE_KEY_REFRESH = "MACHINES_SESSION_REFRESH";
     private final TokenRepository tokenRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final JwtService jwtService;
@@ -91,7 +89,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Cookie createJwtCookie(String jwt) {
-        Cookie jwtCookie = new Cookie(AUTH_COOKIE_KEY_JWT, URLEncoder.encode(jwt, StandardCharsets.UTF_8));
+        Cookie jwtCookie = new Cookie(JwtAuthenticationFilter.AUTH_COOKIE_KEY_JWT, URLEncoder.encode(jwt, StandardCharsets.UTF_8));
         jwtCookie.setPath("/");
 
         // milliseconds to seconds
@@ -105,7 +103,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Cookie createRefreshCookie(String refreshToken) {
-        Cookie refreshCookie = new Cookie(AUTH_COOKIE_KEY_REFRESH, URLEncoder.encode(refreshToken, StandardCharsets.UTF_8));
+        Cookie refreshCookie = new Cookie(JwtAuthenticationFilter.AUTH_COOKIE_KEY_REFRESH, URLEncoder.encode(refreshToken, StandardCharsets.UTF_8));
         refreshCookie.setPath("/");
 
         // milliseconds to seconds

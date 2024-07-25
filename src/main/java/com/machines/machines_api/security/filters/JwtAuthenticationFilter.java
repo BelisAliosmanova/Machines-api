@@ -22,7 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.machines.machines_api.services.impl.security.TokenServiceImpl.AUTH_COOKIE_KEY_JWT;
 
 /**
  * Filter responsible for JWT-based authentication.
@@ -34,7 +33,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
      * Key to retrieve user information from request attribute.
      */
-    public static final String userKey = "user";
+    public static final String USER_KEY = "user";
+    public final static String AUTH_COOKIE_KEY_JWT = "MACHINES_SESSION_JWT";
+    public final static String AUTH_COOKIE_KEY_REFRESH = "MACHINES_SESSION_REFRESH";
+
     private final JwtService jwtService;
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -54,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        request.setAttribute(userKey, null);
+        request.setAttribute(USER_KEY, null);
 
         final String jwt = CookieHelper.readCookie(AUTH_COOKIE_KEY_JWT, request.getCookies()).orElse(null);
 
@@ -97,7 +99,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             // Set user details in request attribute
-            request.setAttribute(userKey, modelMapper.map(userDetails, PublicUserDTO.class));
+            request.setAttribute(USER_KEY, modelMapper.map(userDetails, PublicUserDTO.class));
         }
 
         filterChain.doFilter(request, response);

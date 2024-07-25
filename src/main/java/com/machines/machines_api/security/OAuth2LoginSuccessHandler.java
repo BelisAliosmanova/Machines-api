@@ -23,14 +23,10 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) {
+                                        Authentication authentication) throws IOException {
         // Retrieve the OAuth2 user details from the authentication object
         CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
         oAuth2AuthenticationService.processOAuthPostLogin(oauthUser, response::addCookie);
-
-        try {
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        response.sendRedirect(frontendConfig.getBaseUrl());
     }
 }

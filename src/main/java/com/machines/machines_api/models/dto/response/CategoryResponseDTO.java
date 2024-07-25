@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +15,9 @@ import java.util.UUID;
 public class CategoryResponseDTO extends CategoryDTO {
     private UUID id;
     private List<SubcategoryResponseDTO> subcategories;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public void setSubcategories(List<SubcategoryResponseDTO> subcategories) {
         this.subcategories = subcategories.stream().filter(x -> x.getDeletedAt() == null).toList();

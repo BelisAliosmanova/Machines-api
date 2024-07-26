@@ -1,7 +1,5 @@
 package com.machines.machines_api.exceptions.common;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 
 /**

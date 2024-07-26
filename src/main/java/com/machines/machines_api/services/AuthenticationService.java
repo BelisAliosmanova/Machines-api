@@ -2,7 +2,6 @@ package com.machines.machines_api.services;
 
 import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
-import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
 import com.machines.machines_api.models.entity.User;
 import jakarta.servlet.http.Cookie;

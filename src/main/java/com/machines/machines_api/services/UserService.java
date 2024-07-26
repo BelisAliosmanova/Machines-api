@@ -4,7 +4,6 @@ import com.machines.machines_api.models.dto.auth.AdminUserDTO;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
 import com.machines.machines_api.models.entity.User;
-import com.machines.machines_api.models.entity.VerificationToken;
 import com.machines.machines_api.security.CustomOAuth2User;
 
 import java.util.List;

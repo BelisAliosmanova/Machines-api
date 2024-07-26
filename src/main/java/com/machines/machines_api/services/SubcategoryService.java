@@ -9,9 +9,16 @@ import java.util.UUID;
 
 public interface SubcategoryService {
     List<SubcategoryResponseDTO> getAll();
+
     List<SubcategoryAdminResponseDTO> getAllAdmin();
+
     SubcategoryResponseDTO getById(UUID id);
+
+    SubcategoryAdminResponseDTO getByIdAdmin(UUID id);
+
     SubcategoryResponseDTO create(SubcategoryRequestDTO subcategoryDTO);
+
     SubcategoryResponseDTO update(UUID id, SubcategoryRequestDTO subcategoryDTO);
+
     void delete(UUID id);
 }

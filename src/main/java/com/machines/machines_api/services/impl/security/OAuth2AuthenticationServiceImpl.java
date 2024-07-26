@@ -23,7 +23,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
     private final TokenService tokenService;
 
     @Override
-    public void processOAuthPostLogin(CustomOAuth2User oAuth2User, Consumer<Cookie> addCookieFunc)  {
+    public void processOAuthPostLogin(CustomOAuth2User oAuth2User, Consumer<Cookie> addCookieFunc) {
         // Process OAuth2 user and retrieve associated user entity
         User user = userService.processOAuthUser(oAuth2User);
 

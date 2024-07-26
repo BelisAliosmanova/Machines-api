@@ -2,11 +2,9 @@ package com.machines.machines_api.services.impl.security;
 
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.services.TokenService;
-import com.machines.machines_api.services.UserService;
 import com.machines.machines_api.services.impl.security.events.OnRegistrationCompleteEvent;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;

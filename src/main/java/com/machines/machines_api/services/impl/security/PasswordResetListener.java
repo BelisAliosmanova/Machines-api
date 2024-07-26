@@ -3,7 +3,6 @@ package com.machines.machines_api.services.impl.security;
 import com.machines.machines_api.config.FrontendConfig;
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.services.TokenService;
-import com.machines.machines_api.services.UserService;
 import com.machines.machines_api.services.impl.security.events.OnPasswordResetRequestEvent;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;

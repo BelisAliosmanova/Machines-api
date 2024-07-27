@@ -13,5 +13,4 @@ import java.time.LocalDateTime;
 public class RegionAdminResponseDTO extends RegionResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 }

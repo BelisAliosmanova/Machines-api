@@ -4,6 +4,7 @@ import com.machines.machines_api.exceptions.location.regions.RegionCreateExcepti
 import com.machines.machines_api.exceptions.location.regions.RegionNotFoundException;
 import com.machines.machines_api.models.dto.request.RegionRequestDTO;
 import com.machines.machines_api.models.dto.response.RegionResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.RegionAdminResponseDTO;
 import com.machines.machines_api.models.entity.Country;
 import com.machines.machines_api.models.entity.Region;
 import com.machines.machines_api.repositories.RegionRepository;
@@ -38,8 +39,24 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    public List<RegionAdminResponseDTO> getAllAdmin() {
+        return regionRepository
+                .findAll()
+                .stream()
+                .map(
+                        x -> modelMapper.map(x, RegionAdminResponseDTO.class)
+                )
+                .toList();
+    }
+
+    @Override
     public RegionResponseDTO getById(UUID id) {
         return modelMapper.map(getEntityById(id), RegionResponseDTO.class);
+    }
+
+    @Override
+    public RegionAdminResponseDTO getCountryByIdAdmin(UUID id) {
+        return modelMapper.map(getEntityByIdAdmin(id), RegionAdminResponseDTO.class);
     }
 
     @Override
@@ -65,7 +82,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public RegionResponseDTO update(UUID id, RegionRequestDTO regionRequestDTO) {
-        Region region = getEntityById(id);
+        Region region = getEntityByIdAdmin(id);
         Optional<Region> potentialRegion = regionRepository.findByNameAndDeletedAtIsNull(regionRequestDTO.getName());
 
         if (potentialRegion.isPresent() && !region.getId().equals(potentialRegion.get().getId())) {
@@ -87,14 +104,31 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void delete(UUID id) {
-        Region region = getEntityById(id);
-        region.setDeletedAt(LocalDateTime.now());
+        Region region = getEntityByIdAdmin(id);
+
+        if(region.getDeletedAt() == null){
+            region.setDeletedAt(LocalDateTime.now());
+        } else{
+            region.setDeletedAt(null);
+        }
+
         regionRepository.save(region);
     }
 
     @Override
     public Region getEntityById(UUID id) {
         Optional<Region> region = regionRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (region.isEmpty()) {
+            throw new RegionNotFoundException();
+        }
+
+        return region.get();
+    }
+
+    @Override
+    public Region getEntityByIdAdmin(UUID id) {
+        Optional<Region> region = regionRepository.findById(id);
 
         if (region.isEmpty()) {
             throw new RegionNotFoundException();

@@ -7,6 +7,7 @@ import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
@@ -34,6 +35,12 @@ public class OfferServiceImpl implements OfferService {
     public List<OfferResponseDTO> getAll() {
         List<Offer> offers = offerRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc();
         return offers.stream().map(x -> modelMapper.map(x, OfferResponseDTO.class)).toList();
+    }
+
+    @Override
+    public List<OfferAdminResponseDTO> getAllAdmin() {
+        List<Offer> offers = offerRepository.findAll();
+        return offers.stream().map(x -> modelMapper.map(x, OfferAdminResponseDTO.class)).toList();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.machines.machines_api.services;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.entity.Offer;
 
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.UUID;
 
 public interface OfferService {
     List<OfferResponseDTO> getAll();
+
+    List<OfferAdminResponseDTO> getAllAdmin();
 
     OfferResponseDTO getById(UUID id);
 

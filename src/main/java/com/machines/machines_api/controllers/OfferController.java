@@ -3,6 +3,7 @@ package com.machines.machines_api.controllers;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,13 @@ public class OfferController {
     @GetMapping("/all")
     public ResponseEntity<List<OfferResponseDTO>> getAll() {
         List<OfferResponseDTO> offers = offerService.getAll();
+        return ResponseEntity.ok(offers);
+    }
+
+    @GetMapping("/all/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<OfferAdminResponseDTO>> getAllAdmin() {
+        List<OfferAdminResponseDTO> offers = offerService.getAllAdmin();
         return ResponseEntity.ok(offers);
     }
 

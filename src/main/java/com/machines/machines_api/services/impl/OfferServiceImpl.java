@@ -5,19 +5,15 @@ import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.exceptions.offer.OfferInvalidMainPicException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
-import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,11 +48,10 @@ public class OfferServiceImpl implements OfferService {
             throw new OfferInvalidMainPicException();
         }
 
+        User owner = userService.findById(user.getId());
 
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);
         mapRequestDTOIdsToEntities(offerRequestDTO, offer);
-        User owner = userService.findById(user.getId());
-
         offer.setOwner(owner);
 
         Offer savedOffer = offerRepository.save(offer);
@@ -82,7 +77,16 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void delete(UUID id, PublicUserDTO user) {
+        Offer offer = getEntityById(id);
 
+        if (!user.getRole().equals(Role.ADMIN)) {
+            if (!offer.getOwner().getId().equals(user.getId())) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        offer.delete();
+        offerRepository.save(offer);
     }
 
     @Override

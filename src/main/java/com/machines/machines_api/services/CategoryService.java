@@ -10,10 +10,16 @@ import java.util.UUID;
 
 public interface CategoryService {
     List<CategoryResponseDTO> getAll();
+
     List<CategoryAdminResponseDTO> getAllAdmin();
+
     CategoryResponseDTO getCategoryById(UUID id);
+
     CategoryResponseDTO create(CategoryRequestDTO categoryDTO);
+
     CategoryResponseDTO update(UUID id, CategoryRequestDTO categoryDTO);
+
     void delete(UUID id);
+
     Category getCategoryEntityById(UUID id);
 }

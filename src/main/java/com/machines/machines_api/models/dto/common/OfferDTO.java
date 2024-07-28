@@ -1,0 +1,39 @@
+package com.machines.machines_api.models.dto.common;
+
+import com.machines.machines_api.enums.OfferSaleType;
+import com.machines.machines_api.enums.OfferState;
+import com.machines.machines_api.enums.OfferType;
+import lombok.Data;
+
+@Data
+public class OfferDTO {
+    private String title;
+    private String phoneNumber;
+    private String description;
+    private String websiteURL;
+    private double price;
+    private boolean isBulgarian;
+    private boolean autoUpdate = false;
+    private OfferState offerState;
+    private OfferSaleType offerSaleType;
+    private OfferType offerType = OfferType.BASIC;
+
+    // *********************************
+    // **   EXTRA INFO | EXTRA INFO   **
+    // *********************************
+    private int manufactureYear;
+    private String model;
+    private double powerSupplyVoltage;
+    private String fuelType;
+    private double horsePower;
+    private String consumption;
+    private double outputPower;
+    private String productivity;
+    private double capacity;
+    private double minRevolutions;
+    private double nominalRevolutions;
+    private double maxRevolutions;
+    private String dimensions;
+    private double ownWeight;
+    private String workMoves;
+}

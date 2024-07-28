@@ -36,8 +36,13 @@ public class OfferController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('user:create')")
-    public ResponseEntity<OfferResponseDTO> create(@Valid @RequestBody OfferRequestDTO offerRequestDTO) {
-        OfferResponseDTO offer = offerService.create(offerRequestDTO);
+    public ResponseEntity<OfferResponseDTO> create(
+            @Valid @RequestBody OfferRequestDTO offerRequestDTO,
+            HttpServletRequest httpServletRequest
+    ) {
+        PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
+        OfferResponseDTO offer = offerService.create(offerRequestDTO, user);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(offer);
     }
 

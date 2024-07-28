@@ -12,6 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 public class OfferRequestDTO extends OfferDTO {
+    private UUID ownerId;
     private UUID cityId;
     private UUID subcategoryId;
     private UUID mainPictureId;

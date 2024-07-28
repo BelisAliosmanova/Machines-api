@@ -72,6 +72,10 @@ public class Offer extends BaseEntity {
     @ManyToMany
     private Set<File> pictures;
 
+    @NotNull(message = "Създателят на обявата е задължителен")
+    @ManyToOne
+    private User owner;
+
     // *********************************
     // **   EXTRA INFO | EXTRA INFO   **
     // *********************************

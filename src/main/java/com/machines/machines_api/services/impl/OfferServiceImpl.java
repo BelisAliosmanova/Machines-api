@@ -1,15 +1,13 @@
 package com.machines.machines_api.services.impl;
 
+import com.machines.machines_api.exceptions.offer.OfferInvalidMainPicException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
-import com.machines.machines_api.services.CityService;
-import com.machines.machines_api.services.FileService;
-import com.machines.machines_api.services.OfferService;
-import com.machines.machines_api.services.SubcategoryService;
+import com.machines.machines_api.services.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class OfferServiceImpl implements OfferService {
+    private final UserService userService;
     private final FileService fileService;
     private final CityService cityService;
     private final SubcategoryService subcategoryService;
@@ -41,9 +40,13 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferResponseDTO create(OfferRequestDTO offerRequestDTO) {
-        // TODO: verify that main pic is in the pic list
+    public OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
+        boolean isValidMainPicture = offerRequestDTO.getPictureIds().contains(offerRequestDTO.getMainPictureId());
+        if (!isValidMainPicture) {
+            throw new OfferInvalidMainPicException();
+        }
 
+        User owner = userService.findById(user.getId());
         Subcategory subcategory = subcategoryService.getSubCategoryEntityById(offerRequestDTO.getSubcategoryId());
         City city = cityService.getEntityById(offerRequestDTO.getCityId());
         File mainPicture = fileService.getEntityById(offerRequestDTO.getMainPictureId());
@@ -54,6 +57,7 @@ public class OfferServiceImpl implements OfferService {
         offer.setCity(city);
         offer.setMainPicture(mainPicture);
         offer.setPictures(pictures);
+        offer.setOwner(owner);
         offer.setId(null);
 
         Offer savedOffer = offerRepository.save(offer);

@@ -1,5 +1,6 @@
 package com.machines.machines_api.models.dto.response;
 
+import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferDTO;
 import com.machines.machines_api.models.entity.File;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class OfferResponseDTO extends OfferDTO {
+    private PublicUserDTO owner;
     private CityResponseDTO city;
     private SubcategoryResponseDTO subcategory;
     private File mainPicture;

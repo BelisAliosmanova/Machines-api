@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface OfferService {
     List<OfferResponseDTO> getAll();
     OfferResponseDTO getById(UUID id);
-    OfferResponseDTO create(OfferRequestDTO offerRequestDTO);
+    OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user);
     OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user);
     void delete(UUID id, PublicUserDTO user);
     Offer getEntityById(UUID id);

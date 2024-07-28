@@ -3,7 +3,6 @@ package com.machines.machines_api.services.impl;
 import com.machines.machines_api.exceptions.category.CategoryCreateException;
 import com.machines.machines_api.exceptions.category.CategoryNotFoundException;
 import com.machines.machines_api.models.dto.request.SubcategoryRequestDTO;
-import com.machines.machines_api.models.dto.response.CategoryResponseDTO;
 import com.machines.machines_api.models.dto.response.SubcategoryResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
 import com.machines.machines_api.models.entity.Category;
@@ -11,13 +10,10 @@ import com.machines.machines_api.models.entity.Subcategory;
 import com.machines.machines_api.repositories.SubcategoryRepository;
 import com.machines.machines_api.services.CategoryService;
 import com.machines.machines_api.services.SubcategoryService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -100,6 +96,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         subcategoryRepository.save(subcategory);
     }
 
+    @Override
     public Subcategory getSubCategoryEntityById(UUID id) {
         Optional<Subcategory> subcategory = subcategoryRepository.findByIdAndDeletedAtIsNull(id);
 

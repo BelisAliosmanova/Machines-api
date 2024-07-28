@@ -35,14 +35,14 @@ public class OfferController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('user:create')")
     public ResponseEntity<OfferResponseDTO> create(@Valid @RequestBody OfferRequestDTO offerRequestDTO) {
         OfferResponseDTO offer = offerService.create(offerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(offer);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('user:update')")
     public ResponseEntity<OfferResponseDTO> update(
             @PathVariable UUID id,
             @Valid @RequestBody OfferRequestDTO offerRequestDTO,
@@ -55,7 +55,7 @@ public class OfferController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('user:delete')")
     public ResponseEntity<Void> delete(@PathVariable UUID id, HttpServletRequest httpServletRequest) {
         PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
         offerService.delete(id, user);

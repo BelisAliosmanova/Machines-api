@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OfferRepository extends JpaRepository<Offer, UUID> {
-    List<Offer> findAllByDeletedAtIsNullOrderByCreatedAt();
+    List<Offer> findAllByDeletedAtIsNullOrderByCreatedAtDesc();
     Optional<Offer> findByIdAndDeletedAtIsNull(UUID id);
     Optional<Offer> findByTitleAndDeletedAtIsNull(String title);
 }

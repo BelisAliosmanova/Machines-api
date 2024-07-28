@@ -12,9 +12,8 @@ import java.util.Map;
  * downloads, and processing based on their types.
  */
 public enum FileType {
-    PDF(".pdf", MediaType.APPLICATION_PDF),
-    JPEG(".jpg", MediaType.IMAGE_JPEG),
-    JPG(".jpeg", MediaType.IMAGE_JPEG),
+    JPEG(".jpeg", MediaType.IMAGE_JPEG),
+    JPG(".jpg", MediaType.IMAGE_JPEG),
     PNG(".png", MediaType.IMAGE_PNG);
 
     private static final Map<String, MediaType> FILE_TYPE_MEDIA_TYPE_MAP = new HashMap<>();

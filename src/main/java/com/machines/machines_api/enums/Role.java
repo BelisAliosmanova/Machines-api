@@ -38,14 +38,6 @@ public enum Role {
                     USER_CREATE,
                     USER_DELETE
             )
-    ),
-    TRAINER(
-            Set.of(
-                    USER_READ,
-                    USER_UPDATE,
-                    USER_CREATE,
-                    USER_DELETE
-            )
     );
 
     private final Set<Permission> permissions;

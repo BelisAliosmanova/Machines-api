@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         User userToUpdate = findById(id);
 
         if (userToUpdate.getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException(messageSource);
+            throw new AccessDeniedException();
         }
 
         modelMapper.map(userDTO, userToUpdate);
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
         User user = findById(id);
 
         if (user.getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException(messageSource);
+            throw new AccessDeniedException();
         }
 
         user.setDeletedAt(LocalDateTime.now());

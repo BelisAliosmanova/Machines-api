@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
-                    httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper, messageSource));
+                    httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(new JwtAuthenticationEntryPoint(objectMapper));
                 })
                 // Configure authorization rules for various endpoints
                 .authorizeHttpRequests()

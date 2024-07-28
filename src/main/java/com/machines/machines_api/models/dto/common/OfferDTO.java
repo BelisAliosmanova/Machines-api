@@ -4,11 +4,13 @@ import com.machines.machines_api.enums.OfferSaleType;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.enums.OfferType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class OfferDTO {
+public class OfferDTO extends BaseDTO {
     private UUID id;
     private String title;
     private String phoneNumber;

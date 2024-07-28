@@ -1,17 +1,23 @@
 package com.machines.machines_api.services.impl;
 
+import com.machines.machines_api.enums.Role;
+import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.exceptions.offer.OfferInvalidMainPicException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
+import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +25,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final FileService fileService;
@@ -46,19 +52,12 @@ public class OfferServiceImpl implements OfferService {
             throw new OfferInvalidMainPicException();
         }
 
-        User owner = userService.findById(user.getId());
-        Subcategory subcategory = subcategoryService.getSubCategoryEntityById(offerRequestDTO.getSubcategoryId());
-        City city = cityService.getEntityById(offerRequestDTO.getCityId());
-        File mainPicture = fileService.getEntityById(offerRequestDTO.getMainPictureId());
-        Set<File> pictures = offerRequestDTO.getPictureIds().stream().map(fileService::getEntityById).collect(Collectors.toSet());
 
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);
-        offer.setSubcategory(subcategory);
-        offer.setCity(city);
-        offer.setMainPicture(mainPicture);
-        offer.setPictures(pictures);
+        mapRequestDTOIdsToEntities(offerRequestDTO, offer);
+        User owner = userService.findById(user.getId());
+
         offer.setOwner(owner);
-        offer.setId(null);
 
         Offer savedOffer = offerRepository.save(offer);
         return modelMapper.map(savedOffer, OfferResponseDTO.class);
@@ -66,7 +65,19 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
-        return null;
+        Offer offer = getEntityById(id);
+
+        if (!user.getRole().equals(Role.ADMIN)) {
+            if (!offer.getOwner().getId().equals(user.getId())) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        modelMapper.map(offerRequestDTO, offer);
+        mapRequestDTOIdsToEntities(offerRequestDTO, offer);
+
+        Offer updatedOffer = offerRepository.save(offer);
+        return modelMapper.map(updatedOffer, OfferResponseDTO.class);
     }
 
     @Override
@@ -83,5 +94,27 @@ public class OfferServiceImpl implements OfferService {
         }
 
         return offer.get();
+    }
+
+    public void mapRequestDTOIdsToEntities(OfferRequestDTO offerRequestDTO, Offer offer) {
+        if (offerRequestDTO.getSubcategoryId() != null) {
+            Subcategory subcategory = subcategoryService.getSubCategoryEntityById(offerRequestDTO.getSubcategoryId());
+            offer.setSubcategory(subcategory);
+        }
+
+        if (offerRequestDTO.getCityId() != null) {
+            City city = cityService.getEntityById(offerRequestDTO.getCityId());
+            offer.setCity(city);
+        }
+
+        if (offerRequestDTO.getMainPictureId() != null) {
+            File mainPicture = fileService.getEntityById(offerRequestDTO.getMainPictureId());
+            offer.setMainPicture(mainPicture);
+        }
+
+        if (offerRequestDTO.getPictureIds() != null) {
+            Set<File> pictures = offerRequestDTO.getPictureIds().stream().map(fileService::getEntityById).collect(Collectors.toSet());
+            offer.setPictures(pictures);
+        }
     }
 }

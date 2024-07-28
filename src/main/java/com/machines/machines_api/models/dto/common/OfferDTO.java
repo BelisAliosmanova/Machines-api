@@ -5,8 +5,11 @@ import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.enums.OfferType;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class OfferDTO {
+    private UUID id;
     private String title;
     private String phoneNumber;
     private String description;

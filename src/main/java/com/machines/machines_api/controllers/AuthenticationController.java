@@ -1,21 +1,13 @@
 package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.config.FrontendConfig;
-import com.machines.machines_api.exceptions.email.EmailNotVerified;
-import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.interfaces.RateLimited;
 import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
-import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
 import com.machines.machines_api.models.entity.User;
-import com.machines.machines_api.models.entity.VerificationToken;
-import com.machines.machines_api.repositories.UserRepository;
-import com.machines.machines_api.repositories.VerificationTokenRepository;
-import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.AuthenticationService;
 import com.machines.machines_api.services.impl.security.events.OnPasswordResetRequestEvent;
-import com.machines.machines_api.services.impl.security.events.OnRegistrationCompleteEvent;
 import com.machines.machines_api.utils.CookieHelper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,14 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import static com.machines.machines_api.security.filters.JwtAuthenticationFilter.AUTH_COOKIE_KEY_JWT;
 import static com.machines.machines_api.security.filters.JwtAuthenticationFilter.AUTH_COOKIE_KEY_REFRESH;
@@ -50,9 +38,7 @@ import static com.machines.machines_api.security.filters.JwtAuthenticationFilter
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
     private final ApplicationEventPublisher eventPublisher;
-    private final ModelMapper modelMapper;
     private final FrontendConfig frontendConfig;
 
     @Value("${server.backend.baseUrl}")

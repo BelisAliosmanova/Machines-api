@@ -9,9 +9,14 @@ import java.util.UUID;
 
 public interface RegionService {
     List<RegionResponseDTO> getAll();
+
     RegionResponseDTO getById(UUID id);
+
     RegionResponseDTO create(RegionRequestDTO regionRequestDTO);
+
     RegionResponseDTO update(UUID id, RegionRequestDTO regionRequestDTO);
+
     void delete(UUID id);
+
     Region getEntityById(UUID id);
 }

@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface SubcategoryRepository extends JpaRepository<Subcategory, UUID> {
     List<Subcategory> findAllByDeletedAtIsNull();
+
     Optional<Subcategory> findByIdAndDeletedAtIsNull(UUID id);
+
     Optional<Subcategory> findByNameAndDeletedAtIsNull(String name);
 }

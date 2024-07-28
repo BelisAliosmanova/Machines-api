@@ -11,6 +11,8 @@ import java.util.UUID;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     List<Category> findAllByDeletedAtIsNull();
+
     Optional<Category> findByIdAndDeletedAtIsNull(UUID id);
+
     Optional<Category> findByNameAndDeletedAtIsNull(String name);
 }

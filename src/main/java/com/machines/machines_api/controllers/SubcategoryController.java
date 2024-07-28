@@ -2,7 +2,6 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.dto.request.SubcategoryRequestDTO;
 import com.machines.machines_api.models.dto.response.SubcategoryResponseDTO;
-import com.machines.machines_api.models.dto.response.admin.CategoryAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
 import com.machines.machines_api.services.SubcategoryService;
 import jakarta.validation.Valid;

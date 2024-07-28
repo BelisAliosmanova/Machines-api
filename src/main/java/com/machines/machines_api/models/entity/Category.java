@@ -1,7 +1,10 @@
 package com.machines.machines_api.models.entity;
 
 import com.machines.machines_api.models.baseEntity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 

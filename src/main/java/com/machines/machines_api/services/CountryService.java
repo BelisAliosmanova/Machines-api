@@ -2,6 +2,7 @@ package com.machines.machines_api.services;
 
 import com.machines.machines_api.models.dto.request.CountryRequestDTO;
 import com.machines.machines_api.models.dto.response.CountryResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CountryAdminResponseDTO;
 import com.machines.machines_api.models.entity.Country;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public interface CountryService {
 
     CountryResponseDTO getById(UUID id);
 
+    List<CountryAdminResponseDTO> getAllAdmin(boolean includeRegions);
+
+    CountryAdminResponseDTO getCountryByIdAdmin(UUID id);
+
     CountryResponseDTO create(CountryRequestDTO countryRequestDTO);
 
     CountryResponseDTO update(UUID id, CountryRequestDTO countryRequestDTO);
@@ -19,4 +24,6 @@ public interface CountryService {
     void delete(UUID id);
 
     Country getEntityById(UUID id);
+
+    Country getEntityByIdAdmin(UUID id);
 }

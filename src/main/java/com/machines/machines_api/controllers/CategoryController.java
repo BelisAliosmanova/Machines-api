@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class CategoryController {
     }
 
     @GetMapping("/all/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CategoryAdminResponseDTO>> getAllAdmin() {
         List<CategoryAdminResponseDTO> categories = categoryService.getAllAdmin();
         return ResponseEntity.ok(categories);
@@ -39,22 +38,28 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
+    @GetMapping("/{id}/admin")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryAdminResponseDTO> getByIdAdmin(@PathVariable UUID id) {
+        return ResponseEntity.ok(categoryService.getCategoryByIdAdmin(id));
+    }
+
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
         CategoryResponseDTO category = categoryService.create(categoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryResponseDTO> update(@PathVariable UUID id, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
         CategoryResponseDTO category = categoryService.update(id, categoryRequestDTO);
         return ResponseEntity.ok(category);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         categoryService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

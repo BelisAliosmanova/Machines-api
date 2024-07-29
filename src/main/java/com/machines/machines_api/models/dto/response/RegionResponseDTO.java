@@ -17,8 +17,6 @@ public class RegionResponseDTO extends RegionDTO {
     private UUID id;
     private UUID countryId;
     private List<CityResponseDTO> cities;
-
-    @JsonIgnore
     private LocalDateTime deletedAt;
 
     public void setCities(List<CityResponseDTO> cities) {

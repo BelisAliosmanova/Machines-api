@@ -45,6 +45,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryAdminResponseDTO getCategoryByIdAdmin(UUID id) {
+        Category category = getCategoryEntityByIdAdmin(id);
+        return modelMapper.map(category, CategoryAdminResponseDTO.class);
+    }
+
+    @Override
     public CategoryResponseDTO create(CategoryRequestDTO categoryDTO) {
         // Make sure category is unique
         if (categoryRepository.findByNameAndDeletedAtIsNull(categoryDTO.getName()).isPresent()) {
@@ -64,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDTO update(UUID id, CategoryRequestDTO categoryDTO) {
-        Category existingCategory = getCategoryEntityById(id);
+        Category existingCategory = getCategoryEntityByIdAdmin(id);
         Optional<Category> potentialCategory = categoryRepository.findByNameAndDeletedAtIsNull(categoryDTO.getName());
 
         if (potentialCategory.isPresent() && !existingCategory.getId().equals(potentialCategory.get().getId())) {
@@ -80,13 +86,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(UUID id) {
-        Category existingCategory = getCategoryEntityById(id);
-        existingCategory.setDeletedAt(LocalDateTime.now());
+        Category existingCategory = getCategoryEntityByIdAdmin(id);
+
+        if (existingCategory.getDeletedAt() == null) {
+            existingCategory.setDeletedAt(LocalDateTime.now());
+        } else {
+            existingCategory.setDeletedAt(null);
+        }
+
         categoryRepository.save(existingCategory);
     }
 
     public Category getCategoryEntityById(UUID id) {
         Optional<Category> category = categoryRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (category.isEmpty()) {
+            throw new CategoryNotFoundException(messageSource);
+        }
+
+        return category.get();
+    }
+
+    public Category getCategoryEntityByIdAdmin(UUID id) {
+        Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isEmpty()) {
             throw new CategoryNotFoundException(messageSource);

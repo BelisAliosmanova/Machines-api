@@ -15,6 +15,8 @@ public interface SubcategoryService {
 
     SubcategoryResponseDTO getById(UUID id);
 
+    SubcategoryAdminResponseDTO getByIdAdmin(UUID id);
+
     SubcategoryResponseDTO create(SubcategoryRequestDTO subcategoryDTO);
 
     SubcategoryResponseDTO update(UUID id, SubcategoryRequestDTO subcategoryDTO);

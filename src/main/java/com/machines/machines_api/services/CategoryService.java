@@ -15,6 +15,8 @@ public interface CategoryService {
 
     CategoryResponseDTO getCategoryById(UUID id);
 
+    CategoryAdminResponseDTO getCategoryByIdAdmin(UUID id);
+
     CategoryResponseDTO create(CategoryRequestDTO categoryDTO);
 
     CategoryResponseDTO update(UUID id, CategoryRequestDTO categoryDTO);

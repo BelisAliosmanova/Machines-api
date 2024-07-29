@@ -4,6 +4,7 @@ import com.machines.machines_api.exceptions.location.countries.CountryCreateExce
 import com.machines.machines_api.exceptions.location.countries.CountryNotFoundException;
 import com.machines.machines_api.models.dto.request.CountryRequestDTO;
 import com.machines.machines_api.models.dto.response.CountryResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CountryAdminResponseDTO;
 import com.machines.machines_api.models.entity.Country;
 import com.machines.machines_api.repositories.CountryRepository;
 import com.machines.machines_api.services.CountryService;
@@ -39,8 +40,29 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    public List<CountryAdminResponseDTO> getAllAdmin(boolean includeRegions) {
+        return countryRepository
+                .findAll()
+                .stream()
+                .map(x -> {
+                    if (!includeRegions) {
+                        x.setRegions(null);
+                    }
+
+                    return modelMapper.map(x, CountryAdminResponseDTO.class);
+                })
+                .toList();
+    }
+
+
+    @Override
     public CountryResponseDTO getById(UUID id) {
         return modelMapper.map(getEntityById(id), CountryResponseDTO.class);
+    }
+
+    @Override
+    public CountryAdminResponseDTO getCountryByIdAdmin(UUID id) {
+        return modelMapper.map(getEntityByIdAdmin(id), CountryAdminResponseDTO.class);
     }
 
     @Override
@@ -63,7 +85,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public CountryResponseDTO update(UUID id, CountryRequestDTO countryRequestDTO) {
-        Country country = getEntityById(id);
+        Country country = getEntityByIdAdmin(id);
         Optional<Country> potentialCountry = countryRepository.findByNameAndDeletedAtIsNull(countryRequestDTO.getName());
 
         if (potentialCountry.isPresent() && !country.getId().equals(potentialCountry.get().getId())) {
@@ -80,14 +102,31 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void delete(UUID id) {
-        Country country = getEntityById(id);
-        country.setDeletedAt(LocalDateTime.now());
+        Country country = getEntityByIdAdmin(id);
+
+        if(country.getDeletedAt() == null){
+            country.setDeletedAt(LocalDateTime.now());
+        } else {
+            country.setDeletedAt(null);
+        }
+
         countryRepository.save(country);
     }
 
     @Override
     public Country getEntityById(UUID id) {
         Optional<Country> country = countryRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (country.isEmpty()) {
+            throw new CountryNotFoundException();
+        }
+
+        return country.get();
+    }
+
+    @Override
+    public Country getEntityByIdAdmin(UUID id) {
+        Optional<Country> country = countryRepository.findById(id);
 
         if (country.isEmpty()) {
             throw new CountryNotFoundException();

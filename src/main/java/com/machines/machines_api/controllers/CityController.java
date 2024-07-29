@@ -2,6 +2,8 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.dto.request.CityRequestDTO;
 import com.machines.machines_api.models.dto.response.CityResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CategoryAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CityAdminResponseDTO;
 import com.machines.machines_api.services.CityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,22 @@ public class CityController {
         return ResponseEntity.ok(cityService.getAll());
     }
 
+    @GetMapping("/all/admin")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<CityAdminResponseDTO>> getAllAdmin() {
+        List<CityAdminResponseDTO> cities = cityService.getAllAdmin();
+        return ResponseEntity.ok(cities);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<CityResponseDTO> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(cityService.getById(id));
+    }
+
+    @GetMapping("/{id}/admin")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CityAdminResponseDTO> getByIdAdmin(@PathVariable UUID id) {
+        return ResponseEntity.ok(cityService.getCategoryByIdAdmin(id));
     }
 
     @PostMapping("/create")

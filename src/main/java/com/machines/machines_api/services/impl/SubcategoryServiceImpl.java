@@ -47,6 +47,12 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     }
 
     @Override
+    public SubcategoryAdminResponseDTO getByIdAdmin(UUID id) {
+        Subcategory subcategory = getSubCategoryEntityByIdAdmin(id);
+        return modelMapper.map(subcategory, SubcategoryAdminResponseDTO.class);
+    }
+
+    @Override
     public SubcategoryResponseDTO create(SubcategoryRequestDTO subcategoryDTO) {
         // Make sure subcategory is unique
         if (subcategoryRepository.findByNameAndDeletedAtIsNull(subcategoryDTO.getName()).isPresent()) {
@@ -69,7 +75,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
     @Override
     public SubcategoryResponseDTO update(UUID id, SubcategoryRequestDTO subcategoryDTO) {
-        Subcategory subcategory = getSubCategoryEntityById(id);
+        Subcategory subcategory = getSubCategoryEntityByIdAdmin(id);
         Optional<Subcategory> potentialSubcategory = subcategoryRepository.findByNameAndDeletedAtIsNull(subcategoryDTO.getName());
 
         if (potentialSubcategory.isPresent() && !subcategory.getId().equals(potentialSubcategory.get().getId())) {
@@ -91,14 +97,30 @@ public class SubcategoryServiceImpl implements SubcategoryService {
 
     @Override
     public void delete(UUID id) {
-        Subcategory subcategory = getSubCategoryEntityById(id);
-        subcategory.setDeletedAt(LocalDateTime.now());
+        Subcategory subcategory = getSubCategoryEntityByIdAdmin(id);
+
+        if (subcategory.getDeletedAt() == null) {
+            subcategory.setDeletedAt(LocalDateTime.now());
+        } else {
+            subcategory.setDeletedAt(null);
+        }
+
         subcategoryRepository.save(subcategory);
     }
 
     @Override
     public Subcategory getSubCategoryEntityById(UUID id) {
         Optional<Subcategory> subcategory = subcategoryRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (subcategory.isEmpty()) {
+            throw new CategoryNotFoundException(messageSource);
+        }
+
+        return subcategory.get();
+    }
+
+    public Subcategory getSubCategoryEntityByIdAdmin(UUID id) {
+        Optional<Subcategory> subcategory = subcategoryRepository.findById(id);
 
         if (subcategory.isEmpty()) {
             throw new CategoryNotFoundException(messageSource);

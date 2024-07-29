@@ -4,6 +4,7 @@ import com.machines.machines_api.exceptions.location.cities.CityCreateException;
 import com.machines.machines_api.exceptions.location.cities.CityNotFoundException;
 import com.machines.machines_api.models.dto.request.CityRequestDTO;
 import com.machines.machines_api.models.dto.response.CityResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.CityAdminResponseDTO;
 import com.machines.machines_api.models.entity.City;
 import com.machines.machines_api.models.entity.Region;
 import com.machines.machines_api.repositories.CityRepository;
@@ -37,8 +38,24 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public List<CityAdminResponseDTO> getAllAdmin() {
+        return cityRepository
+                .findAll()
+                .stream()
+                .map(
+                        x -> modelMapper.map(x, CityAdminResponseDTO.class)
+                )
+                .toList();
+    }
+
+    @Override
     public CityResponseDTO getById(UUID id) {
         return modelMapper.map(getEntityById(id), CityResponseDTO.class);
+    }
+
+    @Override
+    public CityAdminResponseDTO getCategoryByIdAdmin(UUID id) {
+        return modelMapper.map(getEntityByIdAdmin(id), CityAdminResponseDTO.class);
     }
 
     @Override
@@ -63,7 +80,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public CityResponseDTO update(UUID id, CityRequestDTO cityRequestDTO) {
-        City city = getEntityById(id);
+        City city = getEntityByIdAdmin(id);
         Optional<City> potentialCity = cityRepository.findByNameAndDeletedAtIsNull(cityRequestDTO.getName());
 
         if (potentialCity.isPresent() && !city.getId().equals(potentialCity.get().getId())) {
@@ -85,14 +102,31 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public void delete(UUID id) {
-        City city = getEntityById(id);
-        city.setDeletedAt(LocalDateTime.now());
+        City city = getEntityByIdAdmin(id);
+
+        if(city.getDeletedAt() == null) {
+            city.setDeletedAt(LocalDateTime.now());
+        } else {
+            city.setDeletedAt(null);
+        }
+
         cityRepository.save(city);
     }
 
     @Override
     public City getEntityById(UUID id) {
         Optional<City> city = cityRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (city.isEmpty()) {
+            throw new CityNotFoundException();
+        }
+
+        return city.get();
+    }
+
+    @Override
+    public City getEntityByIdAdmin(UUID id) {
+        Optional<City> city = cityRepository.findById(id);
 
         if (city.isEmpty()) {
             throw new CityNotFoundException();

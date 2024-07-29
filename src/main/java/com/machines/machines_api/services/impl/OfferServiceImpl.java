@@ -12,6 +12,8 @@ import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,9 +33,14 @@ public class OfferServiceImpl implements OfferService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<OfferResponseDTO> getAll() {
-        List<Offer> offers = offerRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc();
-        return offers.stream().map(x -> modelMapper.map(x, OfferResponseDTO.class)).toList();
+    public Page<OfferResponseDTO> getAll(int page, int size) {
+        // Page request starts from 0 but actual pages start from 1
+        // So if page = 1 then page request should start from 0
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+
+        return offerRepository
+                .findAllByDeletedAtIsNullOrderByCreatedAtDesc(pageRequest)
+                .map(x -> modelMapper.map(x, OfferResponseDTO.class));
     }
 
     @Override

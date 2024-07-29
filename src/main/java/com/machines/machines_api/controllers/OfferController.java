@@ -9,9 +9,9 @@ import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +24,8 @@ public class OfferController {
     private final OfferService offerService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<OfferResponseDTO>> getAll() {
-        List<OfferResponseDTO> offers = offerService.getAll();
+    public ResponseEntity<Page<OfferResponseDTO>> getAll(@RequestParam int page, @RequestParam int size) {
+        Page<OfferResponseDTO> offers = offerService.getAll(page, size);
         return ResponseEntity.ok(offers);
     }
 

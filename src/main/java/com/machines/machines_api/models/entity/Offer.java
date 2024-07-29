@@ -34,6 +34,7 @@ public class Offer extends BaseEntity {
     @NotBlank(message = "Описанието е задължително")
     private String description;
 
+    @Column(name = "website_url")
     private String websiteURL;
 
     @NotNull(message = "Цената е задължителна")
@@ -73,6 +74,11 @@ public class Offer extends BaseEntity {
     @NotNull(message = "Снимки за обявата са задължителни")
     @Size(min = 1, message = "Поне една снимка за обявата е задължителна")
     @ManyToMany
+    @JoinTable(
+            name = "offers_pictures",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "file_id")
+    )
     private Set<File> pictures;
 
     @NotNull(message = "Създателят на обявата е задължителен")

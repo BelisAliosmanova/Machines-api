@@ -37,11 +37,14 @@ CREATE TABLE offers
     CONSTRAINT fk_city FOREIGN KEY (city_id) REFERENCES cities (id),
     CONSTRAINT fk_subcategory FOREIGN KEY (subcategory_id) REFERENCES subcategories (id),
     CONSTRAINT fk_main_picture FOREIGN KEY (main_picture_id) REFERENCES files (id),
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users (id)
+    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users (id),
+    CONSTRAINT offers_offer_sale_type_check CHECK (((offer_sale_type)::text = ANY ((ARRAY['SALE'::character varying, 'FOR_RENT'::character varying, 'SERVICES'::character varying])::text[]))),
+    CONSTRAINT offers_offer_state_check CHECK (((offer_state)::text = ANY ((ARRAY['NEW'::character varying, 'NEW_IMPORTATION'::character varying, 'USED'::character varying])::text[]))),
+    CONSTRAINT offers_offer_type_check CHECK (((offer_type)::text = ANY ((ARRAY['BASIC'::character varying, 'VIP'::character varying, 'TOP'::character varying])::text[])))
 );
 
 -- Create join table for Offer and File (many-to-many relationship)
-CREATE TABLE offer_pictures
+CREATE TABLE offers_pictures
 (
     offer_id UUID NOT NULL,
     file_id  UUID NOT NULL,

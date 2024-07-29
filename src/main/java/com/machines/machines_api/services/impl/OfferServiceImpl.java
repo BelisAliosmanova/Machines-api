@@ -38,10 +38,9 @@ public class OfferServiceImpl implements OfferService {
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0
         PageRequest pageRequest = PageRequest.of(page - 1, size);
+        var response = offerRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc(pageRequest);
 
-        return offerRepository
-                .findAllByDeletedAtIsNullOrderByCreatedAtDesc(pageRequest)
-                .map(x -> modelMapper.map(x, OfferResponseDTO.class));
+        return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.util.Calendar;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "verification_tokens")
 public class VerificationToken {
     private static final int EXPIRATION = 60 * 24;
     public LocalDateTime createdAt;

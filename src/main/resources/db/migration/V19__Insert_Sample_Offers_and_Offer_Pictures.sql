@@ -41,7 +41,7 @@ VALUES (uuid_generate_v4(),
         'Works well');
 
 -- Insert sample offer pictures
-INSERT INTO offer_pictures (offer_id, file_id)
+INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 1'),
         (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 1'),
@@ -88,7 +88,7 @@ VALUES (uuid_generate_v4(),
         'Works well');
 
 -- Insert duplicate offer pictures for the new offer
-INSERT INTO offer_pictures (offer_id, file_id)
+INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 2'),
         (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 2'),
@@ -135,7 +135,7 @@ VALUES (uuid_generate_v4(),
         'Works well');
 
 -- Insert duplicate offer pictures for the new offer
-INSERT INTO offer_pictures (offer_id, file_id)
+INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 3'),
         (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 3'),
@@ -182,7 +182,7 @@ VALUES (uuid_generate_v4(),
         'Works well');
 
 -- Insert duplicate offer pictures for the new offer
-INSERT INTO offer_pictures (offer_id, file_id)
+INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 4'),
         (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 4'),

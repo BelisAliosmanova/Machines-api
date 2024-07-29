@@ -6,6 +6,7 @@ import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
+import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
@@ -51,7 +52,11 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferResponseDTO getById(UUID id) {
-        return modelMapper.map(getEntityById(id), OfferResponseDTO.class);
+        OfferSingleResponseDTO offerSingleResponseDTO = modelMapper.map(getEntityById(id), OfferSingleResponseDTO.class);
+        List<OfferResponseDTO> similarOffers = findSimilarOffers(offerSingleResponseDTO.getTitle(), offerSingleResponseDTO.getId());
+        offerSingleResponseDTO.setSimilarOffers(similarOffers);
+
+        return offerSingleResponseDTO;
     }
 
     @Override
@@ -106,6 +111,16 @@ public class OfferServiceImpl implements OfferService {
         }
 
         return offer.get();
+    }
+
+    public List<OfferResponseDTO> findSimilarOffers(String title, UUID id) {
+        String searchTerm = String.join(" | ", title.split("\\s+"));
+
+        return offerRepository
+                .findSimilarOffers(searchTerm, id)
+                .stream()
+                .map(x -> modelMapper.map(x, OfferResponseDTO.class))
+                .toList();
     }
 
     public void mapRequestDTOIdsToEntities(OfferRequestDTO offerRequestDTO, Offer offer) {

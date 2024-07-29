@@ -51,4 +51,4 @@ CREATE TABLE offer_pictures
 );
 
 -- Create GIN index for full-text search on the offer title
-CREATE INDEX offers_title ON offers USING gin(to_tsvector('english', title));
+CREATE INDEX offers_title ON offers USING gin(to_tsvector('simple', title));

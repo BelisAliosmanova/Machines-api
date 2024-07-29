@@ -127,3 +127,4 @@ public class Offer extends BaseEntity {
     //    @NotBlank(message = "Работните ходове не може да бъдат празни")
     private String workMoves;
 }
+

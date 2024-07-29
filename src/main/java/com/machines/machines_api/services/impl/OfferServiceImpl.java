@@ -2,7 +2,6 @@ package com.machines.machines_api.services.impl;
 
 import com.machines.machines_api.enums.Role;
 import com.machines.machines_api.exceptions.common.AccessDeniedException;
-import com.machines.machines_api.exceptions.offer.OfferInvalidMainPicException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
@@ -50,11 +49,6 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
-        boolean isValidMainPicture = offerRequestDTO.getPictureIds().contains(offerRequestDTO.getMainPictureId());
-        if (!isValidMainPicture) {
-            throw new OfferInvalidMainPicException();
-        }
-
         User owner = userService.findById(user.getId());
 
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);

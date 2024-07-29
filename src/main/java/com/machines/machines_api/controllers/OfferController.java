@@ -30,7 +30,7 @@ public class OfferController {
     }
 
     @GetMapping("/all/admin")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OfferAdminResponseDTO>> getAllAdmin() {
         List<OfferAdminResponseDTO> offers = offerService.getAllAdmin();
         return ResponseEntity.ok(offers);
@@ -43,7 +43,7 @@ public class OfferController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('user:create')")
+//    @PreAuthorize("hasAuthority('user:create')")
     public ResponseEntity<OfferResponseDTO> create(
             @Valid @RequestBody OfferRequestDTO offerRequestDTO,
             HttpServletRequest httpServletRequest
@@ -55,7 +55,7 @@ public class OfferController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('user:update')")
+//    @PreAuthorize("hasAuthority('user:update')")
     public ResponseEntity<OfferResponseDTO> update(
             @PathVariable UUID id,
             @Valid @RequestBody OfferRequestDTO offerRequestDTO,
@@ -68,7 +68,7 @@ public class OfferController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('user:delete')")
+//    @PreAuthorize("hasAuthority('user:delete')")
     public ResponseEntity<Void> delete(@PathVariable UUID id, HttpServletRequest httpServletRequest) {
         PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
         offerService.delete(id, user);

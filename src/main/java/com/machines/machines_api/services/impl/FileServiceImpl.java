@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -30,19 +32,23 @@ public class FileServiceImpl implements FileService {
     private final MessageSource messageSource;
 
     @Override
-    public com.machines.machines_api.models.entity.File upload(MultipartFile multipartFile) throws IOException {
+    public List<com.machines.machines_api.models.entity.File> upload(MultipartFile[] multipartFiles) throws IOException {
+        List<com.machines.machines_api.models.entity.File> savedFiles = new ArrayList<>();
 
-        String fileName = multipartFile.getOriginalFilename();
-        assert fileName != null;
-        fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));
+        for (MultipartFile multipartFile : multipartFiles) {
+            String fileName = multipartFile.getOriginalFilename();
+            assert fileName != null;
+            fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));
 
-        return this.uploadFile(multipartFile, fileName);
+            savedFiles.add(this.uploadFile(multipartFile, fileName));
+        }
+
+        return savedFiles;
     }
 
     @Override
     public com.machines.machines_api.models.entity.File uploadFile(MultipartFile multipartFile, String fileName) throws IOException {
         String extension = getExtension(fileName);
-        System.out.println("EXTENSION " + extension);
 
         if (!FileType.isSupportedExtension(extension) && !(extension.startsWith(".com"))) {
             throw new UnsupportedFileTypeException(messageSource);

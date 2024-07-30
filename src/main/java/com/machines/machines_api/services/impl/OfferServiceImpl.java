@@ -48,9 +48,12 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<OfferAdminResponseDTO> getAllAdmin() {
-        List<Offer> offers = offerRepository.findAll();
-        return offers.stream().map(x -> modelMapper.map(x, OfferAdminResponseDTO.class)).toList();
+    public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size) {
+        // Page request starts from 0 but actual pages start from 1
+        // So if page = 1 then page request should start from 0
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        Page<Offer> offers = offerRepository.findAll(pageRequest);
+        return offers.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
     }
 
     @Override

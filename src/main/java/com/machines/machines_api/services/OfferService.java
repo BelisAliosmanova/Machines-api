@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface OfferService {
     Page<OfferResponseDTO> getAll(int page, int size);
 
-    List<OfferAdminResponseDTO> getAllAdmin();
+    Page<OfferAdminResponseDTO> getAllAdmin(int page, int size);
 
     OfferResponseDTO getById(UUID id);
 

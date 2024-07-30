@@ -34,8 +34,8 @@ public class OfferController {
 
     @GetMapping("/all/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OfferAdminResponseDTO>> getAllAdmin() {
-        List<OfferAdminResponseDTO> offers = offerService.getAllAdmin();
+    public ResponseEntity<Page<OfferAdminResponseDTO>> getAllAdmin(@RequestParam int page, @RequestParam int size) {
+        Page<OfferAdminResponseDTO> offers = offerService.getAllAdmin(page, size);
         return ResponseEntity.ok(offers);
     }
 

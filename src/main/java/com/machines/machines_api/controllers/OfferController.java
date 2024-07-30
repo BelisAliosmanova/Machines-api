@@ -4,6 +4,8 @@ import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +45,12 @@ public class OfferController {
     public ResponseEntity<OfferResponseDTO> getById(@PathVariable UUID id) {
         OfferResponseDTO offer = offerService.getById(id);
         return ResponseEntity.ok(offer);
+    }
+
+    @GetMapping("/{id}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<OfferSingleAdminResponseDTO> getByIdAdmin(@PathVariable UUID id) {
+        return ResponseEntity.ok(offerService.getByIdAdmin(id));
     }
 
     @PostMapping("/create")

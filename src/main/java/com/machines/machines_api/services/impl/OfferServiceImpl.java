@@ -8,6 +8,7 @@ import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
@@ -66,6 +67,15 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public OfferSingleAdminResponseDTO getByIdAdmin(UUID id) {
+        OfferSingleAdminResponseDTO offerSingleResponseDTO = modelMapper.map(getEntityByIdAdmin(id), OfferSingleAdminResponseDTO.class);
+        List<OfferResponseDTO> similarOffers = findSimilarOffers(offerSingleResponseDTO.getTitle(), offerSingleResponseDTO.getId());
+        offerSingleResponseDTO.setSimilarOffers(similarOffers);
+
+        return offerSingleResponseDTO;
+    }
+
+    @Override
     public OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
         var violations = validator.validate(offerRequestDTO);
 
@@ -117,6 +127,17 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Offer getEntityById(UUID id) {
         Optional<Offer> offer = offerRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (offer.isEmpty()) {
+            throw new OfferNotFoundException();
+        }
+
+        return offer.get();
+    }
+
+    @Override
+    public Offer getEntityByIdAdmin(UUID id) {
+        Optional<Offer> offer = offerRepository.findById(id);
 
         if (offer.isEmpty()) {
             throw new OfferNotFoundException();

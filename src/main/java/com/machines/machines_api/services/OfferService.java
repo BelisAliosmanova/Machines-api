@@ -4,6 +4,7 @@ import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 
@@ -17,6 +18,8 @@ public interface OfferService {
 
     OfferResponseDTO getById(UUID id);
 
+    OfferSingleAdminResponseDTO getByIdAdmin(UUID id);
+
     OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user);
 
     OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user);
@@ -24,4 +27,6 @@ public interface OfferService {
     void delete(UUID id, PublicUserDTO user);
 
     Offer getEntityById(UUID id);
+
+    Offer getEntityByIdAdmin(UUID id);
 }

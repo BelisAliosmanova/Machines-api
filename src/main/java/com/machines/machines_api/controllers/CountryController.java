@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class CountryController {
     }
 
     @GetMapping("/all/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CountryAdminResponseDTO>> getAllAdmin(@RequestParam(defaultValue = "false") boolean includeRegions) {
         List<CountryAdminResponseDTO> countries = countryService.getAllAdmin(includeRegions);
         return ResponseEntity.ok(countries);
@@ -42,20 +43,20 @@ public class CountryController {
     }
 
     @PostMapping("/create")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CountryResponseDTO> create(@Valid @RequestBody CountryRequestDTO countryRequestDTO) {
         CountryResponseDTO countryResponseDTO = countryService.create(countryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(countryResponseDTO);
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CountryResponseDTO> update(@PathVariable UUID id, @Valid @RequestBody CountryRequestDTO countryRequestDTO) {
         return ResponseEntity.ok(countryService.update(id, countryRequestDTO));
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         countryService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

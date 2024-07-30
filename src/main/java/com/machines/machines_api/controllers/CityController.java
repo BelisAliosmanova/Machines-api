@@ -26,7 +26,7 @@ public class CityController {
     }
 
     @GetMapping("/all/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CityAdminResponseDTO>> getAllAdmin() {
         List<CityAdminResponseDTO> cities = cityService.getAllAdmin();
         return ResponseEntity.ok(cities);
@@ -38,7 +38,7 @@ public class CityController {
     }
 
     @GetMapping("/{id}/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CityAdminResponseDTO> getByIdAdmin(@PathVariable UUID id) {
         return ResponseEntity.ok(cityService.getCategoryByIdAdmin(id));
     }

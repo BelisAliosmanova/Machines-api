@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class RegionController {
     }
 
     @GetMapping("/all/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RegionAdminResponseDTO>> getAllAdmin() {
         List<RegionAdminResponseDTO> regions = regionService.getAllAdmin();
         return ResponseEntity.ok(regions);
@@ -42,20 +43,20 @@ public class RegionController {
     }
 
     @PostMapping("/create")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RegionResponseDTO> create(@Valid @RequestBody RegionRequestDTO regionRequestDTO) {
         RegionResponseDTO regionResponseDTO = regionService.create(regionRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(regionResponseDTO);
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RegionResponseDTO> update(@PathVariable UUID id, @Valid @RequestBody RegionRequestDTO regionRequestDTO) {
         return ResponseEntity.ok(regionService.update(id, regionRequestDTO));
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         regionService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

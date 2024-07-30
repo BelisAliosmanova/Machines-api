@@ -38,26 +38,26 @@ public class SubcategoryController {
     }
 
     @GetMapping("/{id}/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SubcategoryAdminResponseDTO> getByIdAdmin(@PathVariable UUID id) {
         return ResponseEntity.ok(subcategoryService.getByIdAdmin(id));
     }
 
     @PostMapping("/create")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SubcategoryResponseDTO> create(@Valid @RequestBody SubcategoryRequestDTO subcategoryRequestDTO) {
         SubcategoryResponseDTO subcategoryResponseDTO = subcategoryService.create(subcategoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(subcategoryResponseDTO);
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SubcategoryResponseDTO> update(@PathVariable UUID id, @Valid @RequestBody SubcategoryRequestDTO subcategoryRequestDTO) {
         return ResponseEntity.ok(subcategoryService.update(id, subcategoryRequestDTO));
     }
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         subcategoryService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

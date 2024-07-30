@@ -19,7 +19,6 @@ import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.services.UserService;
 import io.jsonwebtoken.JwtException;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
@@ -33,7 +32,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor

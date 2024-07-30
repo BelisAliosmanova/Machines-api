@@ -5,7 +5,6 @@ import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.repositories.TokenRepository;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.UserService;
-import com.machines.machines_api.utils.CookieHelper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

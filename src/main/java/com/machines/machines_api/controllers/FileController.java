@@ -22,7 +22,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public List<File> upload(@RequestPart("file") MultipartFile[] multipartFile) throws IOException {
+    public File upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
         return fileService.upload(multipartFile);
     }
 }

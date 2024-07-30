@@ -22,7 +22,7 @@ VALUES (uuid_generate_v4(),
         'VIP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png'),
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'),
         (SELECT id FROM users WHERE name = 'Admin'),
         2022,
         'Model X',
@@ -43,9 +43,9 @@ VALUES (uuid_generate_v4(),
 -- Insert sample offer pictures
 INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 1'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 1'),
-        (SELECT id FROM files WHERE name = '947f048e-3238-4c2c-ac92-0aa35e8824b3.png'));
+        (SELECT id FROM files WHERE name = '1f92af23-4c73-4a50-bcf1-bebb5951b6dd.jpg'));
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
@@ -69,7 +69,7 @@ VALUES (uuid_generate_v4(),
         'TOP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png'),
+        (SELECT id FROM files WHERE name = '1f92af23-4c73-4a50-bcf1-bebb5951b6dd.jpg'),
         (SELECT id FROM users WHERE name = 'Regular'),
         2022,
         'Model X',
@@ -90,9 +90,9 @@ VALUES (uuid_generate_v4(),
 -- Insert duplicate offer pictures for the new offer
 INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 2'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
+        (SELECT id FROM files WHERE name = '1f92af23-4c73-4a50-bcf1-bebb5951b6dd.jpg')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 2'),
-        (SELECT id FROM files WHERE name = '947f048e-3238-4c2c-ac92-0aa35e8824b3.png'));
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'));
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
@@ -116,7 +116,7 @@ VALUES (uuid_generate_v4(),
         'TOP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png'),
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'),
         (SELECT id FROM users WHERE name = 'Regular'),
         2022,
         'Model X',
@@ -137,9 +137,9 @@ VALUES (uuid_generate_v4(),
 -- Insert duplicate offer pictures for the new offer
 INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 3'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 3'),
-        (SELECT id FROM files WHERE name = '947f048e-3238-4c2c-ac92-0aa35e8824b3.png'));
+        (SELECT id FROM files WHERE name = '1f92af23-4c73-4a50-bcf1-bebb5951b6dd.jpg'));
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
@@ -163,7 +163,7 @@ VALUES (uuid_generate_v4(),
         'TOP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png'),
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'),
         (SELECT id FROM users WHERE name = 'Regular'),
         2022,
         'Model X',
@@ -184,6 +184,6 @@ VALUES (uuid_generate_v4(),
 -- Insert duplicate offer pictures for the new offer
 INSERT INTO offers_pictures (offer_id, file_id)
 VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 4'),
-        (SELECT id FROM files WHERE name = 'accb2310-8be3-4a1c-8c81-29de136209cb.png')),
+        (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg')),
        ((SELECT id FROM offers WHERE title = 'Example Offer 4'),
-        (SELECT id FROM files WHERE name = '947f048e-3238-4c2c-ac92-0aa35e8824b3.png'));
+        (SELECT id FROM files WHERE name = '1f92af23-4c73-4a50-bcf1-bebb5951b6dd.jpg'));

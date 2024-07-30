@@ -6,6 +6,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.machines.machines_api.config.FrontendConfig;
 import com.machines.machines_api.enums.Provider;
+import com.machines.machines_api.exceptions.token.InvalidTokenException;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.OAuth2UserInfoDTO;
 import com.machines.machines_api.models.entity.User;
@@ -14,6 +15,7 @@ import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -32,6 +34,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
     private final WebClient userInfoClient;
     private final UserService userService;
     private final TokenService tokenService;
+    private final MessageSource messageSource;
 
     @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-id}")
     private String clientId;
@@ -80,7 +83,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
                     .execute()
                     .getAccessToken();
         } catch (IOException e) {
-            throw new RuntimeException("dsdsa");
+            throw new InvalidTokenException(messageSource);
         }
     }
 }

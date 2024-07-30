@@ -1,5 +1,6 @@
 package com.machines.machines_api.models.entity;
 
+import com.machines.machines_api.annotations.Conditional;
 import com.machines.machines_api.enums.OfferSaleType;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.enums.OfferType;
@@ -88,6 +89,7 @@ public class Offer extends BaseEntity {
     // *********************************
     // **   EXTRA INFO | EXTRA INFO   **
     // *********************************
+
 //    @Min(value = 1950, message = "Годината трябва да е след 1950")
     private int manufactureYear;
 

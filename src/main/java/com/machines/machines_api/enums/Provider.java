@@ -13,8 +13,7 @@ import java.util.Map;
 @Getter
 public enum Provider {
     LOCAL("local"),
-    GOOGLE("google"),
-    FACEBOOK("facebook");
+    GOOGLE("google");
 
     private static final Map<String, Provider> providerMap = new HashMap<>();
 

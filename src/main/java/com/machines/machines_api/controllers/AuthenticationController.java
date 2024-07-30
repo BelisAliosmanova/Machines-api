@@ -6,23 +6,19 @@ import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
 import com.machines.machines_api.models.entity.User;
+import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.AuthenticationService;
 import com.machines.machines_api.services.impl.security.events.OnPasswordResetRequestEvent;
-import com.machines.machines_api.utils.CookieHelper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-
-import static com.machines.machines_api.security.filters.JwtAuthenticationFilter.AUTH_COOKIE_KEY_JWT;
-import static com.machines.machines_api.security.filters.JwtAuthenticationFilter.AUTH_COOKIE_KEY_REFRESH;
 
 /**
  * Controller class for handling authentication-related operations.
@@ -68,27 +64,19 @@ public class AuthenticationController {
     @PostMapping("/authenticate") // login
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(request);
-        authenticationService.attachAuthCookies(authenticationResponse, servletResponse::addCookie);
-
         return ResponseEntity.ok(authenticationResponse);
     }
 
-    @GetMapping("/refresh-token")
-    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String refreshToken = CookieHelper.readCookie(AUTH_COOKIE_KEY_REFRESH, request.getCookies()).orElse(null);
-
+    @GetMapping("/refresh-token/{refreshToken}")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@PathVariable String refreshToken) throws IOException {
         AuthenticationResponse authenticationResponse = authenticationService.refreshToken(refreshToken);
-        authenticationService.attachAuthCookies(authenticationResponse, response::addCookie);
-
         return ResponseEntity.ok(authenticationResponse);
     }
 
     @GetMapping("/me") // Retrieves current user information.
-    public ResponseEntity<AuthenticationResponse> getMe(HttpServletRequest request, HttpServletResponse response) {
-        String jwtToken = CookieHelper.readCookie(AUTH_COOKIE_KEY_JWT, request.getCookies()).orElse(null);
-
+    public ResponseEntity<AuthenticationResponse> getMe(HttpServletRequest request) {
+        String jwtToken = (String) request.getAttribute(JwtAuthenticationFilter.JWT_KEY);
         AuthenticationResponse authenticationResponse = authenticationService.me(jwtToken);
-        authenticationService.attachAuthCookies(authenticationResponse, response::addCookie);
 
         return ResponseEntity.ok(authenticationResponse);
     }

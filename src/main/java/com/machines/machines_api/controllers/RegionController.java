@@ -2,14 +2,12 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.dto.request.RegionRequestDTO;
 import com.machines.machines_api.models.dto.response.RegionResponseDTO;
-import com.machines.machines_api.models.dto.response.admin.CountryAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.RegionAdminResponseDTO;
 import com.machines.machines_api.services.RegionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

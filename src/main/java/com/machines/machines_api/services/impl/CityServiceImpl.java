@@ -104,7 +104,7 @@ public class CityServiceImpl implements CityService {
     public void delete(UUID id) {
         City city = getEntityByIdAdmin(id);
 
-        if(city.getDeletedAt() == null) {
+        if (city.getDeletedAt() == null) {
             city.setDeletedAt(LocalDateTime.now());
         } else {
             city.setDeletedAt(null);

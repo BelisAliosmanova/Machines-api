@@ -6,11 +6,11 @@ import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.exceptions.user.UserCreateException;
 import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.dto.auth.AdminUserDTO;
+import com.machines.machines_api.models.dto.auth.OAuth2UserInfoDTO;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.repositories.UserRepository;
-import com.machines.machines_api.security.CustomOAuth2User;
 import com.machines.machines_api.services.UserService;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
      * @return The processed user.
      */
     @Override
-    public User processOAuthUser(CustomOAuth2User oAuth2User) {
+    public User processOAuthUser(OAuth2UserInfoDTO oAuth2User) {
         User user = userRepository.findByEmail(oAuth2User.getEmail()).orElse(null);
 
         if (user == null) {
@@ -121,9 +121,8 @@ public class UserServiceImpl implements UserService {
             registerRequest.setProvider(oAuth2User.getProvider());
 
             if (oAuth2User.getProvider().equals(Provider.GOOGLE)) {
-                registerRequest.setName(oAuth2User.getGivenName());
-            } else if (oAuth2User.getProvider().equals(Provider.FACEBOOK)) {
-                registerRequest.setName(oAuth2User.getName());
+                registerRequest.setName(oAuth2User.getGiven_name());
+                registerRequest.setSurName(oAuth2User.getFamily_name());
             }
 
             user = userRepository.save(buildUser(registerRequest));

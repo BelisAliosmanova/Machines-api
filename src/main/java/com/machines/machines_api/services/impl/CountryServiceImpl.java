@@ -104,7 +104,7 @@ public class CountryServiceImpl implements CountryService {
     public void delete(UUID id) {
         Country country = getEntityByIdAdmin(id);
 
-        if(country.getDeletedAt() == null){
+        if (country.getDeletedAt() == null) {
             country.setDeletedAt(LocalDateTime.now());
         } else {
             country.setDeletedAt(null);

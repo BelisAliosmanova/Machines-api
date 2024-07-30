@@ -5,7 +5,6 @@ import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.repositories.TokenRepository;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.UserService;
-import com.machines.machines_api.utils.CookieHelper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,8 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Key to retrieve user information from request attribute.
      */
     public static final String USER_KEY = "user";
-    public final static String AUTH_COOKIE_KEY_JWT = "MACHINES_SESSION_JWT";
-    public final static String AUTH_COOKIE_KEY_REFRESH = "MACHINES_SESSION_REFRESH";
+    public static final String JWT_KEY = "jwt";
 
     private final JwtService jwtService;
     private final UserService userService;
@@ -51,16 +49,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         // Skip authentication for specific paths related to authentication process
-        if (path.contains("/api/v1/auth") && !path.contains("/api/v1/auth/complete-oauth")) {
+        if (path.contains("/api/v1/auth") || path.contains("/api/v1/oauth2")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         request.setAttribute(USER_KEY, null);
+        request.setAttribute(JWT_KEY, null);
 
-        final String jwt = CookieHelper.readCookie(AUTH_COOKIE_KEY_JWT, request.getCookies()).orElse(null);
+        final String authHeader = request.getHeader("Authorization");
 
-        if (jwt == null || jwt.isEmpty()) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        final String jwt = authHeader.substring(7);
+        if (jwt.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -100,6 +105,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Set user details in request attribute
             request.setAttribute(USER_KEY, modelMapper.map(userDetails, PublicUserDTO.class));
+            request.setAttribute(JWT_KEY, jwt);
         }
 
         filterChain.doFilter(request, response);

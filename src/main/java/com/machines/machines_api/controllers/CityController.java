@@ -2,7 +2,6 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.dto.request.CityRequestDTO;
 import com.machines.machines_api.models.dto.response.CityResponseDTO;
-import com.machines.machines_api.models.dto.response.admin.CategoryAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.CityAdminResponseDTO;
 import com.machines.machines_api.services.CityService;
 import jakarta.validation.Valid;

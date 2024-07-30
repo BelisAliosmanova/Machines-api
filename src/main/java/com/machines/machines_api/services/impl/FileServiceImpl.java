@@ -12,7 +12,6 @@ import com.machines.machines_api.exceptions.files.UnsupportedFileTypeException;
 import com.machines.machines_api.repositories.FileRepository;
 import com.machines.machines_api.services.FileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

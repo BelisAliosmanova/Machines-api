@@ -21,7 +21,6 @@ import com.machines.machines_api.services.UserService;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

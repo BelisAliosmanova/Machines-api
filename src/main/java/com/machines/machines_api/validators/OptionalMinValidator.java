@@ -3,9 +3,6 @@ package com.machines.machines_api.validators;
 import com.machines.machines_api.annotations.OptionalMin;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.constraints.Min;
-
-import java.lang.annotation.Annotation;
 
 public class OptionalMinValidator implements ConstraintValidator<OptionalMin, Integer> {
     private long min;

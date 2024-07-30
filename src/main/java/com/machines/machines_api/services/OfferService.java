@@ -8,7 +8,6 @@ import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminRespo
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface OfferService {

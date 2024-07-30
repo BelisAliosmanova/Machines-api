@@ -1,12 +1,6 @@
 package com.machines.machines_api.exceptions.user;
 
 import com.machines.machines_api.exceptions.common.BadRequestException;
-import jakarta.validation.ConstraintViolation;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Exception thrown when there is an issue creating a user, either due to invalid data or duplicate user details.

@@ -12,7 +12,6 @@ import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminRespo
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;

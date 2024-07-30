@@ -1,8 +1,5 @@
 package com.machines.machines_api.models.entity;
 
-import com.machines.machines_api.annotations.OptionalDecimalMin;
-import com.machines.machines_api.annotations.OptionalMin;
-import com.machines.machines_api.annotations.OptionalNotBlank;
 import com.machines.machines_api.enums.OfferSaleType;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.enums.OfferType;

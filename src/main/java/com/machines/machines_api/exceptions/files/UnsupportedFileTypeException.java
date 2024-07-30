@@ -1,8 +1,6 @@
 package com.machines.machines_api.exceptions.files;
 
 import com.machines.machines_api.exceptions.common.UnsupportedMediaTypeException;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * Exception thrown to indicate that the requested file type is not supported.

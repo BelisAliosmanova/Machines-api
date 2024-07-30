@@ -5,7 +5,6 @@ import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
-import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,11 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController

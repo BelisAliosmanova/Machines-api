@@ -3,6 +3,7 @@ package com.machines.machines_api.services;
 import com.machines.machines_api.models.dto.request.SubcategoryRequestDTO;
 import com.machines.machines_api.models.dto.response.SubcategoryResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.SubcategoryAdminResponseDTO;
+import com.machines.machines_api.models.entity.Subcategory;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,4 +22,6 @@ public interface SubcategoryService {
     SubcategoryResponseDTO update(UUID id, SubcategoryRequestDTO subcategoryDTO);
 
     void delete(UUID id);
+
+    Subcategory getSubCategoryEntityById(UUID id);
 }

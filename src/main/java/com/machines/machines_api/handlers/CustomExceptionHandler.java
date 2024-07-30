@@ -48,7 +48,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleAccessDeniedExceptions() {
-        return handleApiExceptions(new AccessDeniedException(Objects.requireNonNull(getMessageSource())));
+        return handleApiExceptions(new AccessDeniedException());
     }
 
     @ExceptionHandler(ApiException.class)

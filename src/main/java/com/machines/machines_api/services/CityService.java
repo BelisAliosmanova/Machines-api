@@ -11,9 +11,9 @@ import java.util.UUID;
 public interface CityService {
     List<CityResponseDTO> getAll();
 
-    List<CityAdminResponseDTO> getAllAdmin();
-
     CityResponseDTO getById(UUID id);
+
+    List<CityAdminResponseDTO> getAllAdmin();
 
     CityAdminResponseDTO getCategoryByIdAdmin(UUID id);
 

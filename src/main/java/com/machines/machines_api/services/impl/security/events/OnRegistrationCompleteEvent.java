@@ -11,9 +11,9 @@ import java.util.Locale;
  * OnRegistrationCompleteEvent represents an event raised when a user completes registration.
  * It carries information about the registered user, the application URL, and the locale.
  */
+@Getter
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     @Setter
-    @Getter
     private String appUrl;
     private Locale locale;
     @Setter

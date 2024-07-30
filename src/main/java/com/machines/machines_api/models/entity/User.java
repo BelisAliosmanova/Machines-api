@@ -23,7 +23,6 @@ import java.util.Collection;
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
 
-    @NotNull(message = "The name of the user should not be null!")
     @Size(min = 2, message = "The name should be at least 2 symbols!")
     private String name;
 

@@ -38,9 +38,7 @@ import static com.machines.machines_api.security.filters.JwtAuthenticationFilter
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
     private final ApplicationEventPublisher eventPublisher;
-    private final ModelMapper modelMapper;
     private final FrontendConfig frontendConfig;
 
     @Value("${server.backend.baseUrl}")

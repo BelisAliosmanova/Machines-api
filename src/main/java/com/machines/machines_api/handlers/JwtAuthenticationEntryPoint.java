@@ -5,7 +5,7 @@ import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.utils.ObjectMapperHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.MessageSource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -18,15 +18,10 @@ import java.io.IOException;
  * It sends a standardized error response back to the client with appropriate HTTP status code and error message.
  */
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper;
-    private final MessageSource messageSource;
-
-    public JwtAuthenticationEntryPoint(ObjectMapper objectMapper, MessageSource messageSource) {
-        this.objectMapper = objectMapper;
-        this.messageSource = messageSource;
-    }
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -35,7 +30,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         ObjectMapperHelper
                 .writeExceptionToObjectMapper(
                         objectMapper,
-                        new AccessDeniedException(messageSource),
+                        new AccessDeniedException(),
                         httpServletResponse
                 );
     }

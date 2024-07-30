@@ -108,6 +108,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         subcategoryRepository.save(subcategory);
     }
 
+    @Override
     public Subcategory getSubCategoryEntityById(UUID id) {
         Optional<Subcategory> subcategory = subcategoryRepository.findByIdAndDeletedAtIsNull(id);
 

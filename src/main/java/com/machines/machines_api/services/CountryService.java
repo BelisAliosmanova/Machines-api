@@ -11,9 +11,9 @@ import java.util.UUID;
 public interface CountryService {
     List<CountryResponseDTO> getAll(boolean includeRegions);
 
-    List<CountryAdminResponseDTO> getAllAdmin(boolean includeRegions);
-
     CountryResponseDTO getById(UUID id);
+
+    List<CountryAdminResponseDTO> getAllAdmin(boolean includeRegions);
 
     CountryAdminResponseDTO getCountryByIdAdmin(UUID id);
 

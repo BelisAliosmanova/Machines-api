@@ -1,0 +1,22 @@
+-- Insert sample subcategories
+INSERT INTO subcategories (id, created_at, updated_at, deleted_at, name, category_id)
+VALUES (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Mobile Phones',
+        (SELECT id FROM categories WHERE name = 'Electronics')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Laptops',
+        (SELECT id FROM categories WHERE name = 'Electronics')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Fiction',
+        (SELECT id FROM categories WHERE name = 'Books')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Non-Fiction',
+        (SELECT id FROM categories WHERE name = 'Books')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Men Wear',
+        (SELECT id FROM categories WHERE name = 'Clothing')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Women Wear',
+        (SELECT id FROM categories WHERE name = 'Clothing')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Furniture',
+        (SELECT id FROM categories WHERE name = 'Home & Garden')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Gardening Tools',
+        (SELECT id FROM categories WHERE name = 'Home & Garden')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Camping Gear',
+        (SELECT id FROM categories WHERE name = 'Sports & Outdoors')),
+       (uuid_generate_v4(), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 'Fitness Equipment',
+        (SELECT id FROM categories WHERE name = 'Sports & Outdoors'));

@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.machines.machines_api.exceptions.user.UserNotFoundException;
+import com.machines.machines_api.models.baseEntity.BaseEntity;
+import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.machines.machines_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +38,30 @@ public class ApplicationConfig {
 
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper
+                .getConfiguration()
+                .setPropertyCondition(context -> {
+                    if (
+                            !(context.getParent().getDestination() instanceof BaseEntity &&
+                                    context.getParent().getSource() instanceof BaseDTO)
+                    ) {
+                        return true;
+                    }
+
+                    String destinationProperty = context.getMapping().getLastDestinationProperty().getName();
+
+                    return !("id".equals(destinationProperty) ||
+                            "createdAt".equals(destinationProperty) ||
+                            "updatedAt".equals(destinationProperty) ||
+                            "deletedAt".equals(destinationProperty));
+                })
+                .setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
+                .setMatchingStrategy(MatchingStrategies.STANDARD);
+
+        return modelMapper;
     }
 
     @Bean

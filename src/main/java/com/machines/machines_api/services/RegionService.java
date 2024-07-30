@@ -11,9 +11,10 @@ import java.util.UUID;
 public interface RegionService {
     List<RegionResponseDTO> getAll();
 
+    RegionResponseDTO getById(UUID id);
+
     List<RegionAdminResponseDTO> getAllAdmin();
 
-    RegionResponseDTO getById(UUID id);
     RegionAdminResponseDTO getCountryByIdAdmin(UUID id);
 
     RegionResponseDTO create(RegionRequestDTO regionRequestDTO);

@@ -17,23 +17,11 @@ public class UserCreateException extends BadRequestException {
     /**
      * Constructs a UserCreateException with a message indicating either a duplicate email or invalid user data.
      */
-    public UserCreateException(MessageSource messageSource, boolean isUnique) {
+    public UserCreateException(boolean isUnique) {
         super(
                 isUnique
-                        ? messageSource.getMessage("user.email.exists", null, LocaleContextHolder.getLocale())
-                        : messageSource.getMessage("user.invalid.data", null, LocaleContextHolder.getLocale())
-        );
-    }
-
-    /**
-     * Constructs a UserCreateException with validation errors.
-     */
-    public UserCreateException(Set<ConstraintViolation<?>> validationErrors) {
-        super(
-                validationErrors
-                        .stream()
-                        .map(ConstraintViolation::getMessage)
-                        .collect(Collectors.joining("\n"))
+                        ? "Вече съществува потребител със същия имейл!"
+                        : "Невалидни потребителски данни!"
         );
     }
 }

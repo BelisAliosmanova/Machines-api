@@ -23,7 +23,6 @@ public class LogoutHandler implements org.springframework.security.web.authentic
 
     private final TokenService tokenService;
     private final ObjectMapper objectMapper;
-    private final MessageSource messageSource;
 
     /**
      * Performs user logout by invalidating the JWT token and removing associated cookies.
@@ -39,7 +38,7 @@ public class LogoutHandler implements org.springframework.security.web.authentic
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             try {
-                ObjectMapperHelper.writeExceptionToObjectMapper(objectMapper, new InvalidTokenException(messageSource), response);
+                ObjectMapperHelper.writeExceptionToObjectMapper(objectMapper, new InvalidTokenException(), response);
                 return;
             } catch (IOException exception) {
                 return;

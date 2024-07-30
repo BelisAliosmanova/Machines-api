@@ -5,8 +5,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 public class ExpiredTokenException extends UnauthorizedException {
-
-    public ExpiredTokenException(MessageSource messageSource) {
-        super(messageSource.getMessage("token.expired", null, LocaleContextHolder.getLocale()));
+    public ExpiredTokenException() {
+        super("Токенът е изтекъл!");
     }
 }

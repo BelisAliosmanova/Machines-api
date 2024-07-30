@@ -23,7 +23,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final MessageSource messageSource;
     private final ModelMapper modelMapper;
 
     @Override
@@ -54,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDTO create(CategoryRequestDTO categoryDTO) {
         // Make sure category is unique
         if (categoryRepository.findByNameAndDeletedAtIsNull(categoryDTO.getName()).isPresent()) {
-            throw new CategoryCreateException(messageSource, true);
+            throw new CategoryCreateException(true);
         }
 
         // Persist category
@@ -64,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
 
             return modelMapper.map(category, CategoryResponseDTO.class);
         } catch (RuntimeException exception) {
-            throw new CategoryCreateException(messageSource, false);
+            throw new CategoryCreateException(false);
         }
     }
 
@@ -74,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> potentialCategory = categoryRepository.findByNameAndDeletedAtIsNull(categoryDTO.getName());
 
         if (potentialCategory.isPresent() && !existingCategory.getId().equals(potentialCategory.get().getId())) {
-            throw new CategoryCreateException(messageSource, true);
+            throw new CategoryCreateException(true);
         }
 
         modelMapper.map(categoryDTO, existingCategory);
@@ -101,7 +100,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findByIdAndDeletedAtIsNull(id);
 
         if (category.isEmpty()) {
-            throw new CategoryNotFoundException(messageSource);
+            throw new CategoryNotFoundException();
         }
 
         return category.get();
@@ -111,7 +110,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isEmpty()) {
-            throw new CategoryNotFoundException(messageSource);
+            throw new CategoryNotFoundException();
         }
 
         return category.get();

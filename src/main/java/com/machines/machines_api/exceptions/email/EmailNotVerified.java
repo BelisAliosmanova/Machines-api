@@ -9,7 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * Extends BadRequestException and sets the appropriate message using MessageSource (the messages are in src/main/resources/messages).
  */
 public class EmailNotVerified extends BadRequestException {
-    public EmailNotVerified(MessageSource messageSource) {
-        super(messageSource.getMessage("email.not.verified", null, LocaleContextHolder.getLocale()));
+    public EmailNotVerified() {
+        super("Не можете да влезете, имейлът, даден по време на регистрацията, не е потвърден!");
     }
 }

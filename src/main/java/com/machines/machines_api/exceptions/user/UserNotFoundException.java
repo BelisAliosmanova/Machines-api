@@ -9,11 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * Sets the appropriate message using MessageSource (the messages are in src/main/resources/messages).
  */
 public class UserNotFoundException extends NoSuchElementException {
-    public UserNotFoundException(MessageSource messageSource) {
-        super(messageSource.getMessage("user.not.found", null, LocaleContextHolder.getLocale()));
-    }
-
-    public UserNotFoundException(String field, MessageSource messageSource) {
-        super(messageSource.getMessage("user.not.found", null, LocaleContextHolder.getLocale()) + field);
+    public UserNotFoundException() {
+        super("Потребителят не е намерен!");
     }
 }

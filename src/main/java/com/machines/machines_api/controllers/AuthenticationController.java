@@ -1,7 +1,6 @@
 package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.config.FrontendConfig;
-import com.machines.machines_api.interfaces.RateLimited;
 import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.RegisterRequest;
@@ -40,7 +39,6 @@ public class AuthenticationController {
     @Value("${server.backend.baseUrl}")
     private String appBaseUrl;
 
-    @RateLimited
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         AuthenticationResponse authenticationResponse = authenticationService.register(request);
@@ -60,7 +58,6 @@ public class AuthenticationController {
         return ResponseEntity.ok("User registration confirmed successfully!");
     }
 
-    @RateLimited
     @PostMapping("/authenticate") // login
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(request);
@@ -81,7 +78,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationResponse);
     }
 
-    @RateLimited
     @PostMapping("/forgot-password") // Sends link to email so the user can change their password
     public ResponseEntity<String> forgotPassword(@RequestParam("email") String email) {
         User user = authenticationService.forgotPassword(email);
@@ -89,7 +85,6 @@ public class AuthenticationController {
         return ResponseEntity.ok("Password reset link sent to your email!");
     }
 
-    @RateLimited
     @PostMapping("/password-reset")
     public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
         authenticationService.resetPassword(token, newPassword);

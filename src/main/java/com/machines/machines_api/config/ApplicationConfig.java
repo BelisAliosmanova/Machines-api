@@ -37,7 +37,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableAsync
 public class ApplicationConfig {
     private final UserRepository repository;
-    private final MessageSource messageSource;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -92,7 +91,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("email", messageSource));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Bean

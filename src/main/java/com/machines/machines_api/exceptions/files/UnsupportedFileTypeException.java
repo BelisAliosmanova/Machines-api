@@ -9,7 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * Extends UnsupportedMediaTypeException and sets the appropriate message using MessageSource (the messages are in src/main/resources/messages).
  */
 public class UnsupportedFileTypeException extends UnsupportedMediaTypeException {
-    public UnsupportedFileTypeException(MessageSource messageSource) {
-        super(messageSource.getMessage("unsupported.file.type", null, LocaleContextHolder.getLocale()));
+    public UnsupportedFileTypeException() {
+        super("Неподдържан тип файл!");
     }
 }

@@ -27,7 +27,6 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
-    private final MessageSource messageSource;
 
     @Override
     public com.machines.machines_api.models.entity.File upload(MultipartFile multipartFile) throws IOException {
@@ -44,7 +43,7 @@ public class FileServiceImpl implements FileService {
         String extension = getExtension(fileName);
 
         if (!FileType.isSupportedExtension(extension) && !(extension.startsWith(".com"))) {
-            throw new UnsupportedFileTypeException(messageSource);
+            throw new UnsupportedFileTypeException();
         }
 
         BlobId blobId = BlobId.of("localweb-428009.appspot.com", fileName);

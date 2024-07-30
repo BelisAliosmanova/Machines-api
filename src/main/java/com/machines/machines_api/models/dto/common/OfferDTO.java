@@ -17,7 +17,7 @@ public class OfferDTO extends BaseDTO {
     private String description;
     private String websiteURL;
     private double price;
-    private boolean isBulgarian;
+    private boolean bulgarian;
     private boolean autoUpdate = false;
     private OfferState offerState;
     private OfferSaleType offerSaleType;

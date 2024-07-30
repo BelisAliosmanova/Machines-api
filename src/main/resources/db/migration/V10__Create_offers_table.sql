@@ -10,7 +10,7 @@ CREATE TABLE offers
     description          TEXT             NOT NULL CHECK (description <> ''),
     website_url          VARCHAR(255),
     price                DOUBLE PRECISION NOT NULL CHECK (price >= 1),
-    is_bulgarian         BOOLEAN          NOT NULL,
+    bulgarian            BOOLEAN          NOT NULL,
     auto_update          BOOLEAN          NOT NULL DEFAULT FALSE,
     offer_state          VARCHAR(255)     NOT NULL,
     offer_sale_type      VARCHAR(255)     NOT NULL,

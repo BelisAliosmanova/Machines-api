@@ -2,7 +2,7 @@
 
 -- Insert sample offer data
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    is_bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -49,7 +49,7 @@ VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 1'),
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    is_bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -96,7 +96,7 @@ VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 2'),
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    is_bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -143,7 +143,7 @@ VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 3'),
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    is_bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)

@@ -1,6 +1,8 @@
 package com.machines.machines_api.models.entity;
 
-import com.machines.machines_api.annotations.Conditional;
+import com.machines.machines_api.annotations.OptionalDecimalMin;
+import com.machines.machines_api.annotations.OptionalMin;
+import com.machines.machines_api.annotations.OptionalNotBlank;
 import com.machines.machines_api.enums.OfferSaleType;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.enums.OfferType;
@@ -89,54 +91,20 @@ public class Offer extends BaseEntity {
     // *********************************
     // **   EXTRA INFO | EXTRA INFO   **
     // *********************************
-
-//    @Min(value = 1950, message = "Годината трябва да е след 1950")
-    @Conditional(
-            useAnnotation = Min.class,
-            params = {"value=1950", "message=Годината трябва да е след 1950"}
-    )
-    private int manufactureYear;
-
-    //    @NotBlank(message = "Моделът не може да бъде празен")
+    private Integer manufactureYear;
     private String model;
-
-    //    @DecimalMin(value = "0.1", message = "Захранващото напрежение трябва да е над 0.1")
-    private double powerSupplyVoltage;
-
-    //    @NotBlank(message = "Видът гориво не може да бъде празен")
+    private Double powerSupplyVoltage;
     private String fuelType;
-
-    //    @DecimalMin(value = "0.1", message = "Конската мощност трябва да е над 0.1")
-    private double horsePower;
-
-    //    @NotBlank(message = "Консумацията не може да бъде празна")
+    private Double horsePower;
     private String consumption;
-
-    //    @DecimalMin(value = "0.1", message = "Изходната мощност трябва да е над 0.1")
     private double outputPower;
-
-    //    @NotBlank(message = "Производителността не може да бъде празна")
     private String productivity;
-
-    //    @DecimalMin(value = "0.1", message = "Товароносимостта трябва да е над 0.1")
     private double capacity;
-
-    //    @DecimalMin(value = "0.1", message = "Минималните обороти трябва да са над 0.1")
     private double minRevolutions;
-
-    //    @DecimalMin(value = "0.1", message = "Номиналните обороти трябва да са над 0.1")
     private double nominalRevolutions;
-
-    //    @DecimalMin(value = "0.1", message = "Максималните обороти трябва да са над 0.1")
     private double maxRevolutions;
-
-    //    @NotBlank(message = "Габаритните размери не трябва да са празни")
     private String dimensions;
-
-    //    @DecimalMin(value = "0.1", message = "Собствената маса трябва да е над 0.1")
     private double ownWeight;
-
-    //    @NotBlank(message = "Работните ходове не може да бъдат празни")
     private String workMoves;
 }
 

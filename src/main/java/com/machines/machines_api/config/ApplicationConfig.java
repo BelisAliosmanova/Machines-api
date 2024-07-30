@@ -7,6 +7,9 @@ import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.baseEntity.BaseEntity;
 import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.machines.machines_api.repositories.UserRepository;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -73,6 +76,17 @@ public class ApplicationConfig {
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         return objectMapper;
+    }
+
+    @Bean
+    public Validator validator() {
+        Validator validator;
+
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+
+        return validator;
     }
 
     @Bean

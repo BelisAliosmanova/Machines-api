@@ -11,6 +11,9 @@ import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,7 @@ public class OfferServiceImpl implements OfferService {
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
+    private final Validator validator;
 
     @Override
     public Page<OfferResponseDTO> getAll(int page, int size) {
@@ -60,6 +64,12 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
+        var violations = validator.validate(offerRequestDTO);
+
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
         User owner = userService.findById(user.getId());
 
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);

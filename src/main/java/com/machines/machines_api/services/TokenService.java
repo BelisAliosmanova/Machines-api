@@ -22,15 +22,7 @@ public interface TokenService {
 
     void logoutToken(String jwt);
 
-    Cookie createJwtCookie(String jwt);
-
-    Cookie createRefreshCookie(String refreshToken);
-
     AuthenticationResponse generateAuthResponse(User user);
-
-    void attachAuthCookies(AuthenticationResponse authenticationResponse, Consumer<Cookie> cookieConsumer);
-
-    void detachAuthCookies(Consumer<Cookie> cookieConsumer);
 
     void createVerificationToken(User user, String token);
 

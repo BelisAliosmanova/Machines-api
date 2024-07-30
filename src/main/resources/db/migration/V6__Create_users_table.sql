@@ -8,7 +8,7 @@ CREATE TABLE users
     name       VARCHAR(255) CHECK (char_length(name) >= 2),
     surname    VARCHAR(255) CHECK (char_length(surname) >= 2),
     email      VARCHAR(255) NOT NULL UNIQUE,
-    password   VARCHAR(255) NOT NULL,
+    password   VARCHAR(255),
     role       VARCHAR(255) NOT NULL,
     provider   VARCHAR(255) NOT NULL,
     enabled    BOOLEAN      NOT NULL,

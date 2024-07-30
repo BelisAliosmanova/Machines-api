@@ -35,10 +35,6 @@ public class TokenServiceImpl implements TokenService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
-    @Value("${spring.security.jwt.refresh-token.expiration}")
-    private long refreshExpiration;
-    @Value("${spring.security.jwt.expiration}")
-    private long jwtExpiration;
 
     @Override
     public Token findByToken(String jwt) {
@@ -88,34 +84,6 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Cookie createJwtCookie(String jwt) {
-        Cookie jwtCookie = new Cookie(JwtAuthenticationFilter.AUTH_COOKIE_KEY_JWT, URLEncoder.encode(jwt, StandardCharsets.UTF_8));
-        jwtCookie.setPath("/");
-
-        // milliseconds to seconds
-        jwtCookie.setMaxAge((int) jwtExpiration / 1000);
-        jwtCookie.setSecure(true);
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setAttribute("SameSite", "None");
-
-        return jwtCookie;
-    }
-
-    @Override
-    public Cookie createRefreshCookie(String refreshToken) {
-        Cookie refreshCookie = new Cookie(JwtAuthenticationFilter.AUTH_COOKIE_KEY_REFRESH, URLEncoder.encode(refreshToken, StandardCharsets.UTF_8));
-        refreshCookie.setPath("/");
-
-        // milliseconds to seconds
-        refreshCookie.setMaxAge((int) refreshExpiration / 1000);
-        refreshCookie.setSecure(true);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setAttribute("SameSite", "None");
-
-        return refreshCookie;
-    }
-
-    @Override
     public AuthenticationResponse generateAuthResponse(User user) {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
@@ -129,29 +97,6 @@ public class TokenServiceImpl implements TokenService {
                 .refreshToken(refreshToken)
                 .user(modelMapper.map(user, PublicUserDTO.class))
                 .build();
-    }
-
-    @Override
-    public void attachAuthCookies(AuthenticationResponse authenticationResponse, Consumer<Cookie> cookieConsumer) {
-        Cookie jwtCookie = createJwtCookie(authenticationResponse.getAccessToken());
-        Cookie refreshCookie = createRefreshCookie(authenticationResponse.getRefreshToken());
-
-        // Accept cookies using the consumer
-        cookieConsumer.accept(jwtCookie);
-        cookieConsumer.accept(refreshCookie);
-    }
-
-    @Override
-    public void detachAuthCookies(Consumer<Cookie> cookieConsumer) {
-        Cookie jwtCookie = createJwtCookie("placeholder");
-        Cookie refreshCookie = createRefreshCookie("placeholder");
-
-        jwtCookie.setMaxAge(0);
-        refreshCookie.setMaxAge(0);
-
-        // Accept cookies using the consumer to clear existing cookies
-        cookieConsumer.accept(jwtCookie);
-        cookieConsumer.accept(refreshCookie);
     }
 
     @Override

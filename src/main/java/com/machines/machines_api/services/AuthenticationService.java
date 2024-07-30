@@ -20,8 +20,6 @@ public interface AuthenticationService {
             String jwtToken
     );
 
-    void attachAuthCookies(AuthenticationResponse authenticationResponse, Consumer<Cookie> cookieConsumer);
-
     void resetPassword(String token, String newPassword);
 
     void confirmRegistration(String verificationToken);

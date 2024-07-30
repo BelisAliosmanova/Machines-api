@@ -197,11 +197,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    @Override
-    public void attachAuthCookies(AuthenticationResponse authenticationResponse, Consumer<Cookie> cookieConsumer) {
-        tokenService.attachAuthCookies(authenticationResponse, cookieConsumer);
-    }
-
     /**
      * Resets the password for a user based on the provided token and new password.
      */

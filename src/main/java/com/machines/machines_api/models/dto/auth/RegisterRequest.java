@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 public class RegisterRequest {
     private String email;
     private String password;
-    private String name = "CHANGE_NAME";
+    private String name;
+    private String surName;
     private Role role = Role.USER;
     private Provider provider = Provider.LOCAL;
 }

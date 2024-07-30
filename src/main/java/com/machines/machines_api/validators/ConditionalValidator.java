@@ -1,31 +1,33 @@
 package com.machines.machines_api.validators;
 
+import com.machines.machines_api.annotations.AnnotationFormatException;
+import com.machines.machines_api.annotations.AnnotationInvocationHandler;
 import com.machines.machines_api.annotations.Conditional;
+import io.leangen.geantyref.TypeFactory;
 import jakarta.validation.*;
+import jakarta.validation.metadata.BeanDescriptor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.*;
+import java.util.*;
 
 public class ConditionalValidator implements ConstraintValidator<Conditional, Object> {
     private Class<? extends Annotation> validatorAnnotationClass;
-    private final Map<String, Object> params = new HashMap<>();
+    private Map<String, Object> params = new HashMap<>();
+    private Class<?>[] groups;
 
     @Override
     public void initialize(Conditional constraintAnnotation) {
-        this.validatorAnnotationClass = constraintAnnotation.validatedBy();
-
+        this.validatorAnnotationClass = constraintAnnotation.useAnnotation();
+        this.groups = constraintAnnotation.groups();
         String[] paramArray = constraintAnnotation.params();
         for (String param : paramArray) {
             String[] keyValue = param.split("=", 2);
-
             if (keyValue.length == 2) {
-                Object convertedParam = convertToCorrectType(keyValue[0], keyValue[1]);
-                params.put(keyValue[0], convertedParam);
+                params.put(keyValue[0], convertToCorrectType(keyValue[0], keyValue[1]));
             }
         }
+        System.out.println("Initialization complete. Validator: " + validatorAnnotationClass.getName());
     }
 
     @Override
@@ -34,52 +36,67 @@ public class ConditionalValidator implements ConstraintValidator<Conditional, Ob
             return true;
         }
 
+
         try {
             // Create an instance of the underlying validator annotation with the specified parameters
+            System.out.println("Creating validator annotation...");
             Annotation validatorAnnotation = createValidatorAnnotation();
 
+            DummyClass dummyClass = new DummyClass(value);
+
+
+            System.out.println("Validator annotation created: " + validatorAnnotation);
+
+            var idk = validatorAnnotation.getClass().getAnnotations();
+            var idk2 = validatorAnnotation.getClass().getDeclaredAnnotations();
+
             // Get a Validator instance
-            Validator validator;
-            try (var factory = Validation.buildDefaultValidatorFactory()) {
-                validator = factory.getValidator();
-            }
+            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+            var type = validatorAnnotation.annotationType();
             // Validate the value with the created validator annotation
-            Set<ConstraintViolation<Object>> violations = validator.validateValue(
-                    getDummyClass(), "value", value, validatorAnnotation.annotationType());
+            Set<ConstraintViolation<Object>> validate = validator.validate(value);
 
+
+            var validate1 = validator.validate(value, validatorAnnotation.annotationType());
+
+
+            var violations = validator.validateProperty(
+                    dummyClass,
+                    "value",
+                    validatorAnnotation.annotationType()
+            );
+
+            System.out.println();
             if (violations.isEmpty()) {
-                return true;
+                return false;
+            } else {
+                context.disableDefaultConstraintViolation();
+                for (var violation : violations) {
+                    context.buildConstraintViolationWithTemplate(violation.getMessage())
+                            .addConstraintViolation();
+                }
+                return false;
             }
-
-            context.disableDefaultConstraintViolation();
-
-            for (ConstraintViolation<Object> violation : violations) {
-                context.buildConstraintViolationWithTemplate(violation.getMessage())
-                        .addConstraintViolation();
-            }
-
-            return false;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Annotation createValidatorAnnotation() {
-        // Use dynamic proxy to create an instance of the annotation with the specified parameters
-        return (Annotation) java.lang.reflect.Proxy.newProxyInstance(
+    private Annotation createValidatorAnnotation() throws AnnotationFormatException {
+        System.out.println("Creating proxy for " + validatorAnnotationClass.getName());
+
+        return (Annotation) Proxy.newProxyInstance(
                 validatorAnnotationClass.getClassLoader(),
                 new Class[]{validatorAnnotationClass},
-                (proxy, method, args) -> params.getOrDefault(method.getName(), method.getDefaultValue()));
+                new AnnotationInvocationHandler(validatorAnnotationClass, params == null ? Collections.emptyMap() : params)
+        );
     }
 
     private Object convertToCorrectType(String key, String value) {
-        // Handle conversion logic based on the expected parameter types
-        // This is a simplified solution, more comprehensive type handling might be needed in the future
         try {
             Method method = validatorAnnotationClass.getMethod(key);
             Class<?> returnType = method.getReturnType();
-
             if (returnType.equals(int.class) || returnType.equals(Integer.class)) {
                 return Integer.parseInt(value);
             } else if (returnType.equals(long.class) || returnType.equals(Long.class)) {
@@ -88,16 +105,22 @@ public class ConditionalValidator implements ConstraintValidator<Conditional, Ob
                 return Double.parseDouble(value);
             } else if (returnType.equals(float.class) || returnType.equals(Float.class)) {
                 return Float.parseFloat(value);
+            } else if (returnType.equals(boolean.class) || returnType.equals(Boolean.class)) {
+                return Boolean.parseBoolean(value);
             }
-
             return value; // default to String
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("Invalid parameter name: " + key, e);
         }
     }
 
-    private Class<Object> getDummyClass() {
-        // Returns a dummy class to validate the value
-        return Object.class;
+    // Dummy class to use for validation context
+    private static class DummyClass {
+        @SuppressWarnings("unused")
+        public Object value;
+
+        public DummyClass(Object value) {
+            this.value = value;
+        }
     }
 }

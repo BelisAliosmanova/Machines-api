@@ -91,6 +91,10 @@ public class Offer extends BaseEntity {
     // *********************************
 
 //    @Min(value = 1950, message = "Годината трябва да е след 1950")
+    @Conditional(
+            useAnnotation = Min.class,
+            params = {"value=1950", "message=Годината трябва да е след 1950"}
+    )
     private int manufactureYear;
 
     //    @NotBlank(message = "Моделът не може да бъде празен")

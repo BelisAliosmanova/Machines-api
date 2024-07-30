@@ -15,7 +15,7 @@ public @interface Conditional {
     Class<? extends Payload>[] payload() default {};
 
     // Specifies the underlying validator annotation
-    Class<? extends Annotation> validatedBy();
+    Class<? extends Annotation> useAnnotation();
 
     // The properties for the underlying validator
     String[] params() default {};

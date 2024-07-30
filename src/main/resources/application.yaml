@@ -38,6 +38,11 @@ spring:
       refresh-token:
         expiration: ${REFRESH_TOKEN_EXPIRATION} # 7 days
     oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: https://www.googleapis.com
+          client-id: ${GOOGLE_CLIENT_ID}
+          client-secret: ${GOOGLE_CLIENT_SECRET}
       client:
         registration:
           google:

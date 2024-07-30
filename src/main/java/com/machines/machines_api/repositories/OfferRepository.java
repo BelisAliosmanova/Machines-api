@@ -21,6 +21,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
             nativeQuery = true
     )
     List<Offer> findSimilarOffers(@Param("searchTerm") String searchTerm, @Param("currentOfferId") UUID id);
+
     Page<Offer> findAllByDeletedAtIsNullOrderByCreatedAtDesc(Pageable pageable);
 
     Optional<Offer> findByIdAndDeletedAtIsNull(UUID id);

@@ -42,7 +42,7 @@ public class Offer extends BaseEntity {
     private double price;
 
     @NotNull(message = "Задължително е да се знае дали е произведено в България")
-    private boolean isBulgarian;
+    private boolean bulgarian;
 
     @NotNull(message = "Задължително е да се знае дали да се поднобява обявата автоматично")
     private boolean autoUpdate = false;

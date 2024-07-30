@@ -1,6 +1,5 @@
 package com.machines.machines_api.models.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.machines.machines_api.models.dto.common.RegionDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

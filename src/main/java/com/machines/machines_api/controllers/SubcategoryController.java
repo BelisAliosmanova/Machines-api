@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class SubcategoryController {
     }
 
     @GetMapping("/all/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<SubcategoryAdminResponseDTO>> getAllAdmin() {
         List<SubcategoryAdminResponseDTO> categories = subcategoryService.getAllAdmin();
         return ResponseEntity.ok(categories);

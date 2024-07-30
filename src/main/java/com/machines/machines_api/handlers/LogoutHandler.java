@@ -2,9 +2,7 @@ package com.machines.machines_api.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.machines.machines_api.exceptions.token.InvalidTokenException;
-import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.TokenService;
-import com.machines.machines_api.utils.CookieHelper;
 import com.machines.machines_api.utils.ObjectMapperHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

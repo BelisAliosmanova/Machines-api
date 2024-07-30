@@ -4,10 +4,8 @@ import com.machines.machines_api.enums.TokenType;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.entity.Token;
 import com.machines.machines_api.models.entity.User;
-import jakarta.servlet.http.Cookie;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public interface TokenService {
     Token findByToken(String jwt);

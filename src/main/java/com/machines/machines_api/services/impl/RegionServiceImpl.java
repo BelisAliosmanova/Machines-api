@@ -106,9 +106,9 @@ public class RegionServiceImpl implements RegionService {
     public void delete(UUID id) {
         Region region = getEntityByIdAdmin(id);
 
-        if(region.getDeletedAt() == null){
+        if (region.getDeletedAt() == null) {
             region.setDeletedAt(LocalDateTime.now());
-        } else{
+        } else {
             region.setDeletedAt(null);
         }
 

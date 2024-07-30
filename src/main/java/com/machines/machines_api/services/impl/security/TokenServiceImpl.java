@@ -8,21 +8,15 @@ import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.models.entity.VerificationToken;
 import com.machines.machines_api.repositories.TokenRepository;
 import com.machines.machines_api.repositories.VerificationTokenRepository;
-import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.TokenService;
-import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Service implementation responsible for handling authentication tokens.

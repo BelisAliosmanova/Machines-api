@@ -8,9 +8,12 @@ import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -32,6 +35,7 @@ public class OfferServiceImpl implements OfferService {
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
+    private final Validator validator;
 
     @Override
     public Page<OfferResponseDTO> getAll(int page, int size) {
@@ -44,9 +48,12 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<OfferAdminResponseDTO> getAllAdmin() {
-        List<Offer> offers = offerRepository.findAll();
-        return offers.stream().map(x -> modelMapper.map(x, OfferAdminResponseDTO.class)).toList();
+    public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size) {
+        // Page request starts from 0 but actual pages start from 1
+        // So if page = 1 then page request should start from 0
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        Page<Offer> offers = offerRepository.findAll(pageRequest);
+        return offers.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
     }
 
     @Override
@@ -59,7 +66,22 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public OfferSingleAdminResponseDTO getByIdAdmin(UUID id) {
+        OfferSingleAdminResponseDTO offerSingleResponseDTO = modelMapper.map(getEntityByIdAdmin(id), OfferSingleAdminResponseDTO.class);
+        List<OfferResponseDTO> similarOffers = findSimilarOffers(offerSingleResponseDTO.getTitle(), offerSingleResponseDTO.getId());
+        offerSingleResponseDTO.setSimilarOffers(similarOffers);
+
+        return offerSingleResponseDTO;
+    }
+
+    @Override
     public OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
+        var violations = validator.validate(offerRequestDTO);
+
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
         User owner = userService.findById(user.getId());
 
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);
@@ -104,6 +126,17 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Offer getEntityById(UUID id) {
         Optional<Offer> offer = offerRepository.findByIdAndDeletedAtIsNull(id);
+
+        if (offer.isEmpty()) {
+            throw new OfferNotFoundException();
+        }
+
+        return offer.get();
+    }
+
+    @Override
+    public Offer getEntityByIdAdmin(UUID id) {
+        Optional<Offer> offer = offerRepository.findById(id);
 
         if (offer.isEmpty()) {
             throw new OfferNotFoundException();

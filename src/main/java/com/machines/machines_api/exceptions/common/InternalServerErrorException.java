@@ -1,7 +1,5 @@
 package com.machines.machines_api.exceptions.common;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -10,8 +8,8 @@ import org.springframework.http.HttpStatus;
  * Sets the appropriate message using MessageSource (the messages are in src/main/resources/messages).
  */
 public class InternalServerErrorException extends ApiException {
-    public InternalServerErrorException(MessageSource messageSource) {
-        super(messageSource.getMessage("internal.server.error", null, LocaleContextHolder.getLocale()), HttpStatus.INTERNAL_SERVER_ERROR);
+    public InternalServerErrorException() {
+        super("Вътрешна грешка на сървъра!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public InternalServerErrorException(String message) {

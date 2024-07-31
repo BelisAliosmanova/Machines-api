@@ -5,6 +5,7 @@ import com.machines.machines_api.enums.Role;
 import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.exceptions.user.UserCreateException;
 import com.machines.machines_api.exceptions.user.UserNotFoundException;
+import com.machines.machines_api.exceptions.user.UserValidationException;
 import com.machines.machines_api.models.dto.auth.AdminUserDTO;
 import com.machines.machines_api.models.dto.auth.OAuth2UserInfoDTO;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
@@ -15,7 +16,6 @@ import com.machines.machines_api.services.UserService;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final MessageSource messageSource;
 
     /**
      * Creates a new user based on the provided registration request.
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new UserCreateException(messageSource, true);
+            throw new UserCreateException(true);
         }
 
         try {
@@ -54,16 +53,16 @@ public class UserServiceImpl implements UserService {
             user.setUpdatedAt(LocalDateTime.now());
             return userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
-            throw new UserCreateException(messageSource, true);
+            throw new UserCreateException(true);
         } catch (ConstraintViolationException exception) {
-            throw new UserCreateException(exception.getConstraintViolations());
+            throw new UserValidationException(exception.getConstraintViolations());
         }
     }
 
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("email", messageSource));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -133,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     public User findById(UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("id", messageSource));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     private User buildUser(RegisterRequest request) {

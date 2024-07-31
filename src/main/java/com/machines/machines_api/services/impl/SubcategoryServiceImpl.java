@@ -12,7 +12,6 @@ import com.machines.machines_api.services.CategoryService;
 import com.machines.machines_api.services.SubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,7 +24,6 @@ import java.util.UUID;
 public class SubcategoryServiceImpl implements SubcategoryService {
     private final CategoryService categoryService;
     private final SubcategoryRepository subcategoryRepository;
-    private final MessageSource messageSource;
     private final ModelMapper modelMapper;
 
     @Override
@@ -56,7 +54,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
     public SubcategoryResponseDTO create(SubcategoryRequestDTO subcategoryDTO) {
         // Make sure subcategory is unique
         if (subcategoryRepository.findByNameAndDeletedAtIsNull(subcategoryDTO.getName()).isPresent()) {
-            throw new CategoryCreateException(messageSource, true);
+            throw new CategoryCreateException(true);
         }
 
         Category mainCategory = categoryService.getCategoryEntityById(subcategoryDTO.getCategoryId());
@@ -69,7 +67,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
             Subcategory savedSubcategory = subcategoryRepository.save(subcategory);
             return modelMapper.map(savedSubcategory, SubcategoryResponseDTO.class);
         } catch (RuntimeException exception) {
-            throw new CategoryCreateException(messageSource, false);
+            throw new CategoryCreateException(false);
         }
     }
 
@@ -79,7 +77,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         Optional<Subcategory> potentialSubcategory = subcategoryRepository.findByNameAndDeletedAtIsNull(subcategoryDTO.getName());
 
         if (potentialSubcategory.isPresent() && !subcategory.getId().equals(potentialSubcategory.get().getId())) {
-            throw new CategoryCreateException(messageSource, true);
+            throw new CategoryCreateException(true);
         }
 
         if (subcategoryDTO.getName() != null) {
@@ -113,7 +111,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         Optional<Subcategory> subcategory = subcategoryRepository.findByIdAndDeletedAtIsNull(id);
 
         if (subcategory.isEmpty()) {
-            throw new CategoryNotFoundException(messageSource);
+            throw new CategoryNotFoundException();
         }
 
         return subcategory.get();
@@ -123,7 +121,7 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         Optional<Subcategory> subcategory = subcategoryRepository.findById(id);
 
         if (subcategory.isEmpty()) {
-            throw new CategoryNotFoundException(messageSource);
+            throw new CategoryNotFoundException();
         }
 
         return subcategory.get();

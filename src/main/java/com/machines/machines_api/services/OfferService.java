@@ -4,18 +4,20 @@ import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface OfferService {
     Page<OfferResponseDTO> getAll(int page, int size);
 
-    List<OfferAdminResponseDTO> getAllAdmin();
+    Page<OfferAdminResponseDTO> getAllAdmin(int page, int size);
 
     OfferResponseDTO getById(UUID id);
+
+    OfferSingleAdminResponseDTO getByIdAdmin(UUID id);
 
     OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user);
 
@@ -24,4 +26,6 @@ public interface OfferService {
     void delete(UUID id, PublicUserDTO user);
 
     Offer getEntityById(UUID id);
+
+    Offer getEntityByIdAdmin(UUID id);
 }

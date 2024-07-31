@@ -7,10 +7,11 @@ import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.baseEntity.BaseEntity;
 import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.machines.machines_api.repositories.UserRepository;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -34,7 +35,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableAsync
 public class ApplicationConfig {
     private final UserRepository repository;
-    private final MessageSource messageSource;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -76,9 +76,20 @@ public class ApplicationConfig {
     }
 
     @Bean
+    public Validator validator() {
+        Validator validator;
+
+        try (var factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+
+        return validator;
+    }
+
+    @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UserNotFoundException("email", messageSource));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Bean

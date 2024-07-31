@@ -4,6 +4,7 @@ import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
+import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,8 +32,8 @@ public class OfferController {
 
     @GetMapping("/all/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OfferAdminResponseDTO>> getAllAdmin() {
-        List<OfferAdminResponseDTO> offers = offerService.getAllAdmin();
+    public ResponseEntity<Page<OfferAdminResponseDTO>> getAllAdmin(@RequestParam int page, @RequestParam int size) {
+        Page<OfferAdminResponseDTO> offers = offerService.getAllAdmin(page, size);
         return ResponseEntity.ok(offers);
     }
 
@@ -43,10 +43,16 @@ public class OfferController {
         return ResponseEntity.ok(offer);
     }
 
+    @GetMapping("/{id}/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<OfferSingleAdminResponseDTO> getByIdAdmin(@PathVariable UUID id) {
+        return ResponseEntity.ok(offerService.getByIdAdmin(id));
+    }
+
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('user:create')")
     public ResponseEntity<OfferResponseDTO> create(
-            @Valid @RequestBody OfferRequestDTO offerRequestDTO,
+            @RequestBody OfferRequestDTO offerRequestDTO,
             HttpServletRequest httpServletRequest
     ) {
         PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);

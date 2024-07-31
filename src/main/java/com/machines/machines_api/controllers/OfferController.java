@@ -30,6 +30,14 @@ public class OfferController {
         return ResponseEntity.ok(offers);
     }
 
+    @GetMapping("/all/user")
+    public ResponseEntity<Page<OfferAdminResponseDTO>> getAllForLoggedUser(@RequestParam int page, @RequestParam int size,
+                                                                      HttpServletRequest httpServletRequest) {
+        PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
+        Page<OfferAdminResponseDTO> offers = offerService.getAllForLoggedUser(page, size, user);
+        return ResponseEntity.ok(offers);
+    }
+
     @GetMapping("/all/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<OfferAdminResponseDTO>> getAllAdmin(@RequestParam int page, @RequestParam int size) {
@@ -38,8 +46,9 @@ public class OfferController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OfferResponseDTO> getById(@PathVariable UUID id) {
-        OfferResponseDTO offer = offerService.getById(id);
+    public ResponseEntity<OfferResponseDTO> getById(@PathVariable UUID id, HttpServletRequest request) {
+        PublicUserDTO user = (PublicUserDTO) request.getAttribute(JwtAuthenticationFilter.USER_KEY);
+        OfferResponseDTO offer = offerService.getById(id, user);
         return ResponseEntity.ok(offer);
     }
 

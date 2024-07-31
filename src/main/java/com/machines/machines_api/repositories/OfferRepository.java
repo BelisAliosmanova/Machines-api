@@ -27,4 +27,8 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
     Optional<Offer> findByIdAndDeletedAtIsNull(UUID id);
 
     Page<Offer> findAllByDeletedAtIsNull(PageRequest pageRequest);
+
+    Page<Offer> findAllByOwnerId(UUID ownerId, PageRequest pageRequest);
+
+    List<Offer> findAllByOwnerId(UUID ownerId);
 }

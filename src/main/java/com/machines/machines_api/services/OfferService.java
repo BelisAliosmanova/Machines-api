@@ -13,9 +13,11 @@ import java.util.UUID;
 public interface OfferService {
     Page<OfferResponseDTO> getAll(int page, int size);
 
+    Page<OfferAdminResponseDTO> getAllForLoggedUser(int page, int size, PublicUserDTO user);
+
     Page<OfferAdminResponseDTO> getAllAdmin(int page, int size);
 
-    OfferResponseDTO getById(UUID id);
+    OfferResponseDTO getById(UUID id, PublicUserDTO user);
 
     OfferSingleAdminResponseDTO getByIdAdmin(UUID id);
 

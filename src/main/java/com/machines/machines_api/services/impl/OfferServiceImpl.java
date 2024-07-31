@@ -18,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +48,16 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public Page<OfferAdminResponseDTO> getAllForLoggedUser(int page, int size, PublicUserDTO user) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        User loggedUser = userService.findByEmail(user.getEmail());
+
+        var response = offerRepository.findAllByOwnerId(loggedUser.getId(), pageRequest);
+
+        return response.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
+    }
+
+    @Override
     public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size) {
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0
@@ -59,7 +67,23 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public OfferResponseDTO getById(UUID id) {
+    public OfferResponseDTO getById(UUID id, PublicUserDTO user) {
+        Offer offer = offerRepository.findById(id).orElseThrow(OfferNotFoundException::new);
+
+        if (user != null) {
+            User loggedUser = userService.findByEmail(user.getEmail());
+
+            if (loggedUser.getId() == offer.getOwner().getId()) {
+                OfferSingleResponseDTO offerSingleResponseDTO = modelMapper.map(offer, OfferSingleResponseDTO.class);
+
+                List<OfferResponseDTO> similarOffers = findSimilarOffers(offerSingleResponseDTO.getTitle(), offerSingleResponseDTO.getId());
+                offerSingleResponseDTO.setSimilarOffers(similarOffers);
+
+                return offerSingleResponseDTO;
+
+            }
+        }
+
         OfferSingleResponseDTO offerSingleResponseDTO = modelMapper.map(getEntityById(id), OfferSingleResponseDTO.class);
         List<OfferResponseDTO> similarOffers = findSimilarOffers(offerSingleResponseDTO.getTitle(), offerSingleResponseDTO.getId());
         offerSingleResponseDTO.setSimilarOffers(similarOffers);
@@ -96,7 +120,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
-        Offer offer = getEntityById(id);
+        Offer offer = getEntityByIdAdmin(id);
 
         if (!user.getRole().equals(Role.ADMIN)) {
             if (!offer.getOwner().getId().equals(user.getId())) {
@@ -113,7 +137,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void delete(UUID id, PublicUserDTO user) {
-        Offer offer = getEntityById(id);
+        Offer offer = getEntityByIdAdmin(id);
 
         if (!user.getRole().equals(Role.ADMIN)) {
             if (!offer.getOwner().getId().equals(user.getId())) {
@@ -121,7 +145,7 @@ public class OfferServiceImpl implements OfferService {
             }
         }
 
-        if(offer.getDeletedAt() == null) {
+        if (offer.getDeletedAt() == null) {
             offer.delete();
         } else {
             offer.setDeletedAt(null);
@@ -132,7 +156,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Offer getEntityById(UUID id) {
-        Optional<Offer> offer = offerRepository.findById(id);
+        Optional<Offer> offer = offerRepository.findByIdAndDeletedAtIsNull(id);
 
         if (offer.isEmpty()) {
             throw new OfferNotFoundException();

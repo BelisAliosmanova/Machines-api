@@ -46,10 +46,10 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {
         Specification<Offer> offerSpecification = OfferSpecification.filterOffer(offerSpecificationDTO);
+        Sort offerSort = getOfferSort(offerSpecificationDTO.getOfferSort());
 
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0
-        Sort offerSort = getOfferSort(offerSpecificationDTO.getOfferSort());
         PageRequest pageRequest = PageRequest.of(page - 1, size, offerSort);
         var response = offerRepository.findAll(offerSpecification, pageRequest);
 

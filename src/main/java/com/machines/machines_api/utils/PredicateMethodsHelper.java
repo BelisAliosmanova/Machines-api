@@ -14,6 +14,11 @@ public class PredicateMethodsHelper<K> {
     private final CriteriaBuilder criteriaBuilder;
     private final Root<K> root;
 
+    public Predicate isNull(String attributeName) {
+        return criteriaBuilder
+                .isNull(root.get(attributeName));
+    }
+
     public Predicate lessThan(String attributeName, double valueToCheckFor) {
         return criteriaBuilder
                 .lessThan(root.get(attributeName), valueToCheckFor);

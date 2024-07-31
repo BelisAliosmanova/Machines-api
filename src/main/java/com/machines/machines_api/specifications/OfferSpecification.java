@@ -81,6 +81,8 @@ public class OfferSpecification {
             predicates.add(predicateMethods.equal(pathToSubcategory, subcategoryId));
         }
 
+        // Handle deletedAt = null
+        predicates.add(predicateMethods.isNull("deletedAt"));
         return predicates;
     }
 }

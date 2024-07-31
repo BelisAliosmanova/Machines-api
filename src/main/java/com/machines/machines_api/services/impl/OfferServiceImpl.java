@@ -9,15 +9,18 @@ import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
+import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
+import com.machines.machines_api.specifications.OfferSpecification;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,11 +41,13 @@ public class OfferServiceImpl implements OfferService {
     private final Validator validator;
 
     @Override
-    public Page<OfferResponseDTO> getAll(int page, int size) {
+    public Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {
+        Specification<Offer> offerSpecification = OfferSpecification.filterOffer(offerSpecificationDTO);
+
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        var response = offerRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc(pageRequest);
+        var response = offerRepository.findAll(offerSpecification, pageRequest);
 
         return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
     }

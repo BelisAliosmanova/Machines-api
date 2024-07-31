@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -119,13 +121,18 @@ public class OfferServiceImpl implements OfferService {
             }
         }
 
-        offer.delete();
+        if(offer.getDeletedAt() == null) {
+            offer.delete();
+        } else {
+            offer.setDeletedAt(null);
+        }
+
         offerRepository.save(offer);
     }
 
     @Override
     public Offer getEntityById(UUID id) {
-        Optional<Offer> offer = offerRepository.findByIdAndDeletedAtIsNull(id);
+        Optional<Offer> offer = offerRepository.findById(id);
 
         if (offer.isEmpty()) {
             throw new OfferNotFoundException();

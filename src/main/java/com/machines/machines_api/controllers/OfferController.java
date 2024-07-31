@@ -1,6 +1,7 @@
 package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.enums.OfferSaleType;
+import com.machines.machines_api.enums.OfferSort;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
@@ -38,7 +39,8 @@ public class OfferController {
             @RequestParam(required = false) OfferSaleType offerSaleType,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) Boolean bulgarian
+            @RequestParam(required = false) Boolean bulgarian,
+            @RequestParam(required = false, defaultValue = "def") OfferSort offerSort
     ) {
         OfferSpecificationDTO offerSpecificationDTO = OfferSpecificationDTO
                 .builder()
@@ -50,6 +52,7 @@ public class OfferController {
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .bulgarian(bulgarian)
+                .offerSort(offerSort)
                 .build();
 
         Page<OfferResponseDTO> offers = offerService.getAll(page, size, offerSpecificationDTO);

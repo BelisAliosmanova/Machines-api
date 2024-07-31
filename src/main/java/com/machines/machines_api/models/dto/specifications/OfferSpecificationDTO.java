@@ -1,6 +1,7 @@
 package com.machines.machines_api.models.dto.specifications;
 
 import com.machines.machines_api.enums.OfferSaleType;
+import com.machines.machines_api.enums.OfferSort;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.models.dto.common.BaseDTO;
 import lombok.*;
@@ -21,6 +22,7 @@ public class OfferSpecificationDTO extends BaseDTO {
     private Double minPrice;
     private Double maxPrice;
     private Boolean bulgarian;
+    private OfferSort offerSort;
 
     public boolean isValidMinPrice() {
         return minPrice != null && minPrice > 0;

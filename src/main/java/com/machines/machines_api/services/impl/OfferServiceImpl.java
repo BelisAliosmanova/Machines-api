@@ -1,7 +1,9 @@
 package com.machines.machines_api.services.impl;
 
+import com.machines.machines_api.enums.OfferSort;
 import com.machines.machines_api.enums.Role;
 import com.machines.machines_api.exceptions.common.AccessDeniedException;
+import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +49,8 @@ public class OfferServiceImpl implements OfferService {
 
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        Sort offerSort = getOfferSort(offerSpecificationDTO.getOfferSort());
+        PageRequest pageRequest = PageRequest.of(page - 1, size, offerSort);
         var response = offerRepository.findAll(offerSpecification, pageRequest);
 
         return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
@@ -211,5 +215,15 @@ public class OfferServiceImpl implements OfferService {
             Set<File> pictures = offerRequestDTO.getPictureIds().stream().map(fileService::getEntityById).collect(Collectors.toSet());
             offer.setPictures(pictures);
         }
+    }
+
+    private Sort getOfferSort(OfferSort offerSort) {
+        if (offerSort.equals(OfferSort.def)) {
+            return Sort.by("createdAt").descending();
+        } else if (offerSort.equals(OfferSort.alphaDesc)) {
+            return Sort.by("title").ascending();
+        }
+
+        throw new BadRequestException("Невалидно сортиране!");
     }
 }

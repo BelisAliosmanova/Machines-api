@@ -1,10 +1,14 @@
 package com.machines.machines_api.controllers;
 
+import com.machines.machines_api.enums.OfferSaleType;
+import com.machines.machines_api.enums.OfferSort;
+import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
+import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,8 +29,33 @@ public class OfferController {
     private final OfferService offerService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<OfferResponseDTO>> getAll(@RequestParam int page, @RequestParam int size) {
-        Page<OfferResponseDTO> offers = offerService.getAll(page, size);
+    public ResponseEntity<Page<OfferResponseDTO>> getAll(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) UUID subcategoryId,
+            @RequestParam(required = false) UUID cityId,
+            @RequestParam(required = false) OfferState offerState,
+            @RequestParam(required = false) OfferSaleType offerSaleType,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean bulgarian,
+            @RequestParam(required = false, defaultValue = "def") OfferSort offerSort
+    ) {
+        OfferSpecificationDTO offerSpecificationDTO = OfferSpecificationDTO
+                .builder()
+                .search(search)
+                .subcategoryId(subcategoryId)
+                .cityId(cityId)
+                .offerState(offerState)
+                .offerSaleType(offerSaleType)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .bulgarian(bulgarian)
+                .offerSort(offerSort)
+                .build();
+
+        Page<OfferResponseDTO> offers = offerService.getAll(page, size, offerSpecificationDTO);
         return ResponseEntity.ok(offers);
     }
 

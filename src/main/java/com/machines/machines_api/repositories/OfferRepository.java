@@ -3,16 +3,18 @@ package com.machines.machines_api.repositories;
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OfferRepository extends JpaRepository<Offer, UUID> {
+@Repository
+public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecificationExecutor<Offer> {
     @Query(value = "SELECT *, " +
             "ts_rank_cd(to_tsvector('simple', o.title), to_tsquery('simple', :searchTerm)) AS score " +
             "FROM offers o " +
@@ -21,8 +23,6 @@ public interface OfferRepository extends JpaRepository<Offer, UUID> {
             nativeQuery = true
     )
     List<Offer> findSimilarOffers(@Param("searchTerm") String searchTerm, @Param("currentOfferId") UUID id);
-
-    Page<Offer> findAllByDeletedAtIsNullOrderByCreatedAtDesc(Pageable pageable);
 
     Optional<Offer> findByIdAndDeletedAtIsNull(UUID id);
 

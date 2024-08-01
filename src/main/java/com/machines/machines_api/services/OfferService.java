@@ -5,13 +5,14 @@ import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
+import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;
 
 public interface OfferService {
-    Page<OfferResponseDTO> getAll(int page, int size);
+    Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO);
 
     Page<OfferAdminResponseDTO> getAllForLoggedUser(int page, int size, PublicUserDTO user);
 

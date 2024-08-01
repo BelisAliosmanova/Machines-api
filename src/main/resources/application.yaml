@@ -7,6 +7,10 @@ server:
     forgottenPasswordUrl: ${server.frontend.baseUrl}/forgotten-password
   backend:
     baseUrl: ${BACKEND_URL}
+    stripe:
+      apiKey: ${STRIPE_API_KEY}
+      successUrl: ${server.frontend.baseUrl}/success?session_id={CHECKOUT_SESSION_ID}
+      cancelUrl: ${server.frontend.baseUrl}/failure
 
 spring:
   servlet:

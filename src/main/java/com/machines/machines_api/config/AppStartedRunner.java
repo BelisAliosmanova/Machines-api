@@ -17,7 +17,7 @@ public class AppStartedRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        List<CheckoutProduct> checkoutProducts = OfferType.getOfferCheckoutProducts();
+        var checkoutProducts = OfferType.getOfferCheckoutProducts();
         productService.saveAllIfNotAdded(checkoutProducts);
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 public interface ProductService {
     Product getByCheckoutId(String checkoutId);
 
-    List<Product> saveAllIfNotAdded(List<CheckoutProduct> checkoutProducts);
+    void saveAllIfNotAdded(List<CheckoutProduct> checkoutProducts);
 }

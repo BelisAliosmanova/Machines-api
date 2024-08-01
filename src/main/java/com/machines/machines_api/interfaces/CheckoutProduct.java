@@ -12,4 +12,9 @@ public interface CheckoutProduct {
     BigDecimal unitAmountDecimal = null;
 
     Product toProduct();
+
+    String getName();
+    String getCheckoutId();
+    String getCurrency();
+    BigDecimal getUnitAmountDecimal();
 }

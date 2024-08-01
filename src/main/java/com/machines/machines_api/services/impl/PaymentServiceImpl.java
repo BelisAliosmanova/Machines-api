@@ -2,7 +2,6 @@ package com.machines.machines_api.services.impl;
 
 import com.machines.machines_api.config.StripeConfig;
 import com.machines.machines_api.enums.Product;
-import com.machines.machines_api.interfaces.CheckoutProduct;
 import com.machines.machines_api.models.dto.request.CheckoutRequestDTO;
 import com.machines.machines_api.services.PaymentService;
 import com.machines.machines_api.services.ProductService;

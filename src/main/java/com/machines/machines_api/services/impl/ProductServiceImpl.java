@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> saveAllIfNotAdded(List<CheckoutProduct> checkoutProducts) {
+    public void saveAllIfNotAdded(List<CheckoutProduct> checkoutProducts) {
         List<Product> products = new ArrayList<>();
 
         for (CheckoutProduct checkoutProduct : checkoutProducts) {
@@ -39,15 +39,16 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        return productRepository.saveAll(products);
+        productRepository.saveAll(products);
     }
 
     private Product toProduct(CheckoutProduct checkoutProduct) {
         Product product = new Product();
-        product.setName(checkoutProduct.name);
-        product.setCheckoutId(checkoutProduct.checkoutId);
-        product.setCurrency(checkoutProduct.currency);
-        product.setUnitAmountDecimal(checkoutProduct.unitAmountDecimal);
+
+        product.setName(checkoutProduct.getName());
+        product.setCheckoutId(checkoutProduct.getCheckoutId());
+        product.setCurrency(checkoutProduct.getCurrency());
+        product.setUnitAmountDecimal(checkoutProduct.getUnitAmountDecimal());
 
         return product;
     }

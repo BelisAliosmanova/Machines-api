@@ -49,4 +49,24 @@ public enum OfferType implements CheckoutProduct {
 
         return product;
     }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String getCheckoutId() {
+        return this.checkoutId;
+    }
+
+    @Override
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    @Override
+    public BigDecimal getUnitAmountDecimal() {
+        return this.unitAmountDecimal;
+    }
 }

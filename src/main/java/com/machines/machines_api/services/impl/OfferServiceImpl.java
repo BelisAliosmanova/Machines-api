@@ -1,11 +1,14 @@
 package com.machines.machines_api.services.impl;
 
 import com.machines.machines_api.enums.OfferSort;
+import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.enums.Role;
 import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
+import com.machines.machines_api.models.dto.common.OfferTypeDTO;
+import com.machines.machines_api.models.dto.common.ProductDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
@@ -42,6 +45,15 @@ public class OfferServiceImpl implements OfferService {
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
     private final Validator validator;
+
+    @Override
+    public List<OfferTypeDTO> getOfferTypesAsProducts() {
+        return OfferType
+                .getOfferTypes()
+                .stream()
+                .map(OfferType::toOfferTypeDTO)
+                .toList();
+    }
 
     @Override
     public Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {

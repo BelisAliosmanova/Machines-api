@@ -1,6 +1,7 @@
 package com.machines.machines_api.services.impl;
 
 import com.machines.machines_api.enums.Product;
+import com.machines.machines_api.exceptions.product.ProductExistsException;
 import com.machines.machines_api.interfaces.CheckoutProduct;
 import com.machines.machines_api.repositories.ProductRepository;
 import com.machines.machines_api.services.ProductService;
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> product = productRepository.findByCheckoutIdAndDeletedAtIsNull(checkoutId);
 
         if (product.isEmpty()) {
-            throw new RuntimeException("My exception");
+            throw new ProductExistsException("checkoutId");
         }
 
         return product.get();

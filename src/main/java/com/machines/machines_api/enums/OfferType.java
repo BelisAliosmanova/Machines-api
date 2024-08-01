@@ -1,8 +1,7 @@
 package com.machines.machines_api.enums;
 
 import com.machines.machines_api.interfaces.CheckoutProduct;
-import com.stripe.model.Price;
-import com.stripe.model.Product;
+import com.machines.machines_api.models.dto.common.OfferTypeDTO;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,10 +13,10 @@ public enum OfferType implements CheckoutProduct {
     VIP("ВИП обява", "offer_vip", "bgn", BigDecimal.valueOf(2.40)),
     TOP("ТОП обява", "offer_top", "bgn", BigDecimal.valueOf(6.00));
 
-    private static final List<CheckoutProduct> OFFER_CHECKOUT_PRODUCTS = new ArrayList<>();
+    private static final List<OfferType> OFFER_TYPES = new ArrayList<>();
 
     static {
-        OFFER_CHECKOUT_PRODUCTS.addAll(List.of(values()));
+        OFFER_TYPES.addAll(List.of(values()));
     }
 
     private final String name;
@@ -32,22 +31,23 @@ public enum OfferType implements CheckoutProduct {
         this.unitAmountDecimal = unitAmountDecimal;
     }
 
-    public static List<CheckoutProduct> getOfferCheckoutProducts() {
-        return Collections.unmodifiableList(OFFER_CHECKOUT_PRODUCTS);
+    public static List<OfferType> getOfferTypes() {
+        return Collections.unmodifiableList(OFFER_TYPES);
     }
 
-    @Override
-    public Product toProduct() {
-        Product product = new Product();
-        Price price = new Price();
+    public static List<CheckoutProduct> getOfferTypesAsCheckoutProducts() {
+        return Collections.unmodifiableList(OFFER_TYPES);
+    }
 
-        product.setName(this.name);
-        product.setId(this.checkoutId);
-        price.setCurrency(this.currency);
-        price.setUnitAmountDecimal(this.unitAmountDecimal);
-        product.setDefaultPriceObject(price);
+    public OfferTypeDTO toOfferTypeDTO() {
+        OfferTypeDTO offerTypeDTO = new OfferTypeDTO();
+        offerTypeDTO.setName(getName());
+        offerTypeDTO.setCurrency(getCurrency());
+        offerTypeDTO.setCheckoutId(getCheckoutId());
+        offerTypeDTO.setUnitAmountDecimal(getUnitAmountDecimal());
+        offerTypeDTO.setOfferType(this);
 
-        return product;
+        return offerTypeDTO;
     }
 
     @Override

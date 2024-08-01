@@ -11,8 +11,6 @@ public interface CheckoutProduct {
     String currency = null;
     BigDecimal unitAmountDecimal = null;
 
-    Product toProduct();
-
     String getName();
     String getCheckoutId();
     String getCurrency();

@@ -31,18 +31,4 @@ public class Product extends BaseEntity implements CheckoutProduct {
 
     @DecimalMin(value = "0.0", message = "Цената трябва да е 0.0 или повече!")
     private BigDecimal unitAmountDecimal;
-
-    @Override
-    public com.stripe.model.Product toProduct() {
-        com.stripe.model.Product product = new com.stripe.model.Product();
-        Price price = new Price();
-
-        product.setName(getName());
-        product.setId(getCheckoutId());
-        price.setCurrency(getCurrency());
-        price.setUnitAmountDecimal(getUnitAmountDecimal());
-        product.setDefaultPriceObject(price);
-
-        return product;
-    }
 }

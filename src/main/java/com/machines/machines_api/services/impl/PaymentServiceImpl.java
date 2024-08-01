@@ -2,6 +2,7 @@ package com.machines.machines_api.services.impl;
 
 import com.machines.machines_api.config.StripeConfig;
 import com.machines.machines_api.enums.Product;
+import com.machines.machines_api.exceptions.payment.PaymentCreateException;
 import com.machines.machines_api.models.dto.request.CheckoutRequestDTO;
 import com.machines.machines_api.services.PaymentService;
 import com.machines.machines_api.services.ProductService;
@@ -24,6 +25,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public String createHostedCheckoutSession(CheckoutRequestDTO checkoutRequestDTO) throws StripeException {
+        if (checkoutRequestDTO.getCheckoutIds().isEmpty()) {
+            throw new PaymentCreateException();
+        }
+
         Stripe.apiKey = stripeConfig.getApiKey();
 
         Customer customer = CustomerUtil.findOrCreateCustomer(checkoutRequestDTO.getCustomerEmail(), checkoutRequestDTO.getCustomerName());

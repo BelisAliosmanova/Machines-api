@@ -144,7 +144,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public String promote(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException {
+    public String createPromoteSession(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException {
         Offer offer = getEntityById(id);
 
         if (!user.getRole().equals(Role.ADMIN)) {
@@ -157,6 +157,14 @@ public class OfferServiceImpl implements OfferService {
         OfferCheckoutRequestDTO offerCheckoutRequestDTO = new OfferCheckoutRequestDTO(offerType, id, baseCheckoutRequestDTO);
 
         return paymentService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+    }
+
+    @Override
+    public Offer updateOfferType(UUID id, OfferType offerType) {
+        Offer offer = getEntityByIdAdmin(id);
+        offer.setOfferType(offerType);
+
+        return offerRepository.save(offer);
     }
 
     @Override

@@ -31,7 +31,9 @@ public interface OfferService {
 
     OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user);
 
-    String promote(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException;
+    String createPromoteSession(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException;
+
+    Offer updateOfferType(UUID id, OfferType offerType);
 
     OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user);
 

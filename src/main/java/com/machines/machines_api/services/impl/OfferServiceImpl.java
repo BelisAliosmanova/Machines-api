@@ -8,9 +8,9 @@ import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferTypeDTO;
-import com.machines.machines_api.models.dto.common.ProductDTO;
-import com.machines.machines_api.models.dto.request.CheckoutRequestDTO;
+import com.machines.machines_api.models.dto.request.checkout.BaseCheckoutRequestDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
+import com.machines.machines_api.models.dto.request.checkout.OfferCheckoutRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
@@ -153,13 +153,10 @@ public class OfferServiceImpl implements OfferService {
             }
         }
 
-        CheckoutRequestDTO checkoutRequestDTO = CheckoutRequestDTO.builder()
-                .checkoutIds(List.of(offerType.getCheckoutId()))
-                .customerEmail(user.getEmail())
-                .customerName(customerName)
-                .build();
+        BaseCheckoutRequestDTO baseCheckoutRequestDTO = BaseCheckoutRequestDTO.builder().customerEmail(user.getEmail()).customerName(customerName).build();
+        OfferCheckoutRequestDTO offerCheckoutRequestDTO = new OfferCheckoutRequestDTO(offerType, id, baseCheckoutRequestDTO);
 
-        return paymentService.createHostedCheckoutSession(checkoutRequestDTO);
+        return paymentService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
     }
 
     @Override

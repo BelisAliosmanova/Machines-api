@@ -15,6 +15,7 @@ import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminRespo
 import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
+import com.stripe.exception.StripeException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -108,6 +109,18 @@ public class OfferController {
         OfferResponseDTO offer = offerService.create(offerRequestDTO, user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(offer);
+    }
+
+    @GetMapping("/promote/{id}")
+    @PreAuthorize("hasAuthority('user:create')")
+    public ResponseEntity<String> promote(
+            @PathVariable UUID id,
+            @RequestParam(name = "customerName") String customerName,
+            @RequestParam(name = "offerType") OfferType offerType,
+            HttpServletRequest httpServletRequest
+    ) throws StripeException {
+        PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
+        return ResponseEntity.ok(offerService.promote(id, customerName, offerType, user));
     }
 
     @PutMapping("/{id}")

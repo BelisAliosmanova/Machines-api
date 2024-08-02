@@ -1,5 +1,6 @@
 package com.machines.machines_api.services;
 
+import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferTypeDTO;
 import com.machines.machines_api.models.dto.common.ProductDTO;
@@ -9,6 +10,7 @@ import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO
 import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminResponseDTO;
 import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.models.entity.Offer;
+import com.stripe.exception.StripeException;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -28,6 +30,8 @@ public interface OfferService {
     OfferSingleAdminResponseDTO getByIdAdmin(UUID id);
 
     OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user);
+
+    String promote(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException;
 
     OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user);
 

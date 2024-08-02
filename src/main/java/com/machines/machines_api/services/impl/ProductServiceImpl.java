@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = new ArrayList<>();
 
         for (CheckoutProduct checkoutProduct : checkoutProducts) {
-            Optional<Product> product = productRepository.findByCheckoutIdAndDeletedAtIsNull(checkoutProduct.checkoutId);
+            Optional<Product> product = productRepository.findByCheckoutIdAndDeletedAtIsNull(checkoutProduct.getCheckoutId());
 
             if (product.isEmpty()) {
                 products.add(toProduct(checkoutProduct));

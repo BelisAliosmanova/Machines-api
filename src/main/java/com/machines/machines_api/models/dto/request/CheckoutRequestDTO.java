@@ -5,15 +5,15 @@ import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.stripe.model.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class CheckoutRequestDTO extends BaseDTO {
     @NotNull
     private List<String> checkoutIds;

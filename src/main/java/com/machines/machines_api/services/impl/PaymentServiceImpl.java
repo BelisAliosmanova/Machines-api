@@ -55,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
                                                             .build()
                                             )
                                             .setCurrency(product.getCurrency())
-                                            .setUnitAmountDecimal(product.getUnitAmountDecimal())
+                                            .setUnitAmountDecimal(product.getUnitAmountDecimalInCents())
                                             .build())
                             .build());
         }

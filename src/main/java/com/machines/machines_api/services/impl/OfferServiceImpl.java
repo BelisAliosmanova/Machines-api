@@ -9,6 +9,7 @@ import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferTypeDTO;
 import com.machines.machines_api.models.dto.common.ProductDTO;
+import com.machines.machines_api.models.dto.request.CheckoutRequestDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
@@ -19,6 +20,7 @@ import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
 import com.machines.machines_api.specifications.OfferSpecification;
+import com.stripe.exception.StripeException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,7 @@ public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final FileService fileService;
     private final CityService cityService;
+    private final PaymentService paymentService;
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
@@ -138,6 +141,25 @@ public class OfferServiceImpl implements OfferService {
 
         Offer savedOffer = offerRepository.save(offer);
         return modelMapper.map(savedOffer, OfferResponseDTO.class);
+    }
+
+    @Override
+    public String promote(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException {
+        Offer offer = getEntityById(id);
+
+        if (!user.getRole().equals(Role.ADMIN)) {
+            if (!offer.getOwner().getId().equals(user.getId())) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        CheckoutRequestDTO checkoutRequestDTO = CheckoutRequestDTO.builder()
+                .checkoutIds(List.of(offerType.getCheckoutId()))
+                .customerEmail(user.getEmail())
+                .customerName(customerName)
+                .build();
+
+        return paymentService.createHostedCheckoutSession(checkoutRequestDTO);
     }
 
     @Override

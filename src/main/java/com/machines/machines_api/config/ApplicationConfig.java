@@ -7,6 +7,7 @@ import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.baseEntity.BaseEntity;
 import com.machines.machines_api.models.dto.common.BaseDTO;
 import com.machines.machines_api.repositories.UserRepository;
+import com.stripe.model.EventDataObjectDeserializer;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;

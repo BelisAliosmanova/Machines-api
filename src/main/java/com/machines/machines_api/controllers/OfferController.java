@@ -120,7 +120,7 @@ public class OfferController {
             HttpServletRequest httpServletRequest
     ) throws StripeException {
         PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
-        return ResponseEntity.ok(offerService.promote(id, customerName, offerType, user));
+        return ResponseEntity.ok(offerService.createPromoteSession(id, customerName, offerType, user));
     }
 
     @PutMapping("/{id}")

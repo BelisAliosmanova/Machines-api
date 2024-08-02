@@ -74,7 +74,11 @@ public class PaymentServiceImpl implements PaymentService {
     public String createPromoteOfferHostedCheckoutSession(OfferCheckoutRequestDTO offerCheckoutRequestDTO) throws StripeException {
         Map<String, Map<String, String>> checkoutIds = new HashMap<>();
 
-        OfferMetadata offerMetadata = new OfferMetadata(offerCheckoutRequestDTO.getOfferId().toString());
+        OfferMetadata offerMetadata = new OfferMetadata(
+                offerCheckoutRequestDTO.getOfferId(),
+                offerCheckoutRequestDTO.getOfferType()
+        );
+
         checkoutIds.put(offerCheckoutRequestDTO.getOfferType().getCheckoutId(), offerMetadata);
 
         HostedCheckoutRequestDTO checkoutRequestDTO = new HostedCheckoutRequestDTO(checkoutIds, offerCheckoutRequestDTO);

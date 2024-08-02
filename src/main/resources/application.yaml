@@ -9,6 +9,7 @@ server:
     baseUrl: ${BACKEND_URL}
     stripe:
       apiKey: ${STRIPE_API_KEY}
+      webhookSecret: ${STRIPE_WEBHOOK_SECRET}
       successUrl: ${server.frontend.baseUrl}/success?session_id={CHECKOUT_SESSION_ID}
       cancelUrl: ${server.frontend.baseUrl}/failure
 

@@ -1,4 +1,4 @@
-package com.machines.machines_api.enums;
+package com.machines.machines_api.models.entity;
 
 import com.machines.machines_api.interfaces.CheckoutProduct;
 import com.machines.machines_api.models.baseEntity.BaseEntity;

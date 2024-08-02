@@ -1,4 +1,4 @@
--- Create table for Category entity
+-- Create table for Product entity
 CREATE TABLE products (
      id UUID PRIMARY KEY,
      created_at TIMESTAMP    NOT NULL,

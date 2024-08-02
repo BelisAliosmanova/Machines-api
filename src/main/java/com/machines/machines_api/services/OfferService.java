@@ -3,7 +3,6 @@ package com.machines.machines_api.services;
 import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferTypeDTO;
-import com.machines.machines_api.models.dto.common.ProductDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
@@ -33,7 +32,7 @@ public interface OfferService {
 
     String createPromoteSession(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException;
 
-    Offer updateOfferType(UUID id, OfferType offerType);
+    void updateOfferType(UUID id, OfferType offerType);
 
     OfferResponseDTO update(UUID id, OfferRequestDTO offerRequestDTO, PublicUserDTO user);
 

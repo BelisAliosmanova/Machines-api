@@ -2,28 +2,29 @@ package com.machines.machines_api.services.impl;
 
 import com.google.gson.JsonSyntaxException;
 import com.machines.machines_api.config.StripeConfig;
+import com.machines.machines_api.enums.PaymentProvider;
 import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.common.InternalServerErrorException;
+import com.machines.machines_api.models.dto.common.PaymentDTO;
 import com.machines.machines_api.models.dto.metadata.OfferMetadata;
+import com.machines.machines_api.models.dto.request.PaymentRequestDTO;
+import com.machines.machines_api.services.OfferService;
+import com.machines.machines_api.services.PaymentService;
 import com.machines.machines_api.services.WebhookService;
 import com.stripe.exception.SignatureVerificationException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.PaymentIntent;
-import com.stripe.model.StripeObject;
+import com.stripe.model.*;
 import com.stripe.net.Webhook;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class WebhookServiceImpl implements WebhookService {
     private final StripeConfig stripeConfig;
-    private final OfferServiceImpl offerService;
+    private final OfferService offerService;
+    private final PaymentService paymentService;
+    private final ModelMapper modelMapper;
 
     @Override
     public Event constructEvent(String payload, String sigHeader) {
@@ -71,14 +72,45 @@ public class WebhookServiceImpl implements WebhookService {
 
     public void handlePaymentSucceeded(Event event, PaymentIntent paymentIntent) {
         var metadata = paymentIntent.getMetadata();
-        
+
+        PaymentRequestDTO paymentRequestDTO = getPaymentRequestDTO(paymentIntent);
+        paymentService.save(paymentRequestDTO);
+
+        System.out.println();
         if (OfferMetadata.isOfferMetadata(metadata)) {
-            handleOfferPromotePaymentSucceeded(event, paymentIntent);
+            handleOfferPromotePaymentSucceeded(paymentIntent);
         }
     }
 
-    public void handleOfferPromotePaymentSucceeded(Event event, PaymentIntent paymentIntent) {
+    public void handleOfferPromotePaymentSucceeded(PaymentIntent paymentIntent) {
         OfferMetadata metadata = (OfferMetadata) paymentIntent.getMetadata();
         offerService.updateOfferType(metadata.getOfferId(), metadata.getOfferType());
+    }
+
+    private PaymentRequestDTO getPaymentRequestDTO(PaymentIntent paymentIntent) {
+        var paymentDTOBuilder = PaymentDTO.builder()
+                .status(paymentIntent.getStatus())
+                .description(paymentIntent.getDescription())
+                .amount(paymentIntent.getAmount())
+                .amountReceived(paymentIntent.getAmountReceived())
+                .currency(paymentIntent.getCurrency())
+                .metadata(paymentIntent.getMetadata().toString())
+                .paymentProvider(PaymentProvider.STRIPE);
+
+        Customer customer = paymentIntent.getCustomerObject();
+        if (customer != null) {
+            paymentDTOBuilder
+                    .customerId(customer.getId())
+                    .customerEmail(customer.getEmail())
+                    .customerName(customer.getName());
+        }
+
+        PaymentMethod paymentMethod = paymentService.getPaymentMethod(paymentIntent.getPaymentMethod());
+        if (paymentMethod != null) {
+            paymentDTOBuilder.paymentMethodType(paymentMethod.getType());
+        }
+
+        PaymentDTO paymentDTO = paymentDTOBuilder.build();
+        return modelMapper.map(paymentDTO, PaymentRequestDTO.class);
     }
 }

@@ -1,11 +1,11 @@
 package com.machines.machines_api.services;
 
-import com.machines.machines_api.models.dto.request.checkout.HostedCheckoutRequestDTO;
-import com.machines.machines_api.models.dto.request.checkout.OfferCheckoutRequestDTO;
+import com.machines.machines_api.models.dto.request.PaymentRequestDTO;
 import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentMethod;
 
 public interface PaymentService {
-    String createHostedCheckoutSession(HostedCheckoutRequestDTO checkoutRequestDTO) throws StripeException;
+    void save(PaymentRequestDTO paymentRequestDTO);
 
-    String createPromoteOfferHostedCheckoutSession(OfferCheckoutRequestDTO checkoutRequestDTO) throws StripeException;
+    PaymentMethod getPaymentMethod(String paymentMethod);
 }

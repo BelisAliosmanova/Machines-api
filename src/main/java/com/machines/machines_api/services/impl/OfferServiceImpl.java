@@ -8,8 +8,8 @@ import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferTypeDTO;
-import com.machines.machines_api.models.dto.request.checkout.BaseCheckoutRequestDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
+import com.machines.machines_api.models.dto.request.checkout.BaseCheckoutRequestDTO;
 import com.machines.machines_api.models.dto.request.checkout.OfferCheckoutRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
@@ -43,7 +43,7 @@ public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final FileService fileService;
     private final CityService cityService;
-    private final PaymentService paymentService;
+    private final CheckoutService checkoutService;
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
@@ -156,15 +156,15 @@ public class OfferServiceImpl implements OfferService {
         BaseCheckoutRequestDTO baseCheckoutRequestDTO = BaseCheckoutRequestDTO.builder().customerEmail(user.getEmail()).customerName(customerName).build();
         OfferCheckoutRequestDTO offerCheckoutRequestDTO = new OfferCheckoutRequestDTO(offerType, id, baseCheckoutRequestDTO);
 
-        return paymentService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+        return checkoutService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
     }
 
     @Override
-    public Offer updateOfferType(UUID id, OfferType offerType) {
+    public void updateOfferType(UUID id, OfferType offerType) {
         Offer offer = getEntityByIdAdmin(id);
         offer.setOfferType(offerType);
 
-        return offerRepository.save(offer);
+        offerRepository.save(offer);
     }
 
     @Override

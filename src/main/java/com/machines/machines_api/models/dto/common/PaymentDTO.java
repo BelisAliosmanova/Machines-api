@@ -1,22 +1,14 @@
-package com.machines.machines_api.models.entity;
+package com.machines.machines_api.models.dto.common;
 
 import com.machines.machines_api.enums.PaymentProvider;
-import com.machines.machines_api.models.baseEntity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
 import lombok.*;
 
-@Getter
-@Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "payments")
-public class Payment extends BaseEntity {
+public class PaymentDTO extends BaseDTO {
     private String description;
     private String currency;
     private String status;
@@ -27,7 +19,5 @@ public class Payment extends BaseEntity {
     private String customerId;
     private String customerEmail;
     private String customerName;
-
-    @Enumerated(EnumType.STRING)
     private PaymentProvider paymentProvider;
 }

@@ -76,7 +76,6 @@ public class WebhookServiceImpl implements WebhookService {
         PaymentRequestDTO paymentRequestDTO = getPaymentRequestDTO(paymentIntent);
         paymentService.save(paymentRequestDTO);
 
-        System.out.println();
         if (OfferMetadata.isOfferMetadata(metadata)) {
             handleOfferPromotePaymentSucceeded(paymentIntent);
         }

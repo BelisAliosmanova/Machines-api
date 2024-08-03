@@ -1,24 +1,33 @@
 package com.machines.machines_api.services.impl;
 
+import com.machines.machines_api.enums.CompanySort;
 import com.machines.machines_api.enums.Role;
 import com.machines.machines_api.exceptions.common.AccessDeniedException;
+import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.company.CompanyNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.CompanyRequestDTO;
 import com.machines.machines_api.models.dto.response.CompanyResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.CompanyAdminResponseDTO;
+import com.machines.machines_api.models.dto.specifications.CompanySpecificationDTO;
 import com.machines.machines_api.models.entity.City;
 import com.machines.machines_api.models.entity.Company;
 import com.machines.machines_api.models.entity.File;
 import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.repositories.CompanyRepository;
-import com.machines.machines_api.services.*;
+import com.machines.machines_api.services.CityService;
+import com.machines.machines_api.services.CompanyService;
+import com.machines.machines_api.services.FileService;
+import com.machines.machines_api.services.UserService;
+import com.machines.machines_api.specifications.CompanySpecification;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,19 +41,21 @@ public class CompanyServiceImpl implements CompanyService {
     private final UserService userService;
     private final FileService fileService;
     private final CityService cityService;
-    private final SubcategoryService subcategoryService;
     private final CompanyRepository companyRepository;
     private final ModelMapper modelMapper;
     private final Validator validator;
 
     @Override
-    public Page<CompanyResponseDTO> getAll(int page, int size) {
+    public Page<CompanyResponseDTO> getAll(int page, int size, CompanySpecificationDTO companySpecificationDTO) {
+        Specification<Company> companySpecification = CompanySpecification.filterCompany(companySpecificationDTO);
+        Sort companySort = getCompanySort(companySpecificationDTO.getCompanySort());
+
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        PageRequest pageRequest = PageRequest.of(page - 1, size, companySort);
 
         // Handle "deletedAt = null" in the CompanySpecification.java class
-        var response = companyRepository.findAllByDeletedAtIsNull(pageRequest);
+        var response = companyRepository.findAll(companySpecification, pageRequest);
         return response.map(x -> modelMapper.map(x, CompanyResponseDTO.class));
     }
 
@@ -170,5 +181,15 @@ public class CompanyServiceImpl implements CompanyService {
             Set<File> pictures = companyRequestDTO.getPictureIds().stream().map(fileService::getEntityById).collect(Collectors.toSet());
             company.setPictures(pictures);
         }
+    }
+
+    private Sort getCompanySort(CompanySort companySort) {
+        if (companySort.equals(CompanySort.def)) {
+            return Sort.by("createdAt").descending();
+        } else if (companySort.equals(CompanySort.alphaDesc)) {
+            return Sort.by("name").ascending();
+        }
+
+        throw new BadRequestException("Невалидно сортиране!");
     }
 }

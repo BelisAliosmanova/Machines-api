@@ -1,9 +1,15 @@
 package com.machines.machines_api.controllers;
 
+import com.machines.machines_api.enums.CompanySort;
+import com.machines.machines_api.enums.OfferSaleType;
+import com.machines.machines_api.enums.OfferSort;
+import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.CompanyRequestDTO;
 import com.machines.machines_api.models.dto.response.CompanyResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.CompanyAdminResponseDTO;
+import com.machines.machines_api.models.dto.specifications.CompanySpecificationDTO;
+import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.CompanyService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,9 +32,19 @@ public class CompanyController {
     @GetMapping("/all")
     public ResponseEntity<Page<CompanyResponseDTO>> getAll(
             @RequestParam int page,
-            @RequestParam int size
+            @RequestParam int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) UUID cityId,
+            @RequestParam(required = false, defaultValue = "def") CompanySort companySort
     ) {
-        Page<CompanyResponseDTO> companies = companyService.getAll(page, size);
+        CompanySpecificationDTO companySpecificationDTO = CompanySpecificationDTO
+                .builder()
+                .search(search)
+                .cityId(cityId)
+                .companySort(companySort)
+                .build();
+
+        Page<CompanyResponseDTO> companies = companyService.getAll(page, size, companySpecificationDTO);
         return ResponseEntity.ok(companies);
     }
 

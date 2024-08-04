@@ -1,15 +1,11 @@
 package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.enums.CompanySort;
-import com.machines.machines_api.enums.OfferSaleType;
-import com.machines.machines_api.enums.OfferSort;
-import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.request.CompanyRequestDTO;
 import com.machines.machines_api.models.dto.response.CompanyResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.CompanyAdminResponseDTO;
 import com.machines.machines_api.models.dto.specifications.CompanySpecificationDTO;
-import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.CompanyService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,7 +47,7 @@ public class CompanyController {
     @GetMapping("/all/user")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Page<CompanyAdminResponseDTO>> getAllForLoggedUser(@RequestParam int page, @RequestParam int size,
-                                                                           HttpServletRequest httpServletRequest) {
+                                                                             HttpServletRequest httpServletRequest) {
         PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
         Page<CompanyAdminResponseDTO> companies = companyService.getAllForLoggedUser(page, size, user);
         return ResponseEntity.ok(companies);

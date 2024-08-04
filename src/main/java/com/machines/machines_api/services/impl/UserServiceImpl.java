@@ -82,6 +82,12 @@ public class UserServiceImpl implements UserService {
             throw new AccessDeniedException();
         }
 
+        if (userDTO.getPassword() == null) {
+            userDTO.setPassword(userToUpdate.getPassword());
+        } else {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
         modelMapper.map(userDTO, userToUpdate);
         userToUpdate.setId(id);
 
@@ -98,7 +104,12 @@ public class UserServiceImpl implements UserService {
             throw new AccessDeniedException();
         }
 
-        user.setDeletedAt(LocalDateTime.now());
+        if (user.getDeletedAt() == null) {
+            user.setDeletedAt(LocalDateTime.now());
+        } else {
+            user.setDeletedAt(null);
+        }
+
         userRepository.save(user);
     }
 
@@ -130,9 +141,16 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
     public User findById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public AdminUserDTO getByIdAdmin(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return modelMapper.map(user, AdminUserDTO.class);
     }
 
     private User buildUser(RegisterRequest request) {

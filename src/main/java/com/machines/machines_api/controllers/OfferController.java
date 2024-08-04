@@ -62,7 +62,7 @@ public class OfferController {
     @GetMapping("/all/user")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Page<OfferAdminResponseDTO>> getAllForLoggedUser(@RequestParam int page, @RequestParam int size,
-                                                                      HttpServletRequest httpServletRequest) {
+                                                                           HttpServletRequest httpServletRequest) {
         PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
         Page<OfferAdminResponseDTO> offers = offerService.getAllForLoggedUser(page, size, user);
         return ResponseEntity.ok(offers);

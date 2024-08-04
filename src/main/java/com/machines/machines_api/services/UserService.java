@@ -16,6 +16,8 @@ public interface UserService {
 
     List<AdminUserDTO> getAllUsers();
 
+    AdminUserDTO getByIdAdmin(UUID id);
+
     AdminUserDTO updateUser(UUID id, AdminUserDTO userDTO, PublicUserDTO currentUser);
 
     void deleteUserById(UUID id, PublicUserDTO currentUser);

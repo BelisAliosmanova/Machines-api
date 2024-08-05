@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(Role.USER);
             user.setCreatedAt(LocalDateTime.now());
             user.setUpdatedAt(LocalDateTime.now());
+            user.setEnabled(true);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             throw new UserCreateException(true);
@@ -78,11 +79,12 @@ public class UserServiceImpl implements UserService {
     public AdminUserDTO updateUser(UUID id, AdminUserDTO userDTO, PublicUserDTO currentUser) {
         User userToUpdate = findById(id);
 
-        if (userToUpdate.getId().equals(currentUser.getId())) {
+        if (!(userToUpdate.getId().equals(currentUser.getId()))) {
             throw new AccessDeniedException();
         }
 
-        if (userDTO.getPassword() == null) {
+        // It is not null it is "" so don't change it
+        if (userDTO.getPassword() == "") {
             userDTO.setPassword(userToUpdate.getPassword());
         } else {
             userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));

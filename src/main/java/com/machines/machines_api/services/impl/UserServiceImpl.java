@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(Role.USER);
             user.setCreatedAt(LocalDateTime.now());
             user.setUpdatedAt(LocalDateTime.now());
+            user.setEnabled(true);
             return userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             throw new UserCreateException(true);
@@ -78,8 +79,15 @@ public class UserServiceImpl implements UserService {
     public AdminUserDTO updateUser(UUID id, AdminUserDTO userDTO, PublicUserDTO currentUser) {
         User userToUpdate = findById(id);
 
-        if (userToUpdate.getId().equals(currentUser.getId())) {
+        if (!(userToUpdate.getId().equals(currentUser.getId())) && !currentUser.getRole().equals(Role.ADMIN)) {
             throw new AccessDeniedException();
+        }
+
+        // It is not null it is "" so don't change it
+        if (userDTO.getPassword() == "") {
+            userDTO.setPassword(userToUpdate.getPassword());
+        } else {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
 
         modelMapper.map(userDTO, userToUpdate);
@@ -98,7 +106,12 @@ public class UserServiceImpl implements UserService {
             throw new AccessDeniedException();
         }
 
-        user.setDeletedAt(LocalDateTime.now());
+        if (user.getDeletedAt() == null) {
+            user.setDeletedAt(LocalDateTime.now());
+        } else {
+            user.setDeletedAt(null);
+        }
+
         userRepository.save(user);
     }
 
@@ -130,9 +143,16 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
     public User findById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public AdminUserDTO getByIdAdmin(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        return modelMapper.map(user, AdminUserDTO.class);
     }
 
     private User buildUser(RegisterRequest request) {

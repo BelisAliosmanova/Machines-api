@@ -12,9 +12,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminUserDTO extends PublicUserDTO {
-    private String lastname;
-    private String address;
     private boolean enabled;
+    private String password;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;

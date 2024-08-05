@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     public AdminUserDTO updateUser(UUID id, AdminUserDTO userDTO, PublicUserDTO currentUser) {
         User userToUpdate = findById(id);
 
-        if (!(userToUpdate.getId().equals(currentUser.getId()))) {
+        if (!(userToUpdate.getId().equals(currentUser.getId())) && !currentUser.getRole().equals(Role.ADMIN)) {
             throw new AccessDeniedException();
         }
 

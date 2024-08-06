@@ -34,6 +34,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
     private final UserService userService;
     private final TokenService tokenService;
 
+
     @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.resourceserver.opaquetoken.client-secret}")
@@ -41,7 +42,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
 
     @Override
     public String getOAuthGoogleLoginUrl() {
-        return new GoogleAuthorizationCodeRequestUrl(clientId, frontendConfig.getBaseUrl(), SCOPES).build();
+        return new GoogleAuthorizationCodeRequestUrl(clientId, frontendConfig.getBaseUrl() + "/process-oauth2", SCOPES).build();
     }
 
     @Override
@@ -77,7 +78,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
                     clientId,
                     clientSecret,
                     code,
-                    frontendConfig.getBaseUrl())
+                    frontendConfig.getBaseUrl() + "/process-oauth2")
                     .execute()
                     .getAccessToken();
         } catch (IOException e) {

@@ -29,8 +29,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -163,6 +165,7 @@ public class OfferServiceImpl implements OfferService {
     public void updateOfferType(UUID id, OfferType offerType) {
         Offer offer = getEntityByIdAdmin(id);
         offer.setOfferType(offerType);
+        offer.setRenewedAt(LocalDateTime.now());
 
         offerRepository.save(offer);
     }

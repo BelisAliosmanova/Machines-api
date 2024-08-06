@@ -11,6 +11,7 @@ import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO
 import com.machines.machines_api.models.entity.Offer;
 import com.stripe.exception.StripeException;
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 import java.util.UUID;

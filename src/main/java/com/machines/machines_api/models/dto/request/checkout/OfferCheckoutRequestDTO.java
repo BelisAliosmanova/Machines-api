@@ -1,9 +1,10 @@
 package com.machines.machines_api.models.dto.request.checkout;
 
 import com.machines.machines_api.enums.OfferType;
-import com.machines.machines_api.models.dto.common.BaseDTO;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 

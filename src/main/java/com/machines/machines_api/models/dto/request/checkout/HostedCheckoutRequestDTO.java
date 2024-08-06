@@ -1,13 +1,11 @@
 package com.machines.machines_api.models.dto.request.checkout;
 
-import com.machines.machines_api.interfaces.CheckoutProduct;
-import com.machines.machines_api.models.dto.common.BaseDTO;
-import com.stripe.model.Product;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)

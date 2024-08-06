@@ -1,7 +1,7 @@
 package com.machines.machines_api.services;
 
-import com.machines.machines_api.models.entity.Product;
 import com.machines.machines_api.interfaces.CheckoutProduct;
+import com.machines.machines_api.models.entity.Product;
 
 import java.util.List;
 

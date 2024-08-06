@@ -1,8 +1,6 @@
 package com.machines.machines_api.interfaces;
 
 
-import com.stripe.model.Product;
-
 import java.math.BigDecimal;
 
 public interface CheckoutProduct {
@@ -12,7 +10,10 @@ public interface CheckoutProduct {
     BigDecimal unitAmountDecimal = null;
 
     String getName();
+
     String getCheckoutId();
+
     String getCurrency();
+
     BigDecimal getUnitAmountDecimal();
 }

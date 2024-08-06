@@ -4,10 +4,8 @@ import com.machines.machines_api.enums.OfferSaleType;
 import com.machines.machines_api.enums.OfferSort;
 import com.machines.machines_api.enums.OfferState;
 import com.machines.machines_api.enums.OfferType;
-import com.machines.machines_api.interfaces.CheckoutProduct;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
 import com.machines.machines_api.models.dto.common.OfferTypeDTO;
-import com.machines.machines_api.models.dto.common.ProductDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
@@ -26,7 +24,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController

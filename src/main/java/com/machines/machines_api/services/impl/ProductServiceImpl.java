@@ -1,8 +1,8 @@
 package com.machines.machines_api.services.impl;
 
-import com.machines.machines_api.models.entity.Product;
 import com.machines.machines_api.exceptions.product.ProductExistsException;
 import com.machines.machines_api.interfaces.CheckoutProduct;
+import com.machines.machines_api.models.entity.Product;
 import com.machines.machines_api.repositories.ProductRepository;
 import com.machines.machines_api.services.ProductService;
 import lombok.RequiredArgsConstructor;

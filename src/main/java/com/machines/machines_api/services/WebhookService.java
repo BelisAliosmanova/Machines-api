@@ -5,6 +5,8 @@ import com.stripe.model.StripeObject;
 
 public interface WebhookService {
     Event constructEvent(String payload, String sigHeader);
+
     StripeObject convertStripeObject(Event event);
+
     void handleStripeEvent(Event event, StripeObject stripeObject);
 }

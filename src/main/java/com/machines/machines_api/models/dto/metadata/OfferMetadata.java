@@ -2,7 +2,6 @@ package com.machines.machines_api.models.dto.metadata;
 
 import com.machines.machines_api.enums.OfferType;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;

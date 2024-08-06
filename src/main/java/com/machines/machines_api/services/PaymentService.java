@@ -1,7 +1,6 @@
 package com.machines.machines_api.services;
 
 import com.machines.machines_api.models.dto.request.PaymentRequestDTO;
-import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 
 public interface PaymentService {

@@ -3,7 +3,9 @@ package com.machines.machines_api.controllers;
 import com.machines.machines_api.enums.OfferSaleType;
 import com.machines.machines_api.enums.OfferSort;
 import com.machines.machines_api.enums.OfferState;
+import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
+import com.machines.machines_api.models.dto.common.OfferTypeDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
@@ -11,6 +13,7 @@ import com.machines.machines_api.models.dto.response.admin.OfferSingleAdminRespo
 import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
+import com.stripe.exception.StripeException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,6 +31,11 @@ import java.util.UUID;
 @RequestMapping("/api/v1/offers")
 public class OfferController {
     private final OfferService offerService;
+
+    @GetMapping("/types")
+    public ResponseEntity<List<OfferTypeDTO>> getOfferTypes() {
+        return ResponseEntity.ok(offerService.getOfferTypesAsProducts());
+    }
 
     @GetMapping("/all")
     public ResponseEntity<Page<OfferResponseDTO>> getAll(
@@ -98,6 +107,18 @@ public class OfferController {
         OfferResponseDTO offer = offerService.create(offerRequestDTO, user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(offer);
+    }
+
+    @GetMapping("/promote/{id}")
+    @PreAuthorize("hasAuthority('user:create')")
+    public ResponseEntity<String> promote(
+            @PathVariable UUID id,
+            @RequestParam(name = "customerName") String customerName,
+            @RequestParam(name = "offerType") OfferType offerType,
+            HttpServletRequest httpServletRequest
+    ) throws StripeException {
+        PublicUserDTO user = (PublicUserDTO) httpServletRequest.getAttribute(JwtAuthenticationFilter.USER_KEY);
+        return ResponseEntity.ok(offerService.createPromoteSession(id, customerName, offerType, user));
     }
 
     @PutMapping("/{id}")

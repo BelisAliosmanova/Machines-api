@@ -1,12 +1,16 @@
 package com.machines.machines_api.services.impl;
 
 import com.machines.machines_api.enums.OfferSort;
+import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.enums.Role;
 import com.machines.machines_api.exceptions.common.AccessDeniedException;
 import com.machines.machines_api.exceptions.common.BadRequestException;
 import com.machines.machines_api.exceptions.offer.OfferNotFoundException;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
+import com.machines.machines_api.models.dto.common.OfferTypeDTO;
 import com.machines.machines_api.models.dto.request.OfferRequestDTO;
+import com.machines.machines_api.models.dto.request.checkout.BaseCheckoutRequestDTO;
+import com.machines.machines_api.models.dto.request.checkout.OfferCheckoutRequestDTO;
 import com.machines.machines_api.models.dto.response.OfferResponseDTO;
 import com.machines.machines_api.models.dto.response.OfferSingleResponseDTO;
 import com.machines.machines_api.models.dto.response.admin.OfferAdminResponseDTO;
@@ -16,6 +20,7 @@ import com.machines.machines_api.models.entity.*;
 import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
 import com.machines.machines_api.specifications.OfferSpecification;
+import com.stripe.exception.StripeException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -38,10 +44,20 @@ public class OfferServiceImpl implements OfferService {
     private final UserService userService;
     private final FileService fileService;
     private final CityService cityService;
+    private final CheckoutService checkoutService;
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
     private final Validator validator;
+
+    @Override
+    public List<OfferTypeDTO> getOfferTypesAsProducts() {
+        return OfferType
+                .getOfferTypes()
+                .stream()
+                .map(OfferType::toOfferTypeDTO)
+                .toList();
+    }
 
     @Override
     public Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {
@@ -126,6 +142,31 @@ public class OfferServiceImpl implements OfferService {
 
         Offer savedOffer = offerRepository.save(offer);
         return modelMapper.map(savedOffer, OfferResponseDTO.class);
+    }
+
+    @Override
+    public String createPromoteSession(UUID id, String customerName, OfferType offerType, PublicUserDTO user) throws StripeException {
+        Offer offer = getEntityById(id);
+
+        if (!user.getRole().equals(Role.ADMIN)) {
+            if (!offer.getOwner().getId().equals(user.getId())) {
+                throw new AccessDeniedException();
+            }
+        }
+
+        BaseCheckoutRequestDTO baseCheckoutRequestDTO = BaseCheckoutRequestDTO.builder().customerEmail(user.getEmail()).customerName(customerName).build();
+        OfferCheckoutRequestDTO offerCheckoutRequestDTO = new OfferCheckoutRequestDTO(offerType, id, baseCheckoutRequestDTO);
+
+        return checkoutService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+    }
+
+    @Override
+    public void updateOfferType(UUID id, OfferType offerType) {
+        Offer offer = getEntityByIdAdmin(id);
+        offer.setOfferType(offerType);
+        offer.setPromotedAt(LocalDateTime.now());
+
+        offerRepository.save(offer);
     }
 
     @Override

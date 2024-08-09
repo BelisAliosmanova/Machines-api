@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -84,6 +85,9 @@ public class Offer extends BaseEntity {
     @NotNull(message = "Създателят на обявата е задължителен")
     @ManyToOne
     private User owner;
+
+    private LocalDateTime renewedAt;
+    private LocalDateTime promotedAt;
 
     // *********************************
     // **   EXTRA INFO | EXTRA INFO   **

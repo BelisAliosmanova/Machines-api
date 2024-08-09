@@ -5,6 +5,8 @@ CREATE TABLE offers
     created_at           TIMESTAMP        NOT NULL,
     updated_at           TIMESTAMP        NOT NULL,
     deleted_at           TIMESTAMP,
+    renewed_at           TIMESTAMP,
+    promoted_at          TIMESTAMP,
     title                VARCHAR(255)     NOT NULL CHECK (title <> ''),
     phone_number         VARCHAR(255)     NOT NULL CHECK (phone_number <> ''),
     description          TEXT             NOT NULL CHECK (description <> ''),

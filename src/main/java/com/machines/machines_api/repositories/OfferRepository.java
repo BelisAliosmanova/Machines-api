@@ -1,5 +1,6 @@
 package com.machines.machines_api.repositories;
 
+import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,5 +31,7 @@ public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecific
 
     Page<Offer> findAllByOwnerId(UUID ownerId, PageRequest pageRequest);
 
-    List<Offer> findAllByOwnerId(UUID ownerId);
+    List<Offer> findAllByAutoUpdateIsTrue();
+
+    List<Offer> findAllByOfferTypeIsNot(OfferType offerSaleType);
 }

@@ -4,6 +4,7 @@ import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.models.entity.Offer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +25,9 @@ public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecific
             nativeQuery = true
     )
     List<Offer> findSimilarOffers(@Param("searchTerm") String searchTerm, @Param("currentOfferId") UUID id);
+
+    @Query("SELECT o FROM Offer o WHERE o.offerType IN :offerTypes AND o.deletedAt IS NULL")
+    Page<Offer> findAllByOfferTypeInAndDeletedAtIsNull(@Param("offerTypes") List<OfferType> offerTypes, Pageable pageable);
 
     Optional<Offer> findByIdAndDeletedAtIsNull(UUID id);
 

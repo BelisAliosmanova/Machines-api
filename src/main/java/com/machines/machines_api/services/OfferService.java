@@ -24,6 +24,8 @@ public interface OfferService {
 
     Page<OfferAdminResponseDTO> getAllForLoggedUser(int page, int size, PublicUserDTO user);
 
+    Page<OfferResponseDTO> getByOwner(int page, int size, UUID userId);
+
     Page<OfferAdminResponseDTO> getAllAdmin(int page, int size);
 
     OfferResponseDTO getById(UUID id, PublicUserDTO user);

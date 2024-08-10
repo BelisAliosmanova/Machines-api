@@ -83,6 +83,13 @@ public class OfferController {
         return ResponseEntity.ok(offers);
     }
 
+    @GetMapping("/byOwner")
+    public ResponseEntity<Page<OfferResponseDTO>> getByOwner(@RequestParam int page, @RequestParam int size,
+                                                             @RequestParam UUID userId) {
+        Page<OfferResponseDTO> offers = offerService.getByOwner(page, size, userId);
+        return ResponseEntity.ok(offers);
+    }
+
     @GetMapping("/all/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<OfferAdminResponseDTO>> getAllAdmin(@RequestParam int page, @RequestParam int size) {

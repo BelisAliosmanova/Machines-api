@@ -92,6 +92,15 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public Page<OfferResponseDTO> getByOwner(int page, int size, UUID userId) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+
+        var response = offerRepository.findAllByOwnerId(userId, pageRequest);
+
+        return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
+    }
+
+    @Override
     public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size) {
         // Page request starts from 0 but actual pages start from 1
         // So if page = 1 then page request should start from 0

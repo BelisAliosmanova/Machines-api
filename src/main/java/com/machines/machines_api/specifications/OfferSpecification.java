@@ -25,8 +25,21 @@ public class OfferSpecification {
                     .criteriaBuilder(criteriaBuilder)
                     .build();
 
+            // Add predicates for filtering
             List<Predicate> predicates = getPredicates();
-            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
+            query.where(predicates.toArray(Predicate[]::new));
+
+            // Add sorting for offerType
+            query.orderBy(
+                    criteriaBuilder.asc(criteriaBuilder.selectCase()
+                            .when(criteriaBuilder.equal(root.get("offerType"), "TOP"), 1)
+                            .when(criteriaBuilder.equal(root.get("offerType"), "VIP"), 2)
+                            .when(criteriaBuilder.equal(root.get("offerType"), "BASIC"), 3)
+                            .otherwise(4)),
+                    criteriaBuilder.desc(root.get("createdAt")) // Secondary sorting by createdAt descending
+            );
+
+            return query.getRestriction();
         };
     }
 

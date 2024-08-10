@@ -61,15 +61,16 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {
+        // Create the specification with custom sorting embedded in it
         Specification<Offer> offerSpecification = OfferSpecification.filterOffer(offerSpecificationDTO);
-        Sort offerSort = getOfferSort(offerSpecificationDTO.getOfferSort());
 
         // Page request starts from 0 but actual pages start from 1
-        // So if page = 1 then page request should start from 0
-        PageRequest pageRequest = PageRequest.of(page - 1, size, offerSort);
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
 
-        // Handle "deletedAt = null" in the OfferSpecification.java class
+        // Use the specification with pagination, sorting handled inside the specification
         var response = offerRepository.findAll(offerSpecification, pageRequest);
+
+        // Map the response to OfferResponseDTO
         return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
     }
 
@@ -145,12 +146,6 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferResponseDTO create(OfferRequestDTO offerRequestDTO, PublicUserDTO user) {
-        var violations = validator.validate(offerRequestDTO);
-
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-
         User owner = userService.findById(user.getId());
 
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);
@@ -277,10 +272,19 @@ public class OfferServiceImpl implements OfferService {
     }
 
     private Sort getOfferSort(OfferSort offerSort) {
+        // Custom sorting logic for offerType priority (TOP, VIP, BASIC)
+        Sort offerTypeSort = Sort.by(Sort.Order.asc(
+                "CASE " +
+                        "WHEN offerType = 'TOP' THEN 1 " +
+                        "WHEN offerType = 'VIP' THEN 2 " +
+                        "WHEN offerType = 'BASIC' THEN 3 " +
+                        "ELSE 4 END"
+        ));
+
         if (offerSort.equals(OfferSort.def)) {
-            return Sort.by("createdAt").descending();
+            return offerTypeSort.and(Sort.by("createdAt").descending());
         } else if (offerSort.equals(OfferSort.alphaDesc)) {
-            return Sort.by("title").ascending();
+            return offerTypeSort.and(Sort.by("title").ascending());
         }
 
         throw new BadRequestException("Невалидно сортиране!");

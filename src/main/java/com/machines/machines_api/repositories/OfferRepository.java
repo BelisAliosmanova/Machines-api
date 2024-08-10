@@ -40,4 +40,11 @@ public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecific
     List<Offer> findAllByOfferTypeIsNot(OfferType offerSaleType);
 
     List<Offer> findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType offerType);
+
+    @Query("SELECT o FROM Offer o WHERE o.deletedAt IS NULL ORDER BY " +
+            "CASE WHEN o.offerType = 'TOP' THEN 1 " +
+            "WHEN o.offerType = 'VIP' THEN 2 " +
+            "WHEN o.offerType = 'BASIC' THEN 3 ELSE 4 END, " +
+            "o.createdAt DESC")
+    Page<Offer> findAllOffersWithCustomSort(Pageable pageable);
 }

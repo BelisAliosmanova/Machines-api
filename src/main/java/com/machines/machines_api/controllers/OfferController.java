@@ -68,6 +68,12 @@ public class OfferController {
         return ResponseEntity.ok(offers);
     }
 
+    @GetMapping("/top")
+    public ResponseEntity<List<OfferResponseDTO>> getTopOffers() {
+        List<OfferResponseDTO> topOffers = offerService.getTopOffers();
+        return ResponseEntity.ok(topOffers);
+    }
+
     @GetMapping("/all/user")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<Page<OfferAdminResponseDTO>> getAllForLoggedUser(@RequestParam int page, @RequestParam int size,

@@ -74,6 +74,14 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public List<OfferResponseDTO> getTopOffers() {
+        List<Offer> offers = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.TOP);
+        return offers.stream()
+                .map(x -> modelMapper.map(x, OfferResponseDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<OfferAdminResponseDTO> getAllForLoggedUser(int page, int size, PublicUserDTO user) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         User loggedUser = userService.findByEmail(user.getEmail());

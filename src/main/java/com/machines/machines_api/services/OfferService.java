@@ -20,6 +20,8 @@ public interface OfferService {
 
     Page<OfferResponseDTO> getAll(int page, int size, OfferSpecificationDTO offerSpecificationDTO);
 
+    List<OfferResponseDTO> getTopOffers();
+
     Page<OfferAdminResponseDTO> getAllForLoggedUser(int page, int size, PublicUserDTO user);
 
     Page<OfferAdminResponseDTO> getAllAdmin(int page, int size);

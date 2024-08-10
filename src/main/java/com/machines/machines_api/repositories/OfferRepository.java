@@ -34,4 +34,6 @@ public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecific
     List<Offer> findAllByAutoUpdateIsTrue();
 
     List<Offer> findAllByOfferTypeIsNot(OfferType offerSaleType);
+
+    List<Offer> findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType offerType);
 }

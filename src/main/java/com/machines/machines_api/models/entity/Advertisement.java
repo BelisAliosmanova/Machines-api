@@ -24,14 +24,12 @@ public class Advertisement extends BaseEntity {
     @ManyToMany
     @JoinTable(
             name = "advertisements_pictures",
-            joinColumns = @JoinColumn(name = "advertisements_id"),
+            joinColumns = @JoinColumn(name = "advertisement_id"),
             inverseJoinColumns = @JoinColumn(name = "file_id")
     )
     private Set<File> pictures;
     private String targetUrl;      // URL to the site when the ad is clicked
     private String position;       // Position of the ad on the site (e.g., "Top", "Center", "Bottom", "Gallery")
-    private int width;             // Width of the ad in pixels
-    private int height;            // Height of the ad in pixels
     private LocalDate startDate;   // Start date for the ad campaign
     private LocalDate endDate;     // End date for the ad campaign
     private boolean active;        // Whether the ad is active or not

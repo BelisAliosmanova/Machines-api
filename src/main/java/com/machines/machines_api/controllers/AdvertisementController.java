@@ -37,7 +37,7 @@ public class AdvertisementController {
         return ResponseEntity.ok(advertisement);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Advertisement> getByIdAdmin(@PathVariable UUID id) {
         Advertisement advertisement = advertisementService.getAdvertisementByIdAdmin(id);

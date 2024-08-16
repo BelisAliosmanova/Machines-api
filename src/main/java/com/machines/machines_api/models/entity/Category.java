@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "categories")
 public class Category extends BaseEntity {
     @Column(nullable = false)
-    @NotBlank(message = "The category cannot be blank.")
+    @NotBlank(message = "Помълнете името на категорията")
     private String name;
 
     @OneToMany(mappedBy = "category")

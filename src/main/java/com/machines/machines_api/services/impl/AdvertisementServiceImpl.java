@@ -61,7 +61,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         if (existingAdvertisement.getDeletedAt() == null) {
             existingAdvertisement.setDeletedAt(LocalDateTime.now());
+            existingAdvertisement.setActive(false);
         } else {
+            existingAdvertisement.setActive(true);
             existingAdvertisement.setDeletedAt(null);
         }
 

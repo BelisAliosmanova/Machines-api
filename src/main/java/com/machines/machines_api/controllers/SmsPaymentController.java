@@ -3,13 +3,13 @@ package com.machines.machines_api.controllers;
 import com.machines.machines_api.enums.OfferType;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 public class SmsPaymentController {
 
-    private static final String ALLOWED_IP = "79.98.104.12"; // Mobio.bg IP address
+    private static final Set<String> ALLOWED_IPS = Set.of("87.120.176.216", "35.234.105.159", "0:0:0:0:0:0:0:1");
     private static final Set<Integer> SERVICE_IDS = Set.of(21258, 21259, 21260);
 
     private final OfferService offerService;
@@ -27,7 +27,7 @@ public class SmsPaymentController {
         this.offerService = offerService;
     }
 
-    @GetMapping("/sms/notify")
+    @PostMapping("/sms/notify")
     public String handleSmsNotification(
             @RequestParam int servID,
             @RequestParam String fromnum,
@@ -42,10 +42,9 @@ public class SmsPaymentController {
             @RequestParam String billing_status,
             HttpServletRequest request) {
 
-        // Verify request is coming from Mobio.bg IP
+        // Verify request is coming from allowed IP
         String remoteAddress = request.getRemoteAddr();
-        System.out.println(remoteAddress);
-        if (!ALLOWED_IP.equals(remoteAddress) && !isLocalAddress(remoteAddress)) {
+        if (!ALLOWED_IPS.contains(remoteAddress)) {
             return "Unauthorized IP";
         }
 
@@ -60,35 +59,47 @@ public class SmsPaymentController {
             offerService.updateOfferType(UUID.fromString(item), OfferType.TOP);
         }
 
-        String responseMessage = "Успешно плащане.";
+        String responseMessage = "Успешно плащане."; // Your response message
 
         // Send a response back to Mobio.bg to notify the user
-        sendSmsResponse(fromnum, smsID, responseMessage);
+        sendSmsResponse(servID, fromnum, smsID, responseMessage);
 
         return "OK";
     }
 
-    private void sendSmsResponse(String toNumber, String smsID, String message) {
-        // Use RestTemplate to send the response back to Mobio.bg
+    private void sendSmsResponse(int servID, String toNumber, String smsID, String message) {
         String url = "http://mobio.bg/paynotify/pnsendsms.php";
-        RestTemplate restTemplate = new RestTemplate();
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("servID", SERVICE_IDS.iterator().next())
-                .queryParam("smsID", smsID)
-                .queryParam("tonum", toNumber)
-                .queryParam("message", URLEncoder.encode(message, StandardCharsets.UTF_8));
+        HttpURLConnection connection = null;
 
         try {
-            System.out.println(restTemplate.getForObject(builder.toUriString(), String.class));
-            System.out.println("SMS response sent successfully to Mobio.bg");
+            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+            String requestUrl = String.format("%s?servID=%d&tonum=%s&smsID=%s&message=%s",
+                    url, servID, toNumber, smsID, encodedMessage);
+
+            // Open connection
+            URL urlObj = new URL(requestUrl);
+            connection = (HttpURLConnection) urlObj.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+
+
+            try (OutputStream os = connection.getOutputStream()) {
+                os.flush();
+            }
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                System.out.println("SMS response sent successfully to Mobio.bg");
+            } else {
+                System.err.println("Failed to send SMS response: HTTP error code " + responseCode);
+            }
+
         } catch (Exception e) {
             System.err.println("Failed to send SMS response: " + e.getMessage());
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
-    }
-
-    private boolean isLocalAddress(String ipAddress) {
-        // Check if the IP address is a loopback address (localhost)
-        return ipAddress.equals("127.0.0.1") || ipAddress.equals("0:0:0:0:0:0:0:1");
     }
 }

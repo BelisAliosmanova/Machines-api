@@ -169,7 +169,10 @@ public class OfferServiceImpl implements OfferService {
         BaseCheckoutRequestDTO baseCheckoutRequestDTO = BaseCheckoutRequestDTO.builder().customerEmail(user.getEmail()).customerName(customerName).build();
         OfferCheckoutRequestDTO offerCheckoutRequestDTO = new OfferCheckoutRequestDTO(offerType, id, baseCheckoutRequestDTO);
 
-        return checkoutService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+        String checkout = checkoutService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+
+        updateOfferType(offerCheckoutRequestDTO.getOfferId(), offerCheckoutRequestDTO.getOfferType());
+        return checkout;
     }
 
     @Override

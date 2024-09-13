@@ -21,7 +21,6 @@ import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
 import com.machines.machines_api.specifications.OfferSpecification;
 import com.stripe.exception.StripeException;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,10 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,8 +72,14 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<OfferResponseDTO> getTopOffers() {
-        List<Offer> offers = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.TOP);
-        return offers.stream()
+        List<Offer> offersTop = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.TOP);
+        List<Offer> offersVip = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.VIP);
+
+        List<Offer> allOffers = new ArrayList<>();
+        allOffers.addAll(offersTop);
+        allOffers.addAll(offersVip);
+
+        return allOffers.stream()
                 .map(x -> modelMapper.map(x, OfferResponseDTO.class))
                 .collect(Collectors.toList());
     }

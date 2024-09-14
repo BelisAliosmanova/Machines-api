@@ -92,8 +92,33 @@ public class OfferController {
 
     @GetMapping("/all/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<OfferAdminResponseDTO>> getAllAdmin(@RequestParam int page, @RequestParam int size) {
-        Page<OfferAdminResponseDTO> offers = offerService.getAllAdmin(page, size);
+    public ResponseEntity<Page<OfferAdminResponseDTO>> getAllAdmin(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) UUID subcategoryId,
+            @RequestParam(required = false) UUID cityId,
+            @RequestParam(required = false) OfferState offerState,
+            @RequestParam(required = false) OfferSaleType offerSaleType,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean bulgarian,
+            @RequestParam(required = false, defaultValue = "def") OfferSort offerSort
+    ) {
+        OfferSpecificationDTO offerSpecificationDTO = OfferSpecificationDTO
+                .builder()
+                .search(search)
+                .subcategoryId(subcategoryId)
+                .cityId(cityId)
+                .offerState(offerState)
+                .offerSaleType(offerSaleType)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .bulgarian(bulgarian)
+                .offerSort(offerSort)
+                .build();
+
+        Page<OfferAdminResponseDTO> offers = offerService.getAllAdmin(page, size, offerSpecificationDTO);
         return ResponseEntity.ok(offers);
     }
 

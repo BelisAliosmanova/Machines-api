@@ -67,8 +67,10 @@ public class OfferServiceImpl implements OfferService {
         // Use the specification with pagination, sorting handled inside the specification
         var response = offerRepository.findAll(offerSpecification, pageRequest);
 
-        Search search = new Search(offerSpecificationDTO.getSearch());
-        searchService.create(search);
+        if (offerSpecificationDTO.getSearch() != null) {
+            Search search = new Search(offerSpecificationDTO.getSearch());
+            searchService.create(search);
+        }
 
         // Map the response to OfferResponseDTO
         return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
@@ -108,12 +110,23 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size) {
+    public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {
+        offerSpecificationDTO.setIncludeDeletedOffers(true);
+
+        Specification<Offer> offerSpecification = OfferSpecification.filterOffer(offerSpecificationDTO);
+
         // Page request starts from 0 but actual pages start from 1
-        // So if page = 1 then page request should start from 0
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        Page<Offer> offers = offerRepository.findAll(pageRequest);
-        return offers.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
+
+        // Use the specification with pagination, sorting handled inside the specification
+        var response = offerRepository.findAll(offerSpecification, pageRequest);
+
+        if (offerSpecificationDTO.getSearch() != null) {
+            Search search = new Search(offerSpecificationDTO.getSearch());
+            searchService.create(search);
+        }
+
+        return response.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
     }
 
     @Override

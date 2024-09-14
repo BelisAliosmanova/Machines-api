@@ -23,7 +23,9 @@ public class OfferSpecificationDTO extends BaseDTO {
     private Double maxPrice;
     private Boolean bulgarian;
     private OfferSort offerSort;
+    private boolean includeDeletedOffers;
 
+    // Getters and setters...
     public boolean isValidMinPrice() {
         return minPrice != null && minPrice > 0;
     }

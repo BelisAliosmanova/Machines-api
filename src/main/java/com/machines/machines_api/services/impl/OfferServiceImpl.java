@@ -44,6 +44,7 @@ public class OfferServiceImpl implements OfferService {
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
+    private final SearchService searchService;
     private final Validator validator;
 
     @Override
@@ -65,6 +66,9 @@ public class OfferServiceImpl implements OfferService {
 
         // Use the specification with pagination, sorting handled inside the specification
         var response = offerRepository.findAll(offerSpecification, pageRequest);
+
+        Search search = new Search(offerSpecificationDTO.getSearch());
+        searchService.create(search);
 
         // Map the response to OfferResponseDTO
         return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));

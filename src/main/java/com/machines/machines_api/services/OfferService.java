@@ -45,4 +45,6 @@ public interface OfferService {
     Offer getEntityById(UUID id);
 
     Offer getEntityByIdAdmin(UUID id);
+
+    Offer findOfferByUniqueShortId(Long uniqueShortId);
 }

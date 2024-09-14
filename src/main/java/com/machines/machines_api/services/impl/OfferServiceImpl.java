@@ -153,6 +153,7 @@ public class OfferServiceImpl implements OfferService {
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);
         mapRequestDTOIdsToEntities(offerRequestDTO, offer);
         offer.setOwner(owner);
+        offer.setUniqueShortId(generateUnique4DigitNumber());
 
         Offer savedOffer = offerRepository.save(offer);
         return modelMapper.map(savedOffer, OfferResponseDTO.class);
@@ -244,6 +245,11 @@ public class OfferServiceImpl implements OfferService {
         return offer.get();
     }
 
+    @Override
+    public Offer findOfferByUniqueShortId(Long uniqueShortId) {
+        return offerRepository.findByUniqueShortId(uniqueShortId).orElseThrow(OfferNotFoundException::new);
+    }
+
     public List<OfferResponseDTO> findSimilarOffers(String title, UUID id) {
         String searchTerm = String.join(" | ", title.split("\\s+"));
 
@@ -293,5 +299,18 @@ public class OfferServiceImpl implements OfferService {
         }
 
         throw new BadRequestException("Невалидно сортиране!");
+    }
+
+    private Long generateUnique4DigitNumber() {
+        Random random = new Random();
+        long newId;
+        boolean isUnique;
+
+        do {
+            newId = 1000 + random.nextInt(9000);
+            isUnique = !offerRepository.existsByUniqueShortId(newId);
+        } while (!isUnique);
+
+        return newId;
     }
 }

@@ -86,6 +86,9 @@ public class Offer extends BaseEntity {
     @ManyToOne
     private User owner;
 
+    @Column(unique = true)
+    private Long uniqueShortId;
+
     private LocalDateTime renewedAt;
     private LocalDateTime promotedAt;
 

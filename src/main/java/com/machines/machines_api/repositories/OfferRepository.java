@@ -47,4 +47,8 @@ public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecific
             "WHEN o.offerType = 'BASIC' THEN 3 ELSE 4 END, " +
             "o.createdAt DESC")
     Page<Offer> findAllOffersWithCustomSort(Pageable pageable);
+
+    boolean existsByUniqueShortId(Long uniqueShortId);
+
+    Optional<Offer> findByUniqueShortId(Long uniqueShortId);
 }

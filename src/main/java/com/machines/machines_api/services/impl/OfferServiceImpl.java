@@ -171,6 +171,7 @@ public class OfferServiceImpl implements OfferService {
         mapRequestDTOIdsToEntities(offerRequestDTO, offer);
         offer.setOwner(owner);
         offer.setUniqueShortId(generateUnique4DigitNumber());
+        offer.setCategory(offer.getSubcategory().getCategory());
 
         Offer savedOffer = offerRepository.save(offer);
         return modelMapper.map(savedOffer, OfferResponseDTO.class);
@@ -281,6 +282,7 @@ public class OfferServiceImpl implements OfferService {
         if (offerRequestDTO.getSubcategoryId() != null) {
             Subcategory subcategory = subcategoryService.getSubCategoryEntityById(offerRequestDTO.getSubcategoryId());
             offer.setSubcategory(subcategory);
+            offer.setCategory(subcategory.getCategory());
         }
 
         if (offerRequestDTO.getCityId() != null) {

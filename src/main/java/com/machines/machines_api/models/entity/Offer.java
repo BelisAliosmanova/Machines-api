@@ -68,6 +68,9 @@ public class Offer extends BaseEntity {
     @ManyToOne
     private Subcategory subcategory;
 
+    @ManyToOne
+    private Category category;
+
     @NotNull(message = "Главна снимка за обявата е задължителна")
     @ManyToOne
     private File mainPicture;

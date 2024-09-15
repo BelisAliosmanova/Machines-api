@@ -2,7 +2,7 @@
 
 -- Insert sample offer data
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id, category_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -22,6 +22,7 @@ VALUES (uuid_generate_v4(),
         'VIP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
+        (SELECT id FROM categories WHERE name = 'Books'),
         (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'),
         (SELECT id FROM users WHERE name = 'Admin'),
         2022,
@@ -49,7 +50,7 @@ VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 1'),
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id, category_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -69,6 +70,7 @@ VALUES (uuid_generate_v4(),
         'TOP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
+        (SELECT id FROM categories WHERE name = 'Electronics'),
         (SELECT id FROM files WHERE name = '1f92af23-4c73-4a50-bcf1-bebb5951b6dd.jpg'),
         (SELECT id FROM users WHERE name = 'Regular'),
         2022,
@@ -96,7 +98,7 @@ VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 2'),
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id, category_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -116,6 +118,7 @@ VALUES (uuid_generate_v4(),
         'TOP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
+        (SELECT id FROM categories WHERE name = 'Books'),
         (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'),
         (SELECT id FROM users WHERE name = 'Regular'),
         2022,
@@ -143,7 +146,7 @@ VALUES ((SELECT id FROM offers WHERE title = 'Example Offer 3'),
 
 -- Insert duplicate sample offer data with updated titles
 INSERT INTO offers (id, created_at, updated_at, deleted_at, title, phone_number, description, website_url, price,
-                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id,
+                    bulgarian, auto_update, offer_state, offer_sale_type, offer_type, city_id, subcategory_id, category_id,
                     main_picture_id, owner_id, manufacture_year, model, power_supply_voltage, fuel_type, horse_power,
                     consumption, output_power, productivity, capacity, min_revolutions, nominal_revolutions,
                     max_revolutions, dimensions, own_weight, work_moves)
@@ -163,6 +166,7 @@ VALUES (uuid_generate_v4(),
         'TOP',
         (SELECT id FROM cities WHERE name = 'Los Angeles'),
         (SELECT id FROM subcategories WHERE name = 'Fiction'),
+        (SELECT id FROM categories WHERE name = 'Books'),
         (SELECT id FROM files WHERE name = '041ac8f3-4e17-409c-a3b1-1b44452cc869.jpg'),
         (SELECT id FROM users WHERE name = 'Regular'),
         2022,

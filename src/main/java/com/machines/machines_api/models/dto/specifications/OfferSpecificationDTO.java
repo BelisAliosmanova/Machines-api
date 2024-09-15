@@ -16,6 +16,7 @@ import java.util.UUID;
 public class OfferSpecificationDTO extends BaseDTO {
     private String search;
     private UUID subcategoryId;
+    private UUID categoryId;
     private UUID cityId;
     private OfferState offerState;
     private OfferSaleType offerSaleType;

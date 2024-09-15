@@ -43,6 +43,7 @@ public class OfferController {
             @RequestParam int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) UUID subcategoryId,
+            @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false) UUID cityId,
             @RequestParam(required = false) OfferState offerState,
             @RequestParam(required = false) OfferSaleType offerSaleType,
@@ -55,6 +56,7 @@ public class OfferController {
                 .builder()
                 .search(search)
                 .subcategoryId(subcategoryId)
+                .categoryId(categoryId)
                 .cityId(cityId)
                 .offerState(offerState)
                 .offerSaleType(offerSaleType)
@@ -97,6 +99,7 @@ public class OfferController {
             @RequestParam int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) UUID subcategoryId,
+            @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false) UUID cityId,
             @RequestParam(required = false) OfferState offerState,
             @RequestParam(required = false) OfferSaleType offerSaleType,
@@ -109,6 +112,7 @@ public class OfferController {
                 .builder()
                 .search(search)
                 .subcategoryId(subcategoryId)
+                .categoryId(categoryId)
                 .cityId(cityId)
                 .offerState(offerState)
                 .offerSaleType(offerSaleType)

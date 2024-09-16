@@ -1,6 +1,7 @@
 package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.enums.OfferType;
+import com.machines.machines_api.models.entity.Offer;
 import com.machines.machines_api.services.OfferService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,10 +54,12 @@ public class SmsPaymentController {
             return "Invalid Service ID";
         }
 
+        Offer offer = offerService.findOfferByUniqueShortId(Long.valueOf(item));
+
         if(servID == 21258) {
-            offerService.updateOfferType(UUID.fromString(item), OfferType.VIP);
+            offerService.updateOfferType(offer.getId(), OfferType.VIP);
         } else if (servID == 21260) {
-            offerService.updateOfferType(UUID.fromString(item), OfferType.TOP);
+            offerService.updateOfferType(offer.getId(), OfferType.TOP);
         }
 
         String responseMessage = "Успешно плащане."; // Your response message

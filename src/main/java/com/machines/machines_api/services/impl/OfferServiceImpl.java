@@ -21,7 +21,6 @@ import com.machines.machines_api.repositories.OfferRepository;
 import com.machines.machines_api.services.*;
 import com.machines.machines_api.specifications.OfferSpecification;
 import com.stripe.exception.StripeException;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,10 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +44,7 @@ public class OfferServiceImpl implements OfferService {
     private final SubcategoryService subcategoryService;
     private final OfferRepository offerRepository;
     private final ModelMapper modelMapper;
+    private final SearchService searchService;
     private final Validator validator;
 
     @Override
@@ -70,14 +67,25 @@ public class OfferServiceImpl implements OfferService {
         // Use the specification with pagination, sorting handled inside the specification
         var response = offerRepository.findAll(offerSpecification, pageRequest);
 
+        if (offerSpecificationDTO.getSearch() != null) {
+            Search search = new Search(offerSpecificationDTO.getSearch());
+            searchService.create(search);
+        }
+
         // Map the response to OfferResponseDTO
         return response.map(x -> modelMapper.map(x, OfferResponseDTO.class));
     }
 
     @Override
     public List<OfferResponseDTO> getTopOffers() {
-        List<Offer> offers = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.TOP);
-        return offers.stream()
+        List<Offer> offersTop = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.TOP);
+        List<Offer> offersVip = offerRepository.findAllByOfferTypeAndDeletedAtIsNullOrderByCreatedAtDesc(OfferType.VIP);
+
+        List<Offer> allOffers = new ArrayList<>();
+        allOffers.addAll(offersTop);
+        allOffers.addAll(offersVip);
+
+        return allOffers.stream()
                 .map(x -> modelMapper.map(x, OfferResponseDTO.class))
                 .collect(Collectors.toList());
     }
@@ -102,12 +110,23 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size) {
+    public Page<OfferAdminResponseDTO> getAllAdmin(int page, int size, OfferSpecificationDTO offerSpecificationDTO) {
+        offerSpecificationDTO.setIncludeDeletedOffers(true);
+
+        Specification<Offer> offerSpecification = OfferSpecification.filterOffer(offerSpecificationDTO);
+
         // Page request starts from 0 but actual pages start from 1
-        // So if page = 1 then page request should start from 0
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        Page<Offer> offers = offerRepository.findAll(pageRequest);
-        return offers.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
+
+        // Use the specification with pagination, sorting handled inside the specification
+        var response = offerRepository.findAll(offerSpecification, pageRequest);
+
+        if (offerSpecificationDTO.getSearch() != null) {
+            Search search = new Search(offerSpecificationDTO.getSearch());
+            searchService.create(search);
+        }
+
+        return response.map(x -> modelMapper.map(x, OfferAdminResponseDTO.class));
     }
 
     @Override
@@ -151,6 +170,8 @@ public class OfferServiceImpl implements OfferService {
         Offer offer = modelMapper.map(offerRequestDTO, Offer.class);
         mapRequestDTOIdsToEntities(offerRequestDTO, offer);
         offer.setOwner(owner);
+        offer.setUniqueShortId(generateUnique4DigitNumber());
+        offer.setCategory(offer.getSubcategory().getCategory());
 
         Offer savedOffer = offerRepository.save(offer);
         return modelMapper.map(savedOffer, OfferResponseDTO.class);
@@ -169,7 +190,10 @@ public class OfferServiceImpl implements OfferService {
         BaseCheckoutRequestDTO baseCheckoutRequestDTO = BaseCheckoutRequestDTO.builder().customerEmail(user.getEmail()).customerName(customerName).build();
         OfferCheckoutRequestDTO offerCheckoutRequestDTO = new OfferCheckoutRequestDTO(offerType, id, baseCheckoutRequestDTO);
 
-        return checkoutService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+        String checkout = checkoutService.createPromoteOfferHostedCheckoutSession(offerCheckoutRequestDTO);
+
+        updateOfferType(offerCheckoutRequestDTO.getOfferId(), offerCheckoutRequestDTO.getOfferType());
+        return checkout;
     }
 
     @Override
@@ -239,6 +263,11 @@ public class OfferServiceImpl implements OfferService {
         return offer.get();
     }
 
+    @Override
+    public Offer findOfferByUniqueShortId(Long uniqueShortId) {
+        return offerRepository.findByUniqueShortId(uniqueShortId).orElseThrow(OfferNotFoundException::new);
+    }
+
     public List<OfferResponseDTO> findSimilarOffers(String title, UUID id) {
         String searchTerm = String.join(" | ", title.split("\\s+"));
 
@@ -253,6 +282,7 @@ public class OfferServiceImpl implements OfferService {
         if (offerRequestDTO.getSubcategoryId() != null) {
             Subcategory subcategory = subcategoryService.getSubCategoryEntityById(offerRequestDTO.getSubcategoryId());
             offer.setSubcategory(subcategory);
+            offer.setCategory(subcategory.getCategory());
         }
 
         if (offerRequestDTO.getCityId() != null) {
@@ -288,5 +318,18 @@ public class OfferServiceImpl implements OfferService {
         }
 
         throw new BadRequestException("Невалидно сортиране!");
+    }
+
+    private Long generateUnique4DigitNumber() {
+        Random random = new Random();
+        long newId;
+        boolean isUnique;
+
+        do {
+            newId = 1000 + random.nextInt(9000);
+            isUnique = !offerRepository.existsByUniqueShortId(newId);
+        } while (!isUnique);
+
+        return newId;
     }
 }

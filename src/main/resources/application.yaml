@@ -8,10 +8,10 @@ server:
   backend:
     baseUrl: ${BACKEND_URL}
     stripe:
-      apiKey: ${STRIPE_API_KEY}
-      webhookSecret: ${STRIPE_WEBHOOK_SECRET}
-      successUrl: ${server.frontend.baseUrl}/success?session_id={CHECKOUT_SESSION_ID}
-      cancelUrl: ${server.frontend.baseUrl}/failure
+      apiKey: sk_test_51PlQt6RwpCwh6veQxL74Dg1TnipPRXrpuibV2XLEkMvWrknC8NOh9xKAKtwRsyfjVczblnsmpjryYc1yywQfzGSy00aQRRmBeu
+      webhookSecret: sk_test_51PlQt6RwpCwh6veQxL74Dg1TnipPRXrpuibV2XLEkMvWrknC8NOh9xKAKtwRsyfjVczblnsmpjryYc1yywQfzGSy00aQRRmBeu
+      successUrl: ${FRONTEND_URL}/success
+      cancelUrl: ${FRONTEND_URL}/failure
 
 spring:
   servlet:

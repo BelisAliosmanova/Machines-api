@@ -16,6 +16,7 @@ import java.util.UUID;
 public class OfferSpecificationDTO extends BaseDTO {
     private String search;
     private UUID subcategoryId;
+    private UUID categoryId;
     private UUID cityId;
     private OfferState offerState;
     private OfferSaleType offerSaleType;
@@ -23,7 +24,9 @@ public class OfferSpecificationDTO extends BaseDTO {
     private Double maxPrice;
     private Boolean bulgarian;
     private OfferSort offerSort;
+    private boolean includeDeletedOffers;
 
+    // Getters and setters...
     public boolean isValidMinPrice() {
         return minPrice != null && minPrice > 0;
     }

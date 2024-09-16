@@ -26,7 +26,7 @@ public interface OfferService {
 
     Page<OfferResponseDTO> getByOwner(int page, int size, UUID userId);
 
-    Page<OfferAdminResponseDTO> getAllAdmin(int page, int size);
+    Page<OfferAdminResponseDTO> getAllAdmin(int page, int size, OfferSpecificationDTO offerSpecificationDTO);
 
     OfferResponseDTO getById(UUID id, PublicUserDTO user);
 
@@ -45,4 +45,6 @@ public interface OfferService {
     Offer getEntityById(UUID id);
 
     Offer getEntityByIdAdmin(UUID id);
+
+    Offer findOfferByUniqueShortId(Long uniqueShortId);
 }

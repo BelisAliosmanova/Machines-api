@@ -168,7 +168,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new InvalidTokenException();
         }
 
-        Token refreshToken = refreshTokens.getFirst();
+        Token refreshToken = refreshTokens.get(0);
 
         if (refreshToken == null) {
             throw new InvalidTokenException();

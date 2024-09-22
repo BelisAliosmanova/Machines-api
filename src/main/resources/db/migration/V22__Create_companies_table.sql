@@ -12,9 +12,11 @@ CREATE TABLE companies
     phone_number         VARCHAR(255)     NOT NULL CHECK (phone_number <> ''),
     description          TEXT             NOT NULL CHECK (description <> ''),
     website              VARCHAR(255),
+    region_id            UUID             NOT NULL,
     city_id              UUID             NOT NULL,
     main_picture_id      UUID             NOT NULL,
     owner_id             UUID             NOT NULL,
+    CONSTRAINT fk_region FOREIGN KEY (region_id) REFERENCES regions (id),
     CONSTRAINT fk_city FOREIGN KEY (city_id) REFERENCES cities (id),
     CONSTRAINT fk_main_picture FOREIGN KEY (main_picture_id) REFERENCES files (id),
     CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users (id)

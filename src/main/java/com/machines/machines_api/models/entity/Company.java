@@ -33,6 +33,10 @@ public class Company extends BaseEntity {
 
     private String fax;
 
+    @NotNull(message = "Областта на фирмата е задължителна!")
+    @ManyToOne
+    private Region region;
+
     @NotNull(message = "Градът на фирмата е задължителен!")
     @ManyToOne
     private City city;

@@ -20,7 +20,7 @@ public class OfferDTO extends BaseDTO {
     private String phoneNumber;
     private String description;
     private String websiteURL;
-    private double price;
+    private Double price;
     private boolean bulgarian;
     private boolean autoUpdate = false;
     private OfferState offerState;

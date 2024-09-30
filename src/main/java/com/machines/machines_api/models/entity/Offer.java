@@ -104,14 +104,14 @@ public class Offer extends BaseEntity {
     private String fuelType;
     private Double horsePower;
     private String consumption;
-    private double outputPower;
+    private Double outputPower;
     private String productivity;
-    private double capacity;
-    private double minRevolutions;
-    private double nominalRevolutions;
-    private double maxRevolutions;
+    private Double capacity;
+    private Double minRevolutions;
+    private Double nominalRevolutions;
+    private Double maxRevolutions;
     private String dimensions;
-    private double ownWeight;
+    private Double ownWeight;
     private String workMoves;
 }
 

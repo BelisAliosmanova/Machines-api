@@ -21,7 +21,8 @@ public interface OfferRepository extends JpaRepository<Offer, UUID>, JpaSpecific
             "ts_rank_cd(to_tsvector('simple', o.title), to_tsquery('simple', :searchTerm)) AS score " +
             "FROM offers o " +
             "WHERE o.id != :currentOfferId " +
-            "ORDER BY score DESC",
+            "ORDER BY score DESC " +
+            "LIMIT 20",
             nativeQuery = true
     )
     List<Offer> findSimilarOffers(@Param("searchTerm") String searchTerm, @Param("currentOfferId") UUID id);

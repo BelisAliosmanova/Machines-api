@@ -18,6 +18,7 @@ import com.machines.machines_api.services.AuthenticationService;
 import com.machines.machines_api.services.JwtService;
 import com.machines.machines_api.services.TokenService;
 import com.machines.machines_api.services.UserService;
+import com.machines.machines_api.utils.PasswordEncryptionUtils;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -59,22 +60,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // Login with correct email and password
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
-        } catch (DisabledException exception) {
-            throw new EmailNotVerified();
-        } catch (AuthenticationException exception) {
-            throw new UserLoginException();
+        User user = userService.findByEmail(request.getEmail());
+        boolean passedFirstCheck = PasswordEncryptionUtils.validatePassword(request.getPassword(), user.getPassword());
+
+        if (passedFirstCheck) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(user);
+
+            if (!user.isEnabled()) {
+                throw new EmailNotVerified();
+            }
+        } else {
+            try {
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getEmail(),
+                                request.getPassword()
+                        )
+                );
+            } catch (DisabledException exception) {
+                throw new EmailNotVerified();
+            } catch (AuthenticationException exception) {
+                throw new UserLoginException();
+            }
         }
 
-        User user = userService.findByEmail(request.getEmail());
         tokenService.revokeAllUserTokens(user);
-
         return tokenService.generateAuthResponse(user);
     }
 

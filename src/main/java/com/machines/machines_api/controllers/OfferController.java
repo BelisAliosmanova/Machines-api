@@ -176,6 +176,14 @@ public class OfferController {
         return ResponseEntity.ok(offer);
     }
 
+    @PutMapping("/promote/{id}")
+    @PreAuthorize("hasAuthority('admin:update')")
+    public ResponseEntity<Void> adminPromote(@PathVariable UUID id,
+                             @RequestParam(name = "offerType") OfferType offerType) {
+        offerService.updateOfferType(id, offerType);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('user:delete')")
     public ResponseEntity<Void> delete(@PathVariable UUID id, HttpServletRequest httpServletRequest) {

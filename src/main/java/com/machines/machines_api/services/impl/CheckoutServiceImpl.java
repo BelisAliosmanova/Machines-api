@@ -7,7 +7,6 @@ import com.machines.machines_api.models.dto.request.checkout.HostedCheckoutReque
 import com.machines.machines_api.models.dto.request.checkout.OfferCheckoutRequestDTO;
 import com.machines.machines_api.models.entity.Product;
 import com.machines.machines_api.services.CheckoutService;
-import com.machines.machines_api.services.OfferService;
 import com.machines.machines_api.services.ProductService;
 import com.machines.machines_api.utils.CustomerUtil;
 import com.stripe.exception.StripeException;

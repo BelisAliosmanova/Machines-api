@@ -179,7 +179,7 @@ public class OfferController {
     @PutMapping("/promote/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<Void> adminPromote(@PathVariable UUID id,
-                             @RequestParam(name = "offerType") OfferType offerType) {
+                                             @RequestParam(name = "offerType") OfferType offerType) {
         offerService.updateOfferType(id, offerType);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

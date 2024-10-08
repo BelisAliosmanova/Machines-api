@@ -1,7 +1,6 @@
 package com.machines.machines_api.repositories;
 
 import com.machines.machines_api.models.entity.Advertisement;
-import com.machines.machines_api.models.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface AdvertisementService {
     List<Advertisement> getAll();
+
     Advertisement getAdvertisementById(UUID id);
 
     Advertisement create(Advertisement advertisement);

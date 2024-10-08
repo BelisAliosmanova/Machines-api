@@ -14,7 +14,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-import java.util.UUID;
 
 @RestController
 public class SmsPaymentController {
@@ -56,7 +55,7 @@ public class SmsPaymentController {
 
         Offer offer = offerService.findOfferByUniqueShortId(Long.valueOf(item));
 
-        if(servID == 21258) {
+        if (servID == 21258) {
             offerService.updateOfferType(offer.getId(), OfferType.VIP);
         } else if (servID == 21260) {
             offerService.updateOfferType(offer.getId(), OfferType.TOP);
@@ -75,7 +74,7 @@ public class SmsPaymentController {
         HttpURLConnection connection = null;
 
         try {
-            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
             String requestUrl = String.format("%s?servID=%d&tonum=%s&smsID=%s&message=%s",
                     url, servID, toNumber, smsID, encodedMessage);
 

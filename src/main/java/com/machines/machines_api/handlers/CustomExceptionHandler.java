@@ -6,8 +6,10 @@ import com.machines.machines_api.exceptions.common.InternalServerErrorException;
 import com.machines.machines_api.exceptions.common.ValidationException;
 import com.machines.machines_api.exceptions.user.UserLoginException;
 import com.machines.machines_api.models.dto.response.ExceptionResponse;
+import com.machines.machines_api.services.ExceptionService;
 import com.machines.machines_api.utils.ApiExceptionParser;
 import jakarta.validation.ConstraintViolationException;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -20,12 +22,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * Global exception handler for handling various types of exceptions and converting them into standardized API responses.
  */
 @ControllerAdvice
+@AllArgsConstructor
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+    private final ExceptionService exceptionService;
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleRuntimeExceptions(RuntimeException exception) {
         // Log data
         exception.printStackTrace();
-        return handleApiExceptions(new InternalServerErrorException());
+        return handleApiExceptions(new InternalServerErrorException(exception));
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
@@ -52,6 +57,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ExceptionResponse> handleApiExceptions(ApiException exception) {
         ExceptionResponse apiException = ApiExceptionParser.parseException(exception);
+
+        if (exception instanceof InternalServerErrorException internalException) {
+            exceptionService.log(internalException.getInnerRuntimeException(), internalException.getStatusCode());
+        } else {
+            exceptionService.log(exception);
+        }
 
         return ResponseEntity
                 .status(apiException.getStatus())

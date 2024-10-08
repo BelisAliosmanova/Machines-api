@@ -4,6 +4,8 @@ import com.machines.machines_api.enums.ExceptionSeverity;
 import com.machines.machines_api.exceptions.common.ApiException;
 import com.machines.machines_api.models.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -25,9 +27,8 @@ public class Exception extends BaseEntity {
     private String methodName;
     private String className;
     private Integer lineNumber;
+    @Enumerated(EnumType.STRING)
     private ExceptionSeverity severity;
-    private String reasonPhrase;
-    private String apiExceptionInternalMessage;
 
     public static Exception mapFromRuntimeException(RuntimeException runtimeException, int statusCode) {
         // Exception Info
@@ -55,7 +56,7 @@ public class Exception extends BaseEntity {
                 .build();
     }
 
-    public static Exception mapFromRuntimeException(ApiException apiException) {
+    public static Exception mapFromApiException(ApiException apiException) {
         Exception exception = mapFromRuntimeException(apiException, apiException.getStatusCode());
         exception.setSeverity(ExceptionSeverity.INFORMATIONAL);
 

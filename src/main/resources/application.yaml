@@ -8,8 +8,8 @@ server:
   backend:
     baseUrl: ${BACKEND_URL}
     stripe:
-      apiKey: sk_test_51PlQt6RwpCwh6veQxL74Dg1TnipPRXrpuibV2XLEkMvWrknC8NOh9xKAKtwRsyfjVczblnsmpjryYc1yywQfzGSy00aQRRmBeu
-      webhookSecret: sk_test_51PlQt6RwpCwh6veQxL74Dg1TnipPRXrpuibV2XLEkMvWrknC8NOh9xKAKtwRsyfjVczblnsmpjryYc1yywQfzGSy00aQRRmBeu
+      apiKey: ${STRIPE_API_KEY}
+      webhookSecret: ${STRIPE_WEBHOOK_SECRET}
       successUrl: ${FRONTEND_URL}/success
       cancelUrl: ${FRONTEND_URL}/failure
 
@@ -19,9 +19,9 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
   datasource:
-    url: jdbc:postgresql://localhost:5432/machines
-    username: postgres
-    password: root
+    url: jdbc:${POSTGRESQL_URL}
+    username: ${POSTGRESQL_USER}
+    password: ${POSTGRESQL_PASS}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true

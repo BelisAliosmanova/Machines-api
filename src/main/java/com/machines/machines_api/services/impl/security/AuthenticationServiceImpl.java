@@ -5,6 +5,7 @@ import com.machines.machines_api.exceptions.email.EmailNotVerified;
 import com.machines.machines_api.exceptions.token.ExpiredTokenException;
 import com.machines.machines_api.exceptions.token.InvalidTokenException;
 import com.machines.machines_api.exceptions.user.UserLoginException;
+import com.machines.machines_api.exceptions.user.UserNotFoundException;
 import com.machines.machines_api.models.dto.auth.AuthenticationRequest;
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.models.dto.auth.PublicUserDTO;
@@ -60,7 +61,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // Login with correct email and password
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        User user = userService.findByEmail(request.getEmail());
+        User user;
+
+        try {
+            user = userService.findByEmail(request.getEmail());
+        } catch (UserNotFoundException userNotFoundException) {
+            throw new UserLoginException();
+        }
+
         boolean passedFirstCheck = PasswordEncryptionUtils.validatePassword(request.getPassword(), user.getPassword());
 
         if (passedFirstCheck) {

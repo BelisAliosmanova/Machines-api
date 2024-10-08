@@ -19,9 +19,9 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
   datasource:
-    url: jdbc:${POSTGRESQL_URL}
-    username: ${POSTGRESQL_USER}
-    password: ${POSTGRESQL_PASS}
+    url: jdbc:${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASS}
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true

@@ -42,7 +42,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
 
     @Override
     public String getOAuthGoogleLoginUrl() {
-        return new GoogleAuthorizationCodeRequestUrl(clientId, frontendConfig.getBaseUrl() + "/process-oauth2", SCOPES).build();
+        return new GoogleAuthorizationCodeRequestUrl(clientId, frontendConfig.getOauth2RedirectUrl(), SCOPES).build();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
                     clientId,
                     clientSecret,
                     code,
-                    frontendConfig.getBaseUrl() + "/process-oauth2")
+                    frontendConfig.getOauth2RedirectUrl())
                     .execute()
                     .getAccessToken();
         } catch (IOException e) {

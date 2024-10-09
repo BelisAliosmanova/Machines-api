@@ -1,5 +1,6 @@
 package com.machines.machines_api.services.impl.security;
 
+import com.machines.machines_api.config.ratelimiting.RateLimiterConfigProperties;
 import com.machines.machines_api.enums.TokenType;
 import com.machines.machines_api.exceptions.email.EmailNotVerified;
 import com.machines.machines_api.exceptions.token.ExpiredTokenException;
@@ -45,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RateLimiterConfigProperties rateLimiterConfigProperties;
 
     /**
      * Registers a new user based on the provided registration request.

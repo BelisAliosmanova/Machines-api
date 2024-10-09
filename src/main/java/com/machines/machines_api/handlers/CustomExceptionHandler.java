@@ -1,13 +1,11 @@
 package com.machines.machines_api.handlers;
 
-import com.machines.machines_api.exceptions.common.AccessDeniedException;
-import com.machines.machines_api.exceptions.common.ApiException;
-import com.machines.machines_api.exceptions.common.InternalServerErrorException;
-import com.machines.machines_api.exceptions.common.ValidationException;
+import com.machines.machines_api.exceptions.common.*;
 import com.machines.machines_api.exceptions.user.UserLoginException;
 import com.machines.machines_api.models.dto.response.ExceptionResponse;
 import com.machines.machines_api.services.ExceptionService;
 import com.machines.machines_api.utils.ApiExceptionParser;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +50,25 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return handleApiExceptions(new AccessDeniedException());
     }
 
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<ExceptionResponse> handleTransactionExceptions(TransactionException exception) {
+        if (exception.getRootCause() instanceof ConstraintViolationException) {
+            return handleConstraintValidationExceptions((ConstraintViolationException) exception.getRootCause());
+        }
+
+        return handleRuntimeExceptions(exception);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleConstraintValidationExceptions(ConstraintViolationException exception) {
+        return handleApiExceptions(new ValidationException(exception.getConstraintViolations()));
+    }
+
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<ExceptionResponse> handleRateLimitException() {
+        return handleApiExceptions(new TooManyRequestsException());
+    }
+
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ExceptionResponse> handleApiExceptions(ApiException exception) {
         ExceptionResponse apiException = ApiExceptionParser.parseException(exception);
@@ -65,19 +82,5 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .status(apiException.getStatus())
                 .body(apiException);
-    }
-
-    @ExceptionHandler(TransactionException.class)
-    public ResponseEntity<ExceptionResponse> handleTransactionExceptions(TransactionException exception) {
-        if (exception.getRootCause() instanceof ConstraintViolationException) {
-            return handleConstraintValidationExceptions((ConstraintViolationException) exception.getRootCause());
-        }
-
-        return handleRuntimeExceptions(exception);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponse> handleConstraintValidationExceptions(ConstraintViolationException exception) {
-        return handleApiExceptions(new ValidationException(exception.getConstraintViolations()));
     }
 }

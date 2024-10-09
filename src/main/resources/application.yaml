@@ -15,7 +15,7 @@ server:
 
 spring:
   config:
-    import: "classpath:rate-limiter.yml"
+    import: "classpath:rate-limiter.yaml"
   servlet:
     multipart:
       max-file-size: 20MB

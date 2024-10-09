@@ -1,8 +1,11 @@
-rate-limiter:
-  endpoints:
-    /api/users:
-      limit: 10
-      duration: 1m
-    /api/orders:
-      limit: 5
-      duration: 1m
+resilience4j:
+  rate-limiter:
+    instances:
+      users_rate_limiter:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1m
+        timeoutDuration: 0
+      orders_rate_limiter:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1m
+        timeoutDuration: 0

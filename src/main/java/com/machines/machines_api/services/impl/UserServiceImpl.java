@@ -83,14 +83,20 @@ public class UserServiceImpl implements UserService {
             throw new AccessDeniedException();
         }
 
-        // It is not null it is "" so don't change it
-        if (userDTO.getPassword() == "") {
-            userDTO.setPassword(userToUpdate.getPassword());
-        } else {
-            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        if (currentUser.getRole().equals(Role.USER)) {
+            userToUpdate.setName(userDTO.getName());
+            userToUpdate.setSurname(userDTO.getSurname());
+        } else if (currentUser.getRole().equals(Role.ADMIN)) {
+            // It is not null it is "" so don't change it
+            if (userDTO.getPassword() == "") {
+                userDTO.setPassword(userToUpdate.getPassword());
+            } else {
+                userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            }
+
+            modelMapper.map(userDTO, userToUpdate);
         }
 
-        modelMapper.map(userDTO, userToUpdate);
         userToUpdate.setId(id);
 
         User updatedUser = userRepository.save(userToUpdate);

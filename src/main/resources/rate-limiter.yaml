@@ -1,0 +1,8 @@
+rate-limiter:
+  endpoints:
+    /api/users:
+      limit: 10
+      duration: 1m
+    /api/orders:
+      limit: 5
+      duration: 1m

@@ -8,6 +8,7 @@ import com.machines.machines_api.models.dto.response.admin.CompanyAdminResponseD
 import com.machines.machines_api.models.dto.specifications.CompanySpecificationDTO;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.CompanyService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,7 @@ public class CompanyController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('user:create')")
+    @RateLimiter(name = "general_api_rate_limiter")
     public ResponseEntity<CompanyResponseDTO> create(
             @RequestBody CompanyRequestDTO companyRequestDTO,
             HttpServletRequest httpServletRequest
@@ -87,6 +89,7 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('user:update')")
+    @RateLimiter(name = "general_api_rate_limiter")
     public ResponseEntity<CompanyResponseDTO> update(
             @PathVariable UUID id,
             @Valid @RequestBody CompanyRequestDTO companyRequestDTO,

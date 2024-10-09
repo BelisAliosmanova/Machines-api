@@ -2,6 +2,7 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.dto.auth.AuthenticationResponse;
 import com.machines.machines_api.services.OAuth2AuthenticationService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,13 @@ public class OAuth2Controller {
     private final OAuth2AuthenticationService oAuth2AuthenticationService;
 
     @GetMapping("/url/google")
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<String> auth() {
         return ResponseEntity.ok(oAuth2AuthenticationService.getOAuthGoogleLoginUrl());
     }
 
     @GetMapping("/authenticate/google")
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<AuthenticationResponse> googleAuthenticate(@RequestParam("code") String code) {
         return ResponseEntity.ok(oAuth2AuthenticationService.processOAuthGoogleLogin(code));
     }

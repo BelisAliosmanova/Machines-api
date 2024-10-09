@@ -2,6 +2,7 @@ package com.machines.machines_api.controllers;
 
 import com.machines.machines_api.models.entity.File;
 import com.machines.machines_api.services.FileService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
+    @RateLimiter(name = "general_api_rate_limiter")
     public File upload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
         return fileService.upload(multipartFile);
     }

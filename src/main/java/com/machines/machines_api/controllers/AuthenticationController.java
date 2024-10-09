@@ -8,6 +8,7 @@ import com.machines.machines_api.models.entity.User;
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.AuthenticationService;
 import com.machines.machines_api.services.impl.security.events.OnPasswordResetRequestEvent;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ public class AuthenticationController {
     private String appBaseUrl;
 
     @PostMapping("/register")
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         AuthenticationResponse authenticationResponse = authenticationService.register(request);
 
@@ -52,6 +54,7 @@ public class AuthenticationController {
 
     //Endpoint for email confirmation during registration
     @GetMapping("/registrationConfirm")
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token, HttpServletResponse httpServletResponse) throws IOException {
         authenticationService.confirmRegistration(token);
         httpServletResponse.sendRedirect(frontendConfig.getLoginUrl());
@@ -59,18 +62,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate") // login
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request, HttpServletResponse servletResponse) {
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(request);
         return ResponseEntity.ok(authenticationResponse);
     }
 
     @GetMapping("/refresh-token/{refreshToken}")
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<AuthenticationResponse> refreshToken(@PathVariable String refreshToken) throws IOException {
         AuthenticationResponse authenticationResponse = authenticationService.refreshToken(refreshToken);
         return ResponseEntity.ok(authenticationResponse);
     }
 
     @GetMapping("/me") // Retrieves current user information.
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<AuthenticationResponse> getMe(HttpServletRequest request) {
         String jwtToken = (String) request.getAttribute(JwtAuthenticationFilter.JWT_KEY);
         AuthenticationResponse authenticationResponse = authenticationService.me(jwtToken);
@@ -79,6 +85,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password") // Sends link to email so the user can change their password
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<String> forgotPassword(@RequestParam("email") String email) {
         User user = authenticationService.forgotPassword(email);
         eventPublisher.publishEvent(new OnPasswordResetRequestEvent(user, appBaseUrl));
@@ -86,6 +93,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/password-reset")
+    @RateLimiter(name = "sensitive_operations_rate_limiter")
     public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestParam("newPassword") String newPassword) {
         authenticationService.resetPassword(token, newPassword);
         return ResponseEntity.ok("Password reset successfully");

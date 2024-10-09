@@ -14,6 +14,7 @@ import com.machines.machines_api.models.dto.specifications.OfferSpecificationDTO
 import com.machines.machines_api.security.filters.JwtAuthenticationFilter;
 import com.machines.machines_api.services.OfferService;
 import com.stripe.exception.StripeException;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -141,6 +142,7 @@ public class OfferController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('user:create')")
+    @RateLimiter(name = "general_api_rate_limiter")
     public ResponseEntity<OfferResponseDTO> create(
             @RequestBody OfferRequestDTO offerRequestDTO,
             HttpServletRequest httpServletRequest
@@ -165,6 +167,7 @@ public class OfferController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('user:update')")
+    @RateLimiter(name = "general_api_rate_limiter")
     public ResponseEntity<OfferResponseDTO> update(
             @PathVariable UUID id,
             @Valid @RequestBody OfferRequestDTO offerRequestDTO,

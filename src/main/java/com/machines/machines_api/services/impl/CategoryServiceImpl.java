@@ -31,6 +31,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryResponseDTO> getAllWithOffers() {
+        List<Category> categories = categoryRepository.findAllWithActiveOffers();
+        return categories.stream().map(x -> modelMapper.map(x, CategoryResponseDTO.class)).toList();
+    }
+
+    @Override
     public List<CategoryAdminResponseDTO> getAllAdmin() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(x -> modelMapper.map(x, CategoryAdminResponseDTO.class)).toList();

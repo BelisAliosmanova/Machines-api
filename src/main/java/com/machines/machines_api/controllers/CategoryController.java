@@ -26,6 +26,12 @@ public class CategoryController {
         return ResponseEntity.ok(categories);
     }
 
+    @GetMapping("/all/withOffers")
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategoriesWithOffers() {
+        List<CategoryResponseDTO> categories = categoryService.getAllWithOffers();
+        return ResponseEntity.ok(categories);
+    }
+
     @GetMapping("/all/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CategoryAdminResponseDTO>> getAllAdmin() {

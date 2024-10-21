@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface CategoryService {
     List<CategoryResponseDTO> getAll();
 
+    List<CategoryResponseDTO> getAllWithOffers();
+
     List<CategoryAdminResponseDTO> getAllAdmin();
 
     CategoryResponseDTO getCategoryById(UUID id);
